@@ -36,3 +36,4 @@ Thumbs.db
 # Playwright / walkthrough artifacts
 .playwright-mcp/
 *.png
+!docs/screenshots/*.png

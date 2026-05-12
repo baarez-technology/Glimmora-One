@@ -48,7 +48,7 @@ export async function signupAction(formData: FormData): Promise<{ error?: string
     if (e instanceof BackendError) return { error: e.message };
     return { error: 'Could not create your account. Try again.' };
   }
-  redirect('/dashboard');
+  redirect('/onboarding');
 }
 
 export async function logoutAction() {

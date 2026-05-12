@@ -2,10 +2,12 @@
 
 > **This is a living document.** Whenever a feature is added, removed, or changed, update the matching section *in the same commit* as the code change. If you remove a feature, remove its section — don't leave stale instructions behind. The "Changelog" at the bottom is the diary; everything above it should describe the app *as it is right now*.
 
-**Last updated:** 2026-05-11
-**Applies to app version:** 0.2.0
+**Last updated:** 2026-05-12
+**Applies to app version:** 0.2.1
 
 For the *engineering* design behind the user-facing flows described here (roles matrix, state machines, where each flow lives in code), see [`docs/PRODUCT_FLOWS.md`](./PRODUCT_FLOWS.md).
+
+For a step-by-step QA walkthrough with screenshots, see [`docs/TESTING_GUIDE.md`](./TESTING_GUIDE.md).
 
 ---
 
@@ -334,6 +336,7 @@ Glimmora ONE is a companion, not a clinician. It does not provide medical advice
 
 > Newest at top. One line per release. Keep entries short — sections above describe *current* behavior, not history.
 
+- **2026-05-12 — v0.2.1** — signup now redirects straight to onboarding (no dashboard flicker). Sidebar shows `Role · Tier` (e.g. *Member · free*, *Creator · free*). Profile gained a **Your role** card with a role-aware CTA. Dashboard's "apply to become a creator" callout hides once an application exists; a "we're reading your application" card appears while pending. Theme toggle is now on login + signup. Added [`docs/TESTING_GUIDE.md`](./TESTING_GUIDE.md) with screenshots.
 - **2026-05-11 — v0.2.0** — added onboarding (`/onboarding`), the daily-ritual loop on the dashboard ("three small steps"), focus-area-tuned **Paths**, the creator application flow (`/creator/apply`) with admin review, the creator studio (`/creator`, `/creator/series/new`, `/creator/series/<id>/episodes/new`), the crisis safety card in the companion, and the roles/permissions matrix in `PRODUCT_FLOWS.md`. New backend modules: `routers/dashboard.py`, `models.CreatorApplication`, alembic `0002_creator_apps`.
 - **2026-05-11 — v0.1.1** — signup loosened: username + password 1-char minimum, email optional. If email omitted, a `<username>@noemail.local` placeholder is stored.
 - **2026-05-11 — v0.1.0** — initial release.

@@ -84,7 +84,11 @@ export function AppShell({ user, children }: { user: User; children: React.React
           </div>
           <div className="min-w-0">
             <p className="truncate text-sm">{user.fullName || user.username}</p>
-            <p className="truncate text-xs text-muted">{user.subscriptionTier}</p>
+            <p className="truncate text-xs text-muted">
+              <span className="capitalize">{user.role}</span>
+              <span className="mx-1 opacity-50">·</span>
+              <span>{user.subscriptionTier}</span>
+            </p>
           </div>
         </div>
       </aside>
