@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 249 246 241;          /* ink-50 */
+  --bg-elev: 255 252 247;
+  --fg: 39 33 28;             /* ink-800 */
+  --fg-muted: 118 100 81;     /* ink-500 */
+  --border: 221 210 193;      /* ink-200 */
+  --accent: 233 169 50;       /* glimmer-400 */
+  --accent-fg: 22 18 15;
+}
+
+.dark {
+  --bg: 12 10 8;              /* ink-950 */
+  --bg-elev: 22 18 15;        /* ink-900 */
+  --fg: 239 233 223;          /* ink-100 */
+  --fg-muted: 191 174 147;    /* ink-300 */
+  --border: 61 52 43;         /* ink-700 */
+  --accent: 240 192 87;       /* glimmer-300 */
+  --accent-fg: 22 18 15;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer utilities {
+  .bg-app { background-color: rgb(var(--bg)); }
+  .bg-elev { background-color: rgb(var(--bg-elev)); }
+  .text-app { color: rgb(var(--fg)); }
+  .text-muted { color: rgb(var(--fg-muted)); }
+  .border-app { border-color: rgb(var(--border)); }
+  .ring-accent { --tw-ring-color: rgb(var(--accent)); }
+}
+
+/* Subtle aurora behind hero sections */
+.aurora {
+  background:
+    radial-gradient(60% 50% at 20% 20%, rgba(233, 169, 50, 0.18) 0%, transparent 60%),
+    radial-gradient(50% 60% at 80% 30%, rgba(191, 174, 147, 0.18) 0%, transparent 60%),
+    radial-gradient(40% 40% at 50% 100%, rgba(118, 100, 81, 0.10) 0%, transparent 60%);
+}
+
+.dark .aurora {
+  background:
+    radial-gradient(60% 50% at 20% 20%, rgba(240, 192, 87, 0.12) 0%, transparent 60%),
+    radial-gradient(50% 60% at 80% 30%, rgba(154, 135, 112, 0.12) 0%, transparent 60%),
+    radial-gradient(40% 40% at 50% 100%, rgba(118, 100, 81, 0.10) 0%, transparent 60%);
+}
+
+/* Custom scrollbar for transcript-heavy panels */
+.scroll-quiet::-webkit-scrollbar { width: 8px; }
+.scroll-quiet::-webkit-scrollbar-thumb {
+  background: rgba(var(--fg-muted), 0.3); border-radius: 8px;
+}

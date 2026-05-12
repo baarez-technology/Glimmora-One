@@ -1,0 +1,38 @@
+# Node
+node_modules/
+.next/
+.turbo/
+dist/
+build/
+*.log
+.pnpm-store/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+*.db
+*.sqlite
+*.sqlite3
+
+# Env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Backend artifacts
+backend/uploads/
+backend/dev.db
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Playwright / walkthrough artifacts
+.playwright-mcp/
+*.png
