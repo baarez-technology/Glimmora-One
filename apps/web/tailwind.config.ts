@@ -52,14 +52,48 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        pop: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+          '100%': { transform: 'scale(1)' },
+        },
         breathe: {
           '0%, 100%': { transform: 'scale(1)', opacity: '0.85' },
           '50%': { transform: 'scale(1.06)', opacity: '1' },
         },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        'gradient-pan': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
       animation: {
-        'fade-up': 'fade-up 0.5s ease-out both',
+        'fade-up': 'fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'fade-in': 'fade-in 0.4s ease-out both',
+        'scale-in': 'scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both',
+        pop: 'pop 0.25s ease-out',
         breathe: 'breathe 6s ease-in-out infinite',
+        shimmer: 'shimmer 2.5s linear infinite',
+        float: 'float 6s ease-in-out infinite',
+        'gradient-pan': 'gradient-pan 12s ease-in-out infinite',
+      },
+      transitionTimingFunction: {
+        'soft': 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
     },
   },

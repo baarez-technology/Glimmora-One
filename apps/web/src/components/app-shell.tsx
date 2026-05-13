@@ -40,13 +40,20 @@ export function AppShell({ user, children }: { user: User; children: React.React
                 key={href}
                 href={href}
                 className={cn(
-                  'flex items-center gap-3 rounded-md px-3 py-2 transition-colors',
+                  'group relative flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-200 ease-soft',
                   active
                     ? 'bg-glimmer-100/60 text-ink-800 dark:bg-glimmer-900/30 dark:text-glimmer-200'
-                    : 'text-muted hover:text-app hover:bg-ink-100/60 dark:hover:bg-ink-800/40',
+                    : 'text-muted hover:text-app hover:bg-ink-100/60 dark:hover:bg-ink-800/40 hover:translate-x-0.5',
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <span
+                  aria-hidden
+                  className={cn(
+                    'absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-r-full bg-glimmer-400 transition-all duration-300 ease-soft',
+                    active ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-50',
+                  )}
+                />
+                <Icon className={cn('h-4 w-4 transition-transform duration-200', active && 'scale-110')} />
                 {label}
               </Link>
             );

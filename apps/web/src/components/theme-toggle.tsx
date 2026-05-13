@@ -28,9 +28,14 @@ export function ThemeToggle() {
       size="icon"
       aria-label="Toggle theme"
       onClick={toggle}
-      className="rounded-full"
+      className="rounded-full overflow-hidden hover:rotate-12 transition-transform duration-300 ease-soft motion-reduce:hover:rotate-0"
     >
-      {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      <span
+        key={theme}
+        className="inline-flex animate-scale-in motion-reduce:animate-none"
+      >
+        {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      </span>
     </Button>
   );
 }
