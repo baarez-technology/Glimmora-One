@@ -1,299 +1,370 @@
 # Glimmora ONE — Testing Guide
 
-A step-by-step QA walkthrough of every surface, both as a happy-path flow and per role. Every step has a "what to do" and an "expected result." Screenshots live in `docs/screenshots/`.
+> Pretend you're a detective. Your job is to make sure the app works for everyone. This guide has tests anyone (even a 12-year-old) can run. Each test is a tiny mission — do the thing, check what you see, write a ✓ or ✗.
 
-> **Test environment**
-> - Backend: `http://127.0.0.1:8000` (FastAPI)
-> - Frontend: `http://127.0.0.1:3000` (Next.js)
-> - Bootstrap superadmin: `superadmin / ChangeMe!2026` (created on first start)
-> - Reset state by deleting `backend/dev.db` and restarting the API (re-seeds demo content + superadmin).
+**App version:** 0.4.0-mvp (main branch)
+**Last updated:** 2026-05-16
 
 ---
 
-## 0. Roles & responsibilities at a glance
+## Before you start
 
-| Role | Can read | Can write | Can publish content | Can review applications | Default route |
-|---|---|---|---|---|---|
-| **Anonymous** | landing, pricing, login, signup | — | — | — | `/` |
-| **Member** (default after signup) | dashboard, companion, stories (free + paywall hint on premium), reflect, circles, profile | own reflections, companion chats, circle posts (anonymous handle), creator application | — | — | `/dashboard` |
-| **Creator** | everything a member can | own series + episodes | yes, via `/creator` | — | `/dashboard` |
-| **Admin** | everything | — | — | yes (`/admin`) | `/admin` |
-| **Superadmin** | everything | full | yes | yes + manage admins | `/admin` |
+You need **two things running**:
 
-The role is shown in the left sidebar (`Member · free`, `Creator · free`, etc.) and on the **Profile → Your role** card.
+1. The **backend** at `http://127.0.0.1:8000` — open this in a browser. You should see some words. If you see an error, ask your grown-up to start it.
+2. The **website** at `http://127.0.0.1:3000` — open this in a browser. You should see the Glimmora landing page.
 
----
+You will also need:
 
-## 1. Happy-path full flow (Member)
+| Account | Username | Password | Use it for |
+|---|---|---|---|
+| A brand-new person (you make this in Test 1) | (any) | (any) | Testing as a regular member |
+| The boss | `superadmin` | `ChangeMe!2026` | Already exists — log in if you need to |
 
-These steps run end-to-end as a brand-new visitor. Time: ~5 min.
-
-### 1.1 Landing
-**Do:** visit `http://127.0.0.1:3000/`
-**Expected:** marketing landing renders with hero "A calm room for your inner life.", three feature cards, and a CTA "Begin gently." Theme toggle in the header.
-![Landing](screenshots/01-landing.png)
-
-### 1.2 Theme toggle
-**Do:** click the sun/moon icon in the header.
-**Expected:** the page switches between light and dark mode immediately; choice persists across reloads (stored in `localStorage` under `glimmora-theme`). No flash of wrong theme on next load.
-
-### 1.3 Sign up
-**Do:** click **Begin gently** → fill the form. Username and password are required and may be a single character; email is **optional**. Submit.
-**Expected:** redirected directly to `/onboarding`. The sidebar is visible and shows your name, role (`Member`), and tier (`free`).
-![Signup](screenshots/02-signup.png)
-
-### 1.4 Onboarding (4 steps)
-**Do:** walk through:
-1. **Welcome** — enter a friendly name and a one-line reason.
-2. **Intention** — one sentence direction (e.g. *"I'd like to feel less rushed in the mornings"*).
-3. **Focus** — pick up to four areas (Stillness, Becoming, Feeling, Grief, Joy, Relationships, Work, Sleep, Creativity).
-4. **Begin** — review screen showing your intention.
-
-You can press **Skip for now →** at any step.
-**Expected:** clicking **Begin** lands on `/dashboard`. The companion has already silently created a welcome conversation. Onboarding cannot be re-entered for an already-onboarded user.
-![Onboarding](screenshots/03-onboarding-welcome.png)
-
-### 1.5 Dashboard (Today)
-**Do:** read the dashboard.
-**Expected:** four bands rendered top-to-bottom:
-- **Greeting** + your intention quoted underneath.
-- **Three small steps** card (Arrive / Notice / Reflect) with `0 of 3 · streak 0`.
-- **Featured journey** + **Your inner weather** stats.
-- **Paths for you** — series matched to your focus areas (or first 4 series if you skipped).
-- **Become-a-creator** dashed callout (only if you're a member with no application).
-![Dashboard member](screenshots/04-dashboard-member.png)
-
-### 1.6 Step 1 — Arrive (Companion)
-**Do:** click **Step 1 — Open companion**. On the empty state, click a starter or type a sentence.
-**Expected:** companion responds within a few seconds. An emotion chip and a "question to sit with" appear. After sending one message, the dashboard's Step 1 will tick as done on next visit.
-![Companion empty](screenshots/06-companion-empty.png)
-
-### 1.7 Crisis safety
-**Do:** type a message containing explicit crisis language (e.g. *"I want to die tonight"*). Submit.
-**Expected:** a rose-bordered safety card appears with regional helplines (India / US-Canada / UK-ROI / findahelpline.com). The companion continues to respond gently. This is detected client-server side by the regex `kill myself | end my life | suicide | suicidal | want to die | don't want to live | hurt myself | self-harm` — deliberately conservative; oblique language is **not** flagged.
-![Crisis card](screenshots/07-companion-with-crisis.png)
-
-### 1.8 Step 2 — Notice (Stories)
-**Do:** navigate to **Stories** in the sidebar. Pick a series, then an episode.
-**Expected:** library shows three demo series grouped by category. Each series page shows hero, tags, and episode list with durations. Episode page renders the HLS-capable video player and the reflection prompt below.
-![Library](screenshots/10-stories-library.png)
-![Series page](screenshots/11-series-page.png)
-
-### 1.9 Step 3 — Reflect
-**Do:** open `/reflect/new`, write a sentence, optionally pick a mood + intensity + threads, save.
-**Expected:** redirects to `/reflect` (digest). Stats update: `Reflections: 1 · Day streak: 1 · Most-present: <mood>`. The 30-day band shows today's chip. The new entry appears in the journal column.
-![Reflect new](screenshots/08-reflect-new.png)
-![Reflect digest](screenshots/09-reflect-digest.png)
-
-### 1.10 Circles
-**Do:** open **Circles**.
-**Expected:** three seeded circles (Becoming, First Light, The Quiet Circle). Each has an anonymous post box; you post under a handle chosen for you (not your username).
-![Circles](screenshots/13-circles.png)
-
-### 1.11 Profile
-**Do:** open **Profile**.
-**Expected:** three cards — **You** (editable name/bio/avatar), **Your role** (role label, blurb, role-aware CTA), **Membership** (current tier + Try premium / "thank you" message).
-![Profile member](screenshots/14-profile-member.png)
+> **Test result key:** **✓ Pass** = it did what we expected. **✗ Fail** = it didn't. Write notes about what was different.
 
 ---
 
-## 2. Member → Creator promotion flow
+## Tests by area
 
-### 2.1 Apply
-**Do:** as a member, open `/creator/apply`. Write a pitch (1–2000 chars), optionally a sample URL. Submit.
-**Expected:** the same page now shows **YOUR APPLICATION — PENDING** with your pitch quoted. The dashboard's apply-CTA disappears and is replaced by a "We're reading your application" card. The Profile **Your role** card also reflects pending state.
-![Creator apply](screenshots/15-creator-apply.png)
-
-### 2.2 Admin reviews
-**Do:** sign out, log in as `superadmin / ChangeMe!2026`. Skip onboarding (or complete it). Open **Admin**.
-**Expected:** the **Creator applications** section lists the pending application. Click **Approve**.
-![Admin](screenshots/17-admin.png)
-
-### 2.3 Promotion takes effect
-**Do:** sign out, log back in as the original applicant.
-**Expected:** sidebar role chip flips to **Creator · free**. A new **Studio** link appears in the sidebar. Profile **Your role** card now shows "You can publish series and episodes through Studio" + Open Studio link.
-![Profile creator](screenshots/14-profile-creator.png)
-
-### 2.4 Publish a series + episode
-**Do:** go to `/creator`. Create a series (`/creator/series/new`), then add episodes (`/creator/series/[id]/episodes/new`).
-**Expected:** the series and its episodes appear in the public library after publishing, tier-gated as set.
-![Creator studio](screenshots/20-creator-studio.png)
+| Section | Tests |
+|---|---|
+| A — Landing page | 1–2 |
+| B — Sign up & log in | 3–7 |
+| C — The four hello questions | 8–10 |
+| D — Dashboard (three small steps) | 11–13 |
+| E — Companion | 14–18 |
+| F — Stories | 19–24 |
+| G — Reflect (journal + map) | 25–29 |
+| H — Profile | 30–32 |
+| I — Dark / light mode | 33 |
+| J — The little things | 34–36 |
 
 ---
 
-## 3. Role-by-role checklist
+## A. Landing page
 
-### 3.1 Anonymous visitor
-- [ ] `/` renders without auth.
-- [ ] `/pricing` renders.
-- [ ] `/login` and `/signup` render with theme toggle visible.
-- [ ] Any protected route (`/dashboard`, `/companion`, etc.) → 307 to `/login?next=…`.
-- [ ] Theme toggle persists across reloads.
+### Test 1 — The landing page loads
 
-### 3.2 Member (default after signup)
-- [ ] Brand-new signup goes **straight to `/onboarding`** (no `/dashboard` flicker).
-- [ ] Onboarding can be skipped from any step.
-- [ ] Cannot revisit `/onboarding` once onboarded (redirects to `/dashboard`).
-- [ ] Sidebar shows `Member · <tier>`.
-- [ ] No **Studio** link, no **Admin** link.
-- [ ] `/admin` → 403 / redirect.
-- [ ] `/creator` → 403 / redirect.
-- [ ] Premium-tier episodes display a paywall hint; free episodes play.
-- [ ] After applying as a creator, the apply CTA on dashboard hides; pending state shows in Profile.
+**You do:** open `http://127.0.0.1:3000/` in a browser.
+**You should see:** a calm page with the words **"A calm room for your inner life."** in the middle. Two buttons: **Begin gently** and **See what's inside**. In the top-right corner there's a tiny **moon** (or sun) icon.
+**Result:** ✓ / ✗ _________
 
-### 3.3 Creator
-- [ ] All Member behavior plus:
-- [ ] Sidebar shows **Studio** link.
-- [ ] `/creator` renders studio (series list, analytics, application status).
-- [ ] Can create series and episodes.
-- [ ] `/admin` still 403.
-- [ ] Profile **Your role** card shows creator blurb + Open Studio link.
+### Test 2 — Scroll-down feels gentle
 
-### 3.4 Admin / Superadmin
-- [ ] All Creator behavior plus:
-- [ ] Sidebar shows **Admin** link.
-- [ ] `/admin` renders platform stats (users / series / episodes / reflections / conversations / posts), creator-application list with Approve/Deny, users table.
-- [ ] Approve flips the user's role to `creator` and stamps `decided_by` / `decided_at`.
-- [ ] Deny stamps decision but does not change role; user can re-apply.
-- [ ] Superadmin can do everything admin can; admin cannot demote a superadmin (back-end guard).
+**You do:** scroll the page slowly.
+**You should see:** more cards quietly fade in as you scroll. Nothing pops or shouts at you.
+**Result:** ✓ / ✗ _________
 
 ---
 
-## 4. Cross-cutting checks
+## B. Sign up & log in
 
-- **Cookies**: session cookie is `glimmora_session`, httpOnly. JS cannot read it. `secure` flag is **off** in dev (so http://127.0.0.1 works) and **on** in production builds.
-- **API envelope**: every backend response is `{ success, data, error }`. Frontend `backend()` / `backendData()` unwraps.
-- **CamelCase boundary**: backend serializes snake_case → camelCase via `pydantic.alias_generators.to_camel`. UI consumes camelCase only.
-- **Crisis regex** (`backend/app/ai/companion.py:58`): deliberately conservative. If a tester reports "didn't flag X", verify against the regex before changing — false positives are worse than false negatives here.
-- **Onboarding flag**: stored in `User.preferences.onboarded`. Set true when the user finishes (including Skip). The `(app)` layout redirects un-onboarded users.
+### Test 3 — You can sign up
 
----
+**You do:** click **Begin gently**. Fill the form:
+- Name: `Ren`
+- Username: `ren_test`
+- Email: leave empty
+- Password: `hello`
 
-## 5. Regressions to watch
+Click **Create account**.
 
-1. **Blank flash after signup** — historically caused by chained `redirect()` across server actions + layouts. Fixed by having `signupAction` redirect directly to `/onboarding` (`apps/web/src/lib/auth-actions.ts:51`). If this regresses, you'll see an empty body for ~1s after submit.
-2. **Pydantic email validation rejecting `.local` TLD** — `UserPublic.email` and `AdminUserRow.email` are plain `str`, not `EmailStr`. Don't "fix" them back.
-3. **SQLAlchemy `greenlet_spawn` in chat** — never assign `conv.messages = []`. Pass an empty list explicitly to the AI helper.
-4. **Old uvicorn holding port 8000** — kill the previous process before restarting.
+**You should see:** the app jumps straight to a welcome page (the four hello questions). **It should NOT show a blank screen first.** On the left, the sidebar shows `Ren · member`.
+**Result:** ✓ / ✗ _________
 
----
+### Test 4 — You cannot make two accounts with the same username
 
-## 5a. v0.3.0 additions — Account & data flows
+**You do:** open `/signup` in a new tab. Try to make another account with username `ren_test`.
+**You should see:** an error message saying the username is already in use.
+**Result:** ✓ / ✗ _________
 
-### 5a.1 Change password
-**Do:** open **Profile → Security & data → Change password**. Enter current password + a new one. Click **Update password**.
-**Expected:** "Password updated." inline. The next login must use the new password.
+### Test 5 — Log out
 
-### 5a.2 Forgot password (dev mode)
-**Do:** open `/login` → **Forgot password?** → enter your email or username → **Send reset link**.
-**Expected:** the response page shows the dev-mode reset token (because SMTP is not configured in dev). Click **Continue to reset →**.
-**Then:** on `/reset-password`, the token is pre-filled. Enter a new password → **Set new password** → redirected to `/login`. Old password should be rejected; new password should sign you in.
+**You do:** in the top-right of any page inside the app, click **Sign out**.
+**You should see:** the app sends you back to the landing page. If you try to type `/dashboard` in the URL, the app sends you to the login page instead.
+**Result:** ✓ / ✗ _________
 
-### 5a.3 Export my data
-**Do:** **Profile → Security & data → Download my data**.
-**Expected:** a `glimmora-<username>-export.json` file downloads — contains user, reflections, conversations (with messages), watch progress, and circle posts.
+### Test 6 — Log back in
 
-### 5a.4 Delete account
-**Do:** **Profile → Security & data → Delete account**. Type your username exactly to confirm → **Permanently delete**.
-**Expected:** the account and all owned rows are deleted (DB cascade); you are signed out and redirected to `/`. Superadmin accounts cannot self-delete.
+**You do:** click **Sign in** in the top-right of the landing page. Type `ren_test` and `hello`. Click **Sign in**.
+**You should see:** you land on the dashboard.
+**Result:** ✓ / ✗ _________
 
----
+### Test 7 — Wrong password fails
 
-## 5b. v0.3.0 additions — Watch experience
-
-### 5b.1 Continue watching
-**Do:** open an episode, let it play past 10s, navigate away. Return to `/watch`.
-**Expected:** at the top of `/watch`, a **Continue watching** row appears with the episode card, a progress bar showing the % watched, and "resume" copy. Clicking jumps back into the episode at the saved position.
-
-### 5b.2 Resume from saved position
-**Do:** open the episode again from the Continue-watching card.
-**Expected:** the video starts within ~1s of the prior position (not from 0). Episodes that already played past 95% are marked completed and won't show on the continue row.
+**You do:** sign out. Try to log in with username `ren_test` and password `wrong`.
+**You should see:** a red message saying invalid credentials. You stay on the login page.
+**Result:** ✓ / ✗ _________
 
 ---
 
-## 5c. v0.3.0 additions — Creator: edit / unpublish / delete
+## C. The four hello questions
 
-### 5c.1 Edit a series
-**Do:** **Studio → series → Edit**. Update tagline, tier, tags. Click **Save changes**.
-**Expected:** the series detail under `/watch/<slug>` reflects the new values immediately.
+> Use a fresh account for these (sign out, sign up as someone new like `kid_test`).
 
-### 5c.2 Unpublish / publish
-**Do:** in the Edit Series page, click **Unpublish**.
-**Expected:** the series stops appearing on the public `/watch` library and on series listings. Clicking **Publish** restores visibility. Creator can only do this on their own series; admin can do it on any.
+### Test 8 — Walking through all four steps
 
-### 5c.3 Edit an episode
-**Do:** **Studio → series → Edit → Episodes → ✎ on an episode**. Change title, video URL, reflection prompt, tier. Save.
-**Expected:** the episode page picks up the new values on next load.
+**You do:**
+1. On step 1, type a name and one sentence about why you're here. Click **Continue**.
+2. On step 2, type one sentence about something you want to shift. Click **Continue**.
+3. On step 3, click two squares (like *Stillness* and *Sleep*). Click **Continue**.
+4. On step 4, you see a quote of what you wrote. Click **Begin**.
 
-### 5c.4 Delete an episode / series
-**Do:** click 🗑 next to an episode (or "Delete series" on the editor). Confirm.
-**Expected:** the row disappears; on the public side, watch URLs return 404. Deleting a series cascades to its episodes and watch progress rows.
+**You should see:** you land on the dashboard. Your one-sentence "intention" is quoted on the dashboard.
+**Result:** ✓ / ✗ _________
 
----
+### Test 9 — Skip works
 
-## 5d. v0.3.0 additions — Admin: moderation, search, audit
+**You do:** sign up as another new person. On the welcome page, immediately click **"Skip for now →"** in the top right.
+**You should see:** you land on the dashboard. No questions asked again next time.
+**Result:** ✓ / ✗ _________
 
-### 5d.1 User search
-**Do:** **Admin → Users**. Type into the search box (matches username, email, full name). Optionally filter by role.
-**Expected:** the table filters live (≈200 ms debounce). Inline role select changes the user's role; **Disable / Enable** toggles the active flag.
+### Test 10 — Cannot revisit onboarding
 
-### 5d.2 Content moderation
-**Do:** **Admin → Content moderation**. Click **Unpublish** on a misbehaving series, or 🗑 to delete it outright.
-**Expected:** the series disappears (or stops appearing publicly). The audit log records `series_admin_edit` or `series_admin_delete`.
-
-### 5d.3 Audit log
-**Do:** **Admin → Audit log**.
-**Expected:** a table of recent moderator actions and security events (password changes, self-deletes, admin overrides), most recent first.
+**You do:** after Test 8 or 9, try typing `/onboarding` in the URL bar.
+**You should see:** the app sends you back to the dashboard. (You only see those four questions once.)
+**Result:** ✓ / ✗ _________
 
 ---
 
-## 5e. v0.3.0 additions — Reflection: edit, search, filter
+## D. Dashboard (three small steps)
 
-### 5e.1 Edit a reflection
-**Do:** **Reflect**. Hover an entry → ✎. Edit content / mood / intensity → ✓ to save.
-**Expected:** the entry updates in place. AI insight is regenerated if the content changed (when `OPENAI_API_KEY` is set).
+### Test 11 — Dashboard shows three steps
 
-### 5e.2 Search and filter
-**Do:** type into the search box at the top of the journal column; pick a mood from the dropdown.
-**Expected:** entries filter live; the URL updates (`?q=…&mood=…`), so the view is bookmarkable.
+**You do:** open `/dashboard`.
+**You should see:** a greeting, then a card with **three small steps**: Arrive, Notice, Reflect. All three start as "not done" (no gold check).
+**Result:** ✓ / ✗ _________
 
-### 5e.3 Range toggle on the trend chart
-**Do:** click **7d / 30d / 90d / 1y** above the trend chart.
-**Expected:** the band re-renders for the selected window; the URL parameter `range` reflects the choice.
+### Test 12 — Step 1 ticks after a Companion message
 
----
+**You do:** click **Open companion** on the Arrive step. Send any message. Then click **Today** in the sidebar.
+**You should see:** Step 1 — Arrive shows a gold check now.
+**Result:** ✓ / ✗ _________
 
-## 5f. v0.3.0 additions — Companion: history & search
+### Test 13 — Step 3 ticks after a reflection
 
-### 5f.1 Conversation drawer
-**Do:** open **Companion**. On desktop, a left drawer lists prior conversations; on mobile, tap the chat icon at the bottom-left.
-**Expected:** drawer shows up to 50 conversations, most recent first, each with title and last-message preview. Active conversation is highlighted.
-
-### 5f.2 Search conversations
-**Do:** type in the drawer search box.
-**Expected:** matches in either the conversation title **or** any message body filter the list live.
-
-### 5f.3 Resume a conversation
-**Do:** click a conversation in the drawer.
-**Expected:** the chat loads with all prior messages; replies continue in the same conversation (URL: `/companion?c=<id>`).
-
-### 5f.4 Premium long memory
-**Do:** while on `premium` tier, send a message after >12 prior turns.
-**Expected:** the LLM context includes the last 32 turns (vs 8 for free) — visible as the companion referencing earlier details.
+**You do:** click **Reflect** in the sidebar. Click **New reflection**. Type "Hello, brain." Click **Save reflection**. Go back to the dashboard.
+**You should see:** Step 3 — Reflect shows a gold check.
+**Result:** ✓ / ✗ _________
 
 ---
 
-## 6. Quick smoke (60 sec)
+## E. Companion
 
-```bash
-# Backend health
-curl -s http://127.0.0.1:8000/health
-# Frontend
-curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:3000/
-# Signup + me
-curl -s -c /tmp/c.jar -X POST http://127.0.0.1:8000/v1/auth/signup \
-  -H 'content-type: application/json' \
-  -d '{"username":"smoke","password":"hi"}' | jq .success
-```
+### Test 14 — Companion page loads empty
 
-All three should return success / 200.
+**You do:** click **Companion** in the sidebar (in a brand-new account that hasn't used it).
+**You should see:** the words **"I'm here."** in the middle, with four soft starter sentences as buttons below. A text box at the bottom to type in.
+**Result:** ✓ / ✗ _________
+
+### Test 15 — Click a starter sentence
+
+**You do:** click any of the four starters.
+**You should see:** your message appears in a peach bubble on the right. Three dots animate (the Companion is thinking). Within a few seconds, a reply appears in a soft cream bubble on the left.
+**Result:** ✓ / ✗ _________
+
+### Test 16 — Type your own message
+
+**You do:** in the text box, type "I feel a little tired today." Press Enter.
+**You should see:** your message appears, then a kind reply. Often a small box also appears with **"A question to sit with"** and a question.
+**Result:** ✓ / ✗ _________
+
+### Test 17 — The safety card appears for serious words
+
+**You do:** type a message that has crisis words, like "I want to die tonight." Press Enter.
+
+> ⚠️ This is **just a test**. We're checking that the safety net works.
+
+**You should see:** a rose-pink card appears with phone numbers for India, US/Canada, UK, and a global website. The Companion still replies kindly.
+**Result:** ✓ / ✗ _________
+
+### Test 18 — Safety card does NOT appear for soft sad words
+
+**You do:** in a new conversation or new account, type "I feel a bit lonely tonight." Press Enter.
+**You should see:** the Companion replies kindly. **No pink safety card appears.** (That's on purpose — the safety net is for very direct words only.)
+**Result:** ✓ / ✗ _________
+
+---
+
+## F. Stories
+
+### Test 19 — Library shows series
+
+**You do:** click **Stories** in the sidebar.
+**You should see:** a page called **"The library."** with three groups: *emotional intelligence*, *growth*, *meditation*. Each has at least one card with a cover picture.
+**Result:** ✓ / ✗ _________
+
+### Test 20 — Open a series
+
+**You do:** click any series card (try **Still Mind**).
+**You should see:** the series page with a cover, a description, and a list of episodes with their durations.
+**Result:** ✓ / ✗ _________
+
+### Test 21 — Play an episode
+
+**You do:** click any episode. Click the play button on the video.
+**You should see:** the video starts playing. Below the video, a quiet box with **"A question for after"** and a question.
+**Result:** ✓ / ✗ _________
+
+### Test 22 — Pause + leave + come back resumes
+
+**You do:** let the video play for 30 seconds. Pause it. Click **Stories** in the sidebar to leave. Then click the same episode again.
+**You should see:** the video starts playing **near where you stopped** — not from the very beginning.
+**Result:** ✓ / ✗ _________
+
+### Test 23 — Continue watching row appears
+
+**You do:** after Test 22, click **Stories** in the sidebar.
+**You should see:** at the very top of the page, a row called **"Continue watching"** with your episode in it. There's a small gold bar showing how much you've watched and a "% watched · resume" line.
+**Result:** ✓ / ✗ _________
+
+### Test 24 — Write a reflection from an episode
+
+**You do:** open an episode. Below the video, click **Write a reflection**. Type a sentence. Click **Save reflection**.
+**You should see:** a green "Saved." line with a link to the journal. If you click **Reflect** in the sidebar, the new entry is there.
+**Result:** ✓ / ✗ _________
+
+---
+
+## G. Reflect (journal + map)
+
+### Test 25 — Empty journal looks gentle
+
+**You do:** sign up as a brand-new person, skip onboarding, and click **Reflect**.
+**You should see:** the stats all say zero or "—". The journal area says "Nothing yet. The first sentence is the hardest."
+**Result:** ✓ / ✗ _________
+
+### Test 26 — Write a reflection
+
+**You do:** click **New reflection** in the top right. Type one sentence. Tap the mood **hopeful**. Drag intensity to 6. Click **Save reflection**.
+**You should see:**
+- The page jumps to `/reflect`.
+- Reflections: 1.
+- Day streak: 1.
+- Most-present: hopeful.
+- Avg. intensity: 6.0.
+- Today's chip in the **Last 30 days** chart is colored.
+- Your entry shows up in the journal.
+
+**Result:** ✓ / ✗ _________
+
+### Test 27 — Second reflection adds to stats
+
+**You do:** write another reflection with mood **anxious** and intensity 8.
+**You should see:** Reflections: 2. Avg. intensity: 7.0. The most-present feeling might stay "hopeful" or change to "anxious" (whichever you've used more).
+**Result:** ✓ / ✗ _________
+
+### Test 28 — Milestones show up
+
+**You do:** after writing your first reflection, look at the **Milestones** card on the right.
+**You should see:** at least the milestone "First reflection logged" with a glimmer ✦ next to it.
+**Result:** ✓ / ✗ _________
+
+### Test 29 — Empty days are faint
+
+**You do:** look at the **Last 30 days** chart.
+**You should see:** today (the right-most stub) is colored — the days before it (when you didn't write) are pale, almost invisible. That's correct.
+**Result:** ✓ / ✗ _________
+
+---
+
+## H. Profile
+
+### Test 30 — Profile loads
+
+**You do:** click **Profile** in the sidebar.
+**You should see:** your name as a big serif heading. Your email under it. A card called **You** with editable name and bio.
+**Result:** ✓ / ✗ _________
+
+### Test 31 — Edit name
+
+**You do:** in the **You** card, change your name to something new (like "Tiger"). Click **Save**.
+**You should see:** the name updates at the top of the Profile page. The sidebar also updates.
+**Result:** ✓ / ✗ _________
+
+### Test 32 — Edit bio
+
+**You do:** type something into the bio box. Click **Save**.
+**You should see:** a quiet confirmation that it saved (no error message).
+**Result:** ✓ / ✗ _________
+
+---
+
+## I. Dark / light mode
+
+### Test 33 — Theme toggle
+
+**You do:** click the moon/sun in the top right of any page. Then refresh the page (F5).
+**You should see:** the colors flip immediately. After refresh, the new color stays — the app **remembers** your choice. No flash of the wrong color.
+**Result:** ✓ / ✗ _________
+
+---
+
+## J. The little things
+
+### Test 34 — Protected pages need a login
+
+**You do:** sign out. Try opening `/dashboard` directly.
+**You should see:** the app sends you to `/login?next=/dashboard`. After signing in, you land on `/dashboard`.
+**Result:** ✓ / ✗ _________
+
+### Test 35 — Mobile sidebar at the bottom
+
+**You do:** open the app on your phone, or shrink your browser window narrow.
+**You should see:** the side sidebar disappears. Five icons appear at the **bottom** of the screen — that's the mobile menu.
+**Result:** ✓ / ✗ _________
+
+### Test 36 — Theme + signup pages
+
+**You do:** click the moon/sun on the `/login` page and on the `/signup` page.
+**You should see:** the theme toggle works there too.
+**Result:** ✓ / ✗ _________
+
+---
+
+## Done? Here's the quick scorecard
+
+Count your ✓s and ✗s.
+
+| Section | Tests | ✓ | ✗ |
+|---|---|---|---|
+| A — Landing page | 2 | ___ | ___ |
+| B — Sign up & log in | 5 | ___ | ___ |
+| C — Onboarding | 3 | ___ | ___ |
+| D — Dashboard | 3 | ___ | ___ |
+| E — Companion | 5 | ___ | ___ |
+| F — Stories | 6 | ___ | ___ |
+| G — Reflect | 5 | ___ | ___ |
+| H — Profile | 3 | ___ | ___ |
+| I — Dark/light | 1 | ___ | ___ |
+| J — Little things | 3 | ___ | ___ |
+| **Total** | **36** | ___ | ___ |
+
+**All ✓:** The app is healthy. 🎉
+**Some ✗:** Write down which test number(s) and what you saw. Give that list to your grown-up.
+
+---
+
+## If you get stuck — common gotchas
+
+| What happened | What it probably means | Fix |
+|---|---|---|
+| Blank page after signing up | The dev server is caching old code. | Stop it and run `pnpm dev` again. |
+| "JWT_SECRET is not configured" | A setting file is missing. | Ask your grown-up to set up `.env.local`. |
+| Login works but the dashboard is empty | The session got dropped. | Use `http://127.0.0.1:3000` (not `localhost`, not `https`). |
+| Companion never replies | The OpenAI key isn't set. | Either set it, or wait — the simple fallback replies should still appear. |
+| Video shows a black box | The internet is blocking the test stream. | Try another episode. |
+| Backend won't start (port busy) | An old server is still running. | Restart your computer if you can't find it. |
+
+---
+
+## When you're done testing
+
+- If everything worked, **tell your grown-up**: "All 36 tests passed."
+- If something didn't work, write down:
+  - The test number (like "Test 22").
+  - What you saw (like "the video started from zero").
+  - What you expected to see (like "it should resume").
+
+Good detective work! 🕵️

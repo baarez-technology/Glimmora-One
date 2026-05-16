@@ -1,408 +1,211 @@
-# Glimmora ONE — User Manual
+# Glimmora ONE — How to use the app
 
-> **This is a living document.** Whenever a feature is added, removed, or changed, update the matching section *in the same commit* as the code change. If you remove a feature, remove its section — don't leave stale instructions behind. The "Changelog" at the bottom is the diary; everything above it should describe the app *as it is right now*.
+> A friendly guide for anyone who can read. If you're 12 and you've never seen this app before, this guide is for you.
 
+**App version:** 0.4.0-mvp (main branch)
 **Last updated:** 2026-05-16
-**Applies to app version:** 0.4.0-mvp (main branch)
-
-> **Note (branches):** `main` is intentionally a slim MVP — only the workflows essential to the daily ritual loop (auth, onboarding, dashboard, companion, stories, reflect, profile). The full v0.3.0 feature set (creator studio, admin panel, circles, billing scaffolding, password reset, data export, account deletion, conversation search, reflection edit) lives on the `progression` branch.
-
-For the *engineering* design behind the user-facing flows described here (roles matrix, state machines, where each flow lives in code), see [`docs/PRODUCT_FLOWS.md`](./PRODUCT_FLOWS.md).
-
-For a step-by-step QA walkthrough with screenshots, see [`docs/TESTING_GUIDE.md`](./TESTING_GUIDE.md).
 
 ---
 
 ## Table of contents
 
-1. [What Glimmora ONE is](#1-what-glimmora-one-is)
-2. [Accounts & access](#2-accounts--access)
-3. [Onboarding](#3-onboarding)
-4. [The daily ritual — "Today's three small steps"](#4-the-daily-ritual--todays-three-small-steps)
-5. [The AI companion](#5-the-ai-companion)
-6. [Stories — the OTT library](#6-stories--the-ott-library)
-7. [Reflection journal & digital twin](#7-reflection-journal--digital-twin)
-8. [Paths — content tuned to your focus](#8-paths--content-tuned-to-your-focus)
-9. [Circles — the community space](#9-circles--the-community-space)
-10. [Profile & membership](#10-profile--membership)
-11. [Becoming a creator](#11-becoming-a-creator)
-12. [Creator studio](#12-creator-studio)
-13. [Admin tools](#13-admin-tools)
-14. [Troubleshooting](#14-troubleshooting)
-15. [Safety & boundaries](#15-safety--boundaries)
-16. [Changelog](#16-changelog)
-17. [How to keep this manual current](#17-how-to-keep-this-manual-current)
+1. [What this app is, in one breath](#1-what-this-app-is-in-one-breath)
+2. [Making your account](#2-making-your-account)
+3. [The four hello questions (onboarding)](#3-the-four-hello-questions-onboarding)
+4. [Today's three small steps](#4-todays-three-small-steps)
+5. [Talking to the Companion](#5-talking-to-the-companion)
+6. [Watching a Story](#6-watching-a-story)
+7. [Writing in your journal (Reflect)](#7-writing-in-your-journal-reflect)
+8. [Your inner-weather map](#8-your-inner-weather-map)
+9. [Profile — your tiny page about you](#9-profile--your-tiny-page-about-you)
+10. [Dark mode and light mode](#10-dark-mode-and-light-mode)
+11. [If something looks weird](#11-if-something-looks-weird)
+12. [The safety rule](#12-the-safety-rule)
 
 ---
 
-## 1. What Glimmora ONE is
+## 1. What this app is, in one breath
 
-Glimmora ONE is a calm space for inner work. It combines:
+Glimmora ONE is a **calm room** on your phone or computer. There are four small things inside:
 
-- **A guided four-step onboarding** that asks just enough to make the app feel personal.
-- **A daily ritual** — three small, optional steps that anchor the practice.
-- **An AI companion** that listens, classifies emotional tone, and offers a single question to sit with.
-- **A library of short, guided video journeys** ("Stories"), each ending with a reflection prompt.
-- **A personal reflection journal** that quietly becomes a map of your inner weather — your **Digital Twin**.
-- **Paths** — collections of stories tuned to the focus areas you picked at onboarding.
-- **Community circles** for anonymous, slow conversation with others on the same path.
-- **A creator workflow** — anyone can apply to publish journeys; admins approve.
+- **A Companion** — a kind AI you can talk to. It listens.
+- **Stories** — short, beautiful videos that make your brain feel quieter.
+- **A journal** — a little place to write a sentence about how you feel.
+- **A daily ritual** — three tiny things to do each day.
 
-It is **not** a therapist, a crisis service, or a coach. See [Safety & boundaries](#15-safety--boundaries).
+That's it. No likes. No followers. No notifications buzzing at you. Nobody can see your stuff but you.
 
 ---
 
-## 2. Accounts & access
+## 2. Making your account
 
-### Creating an account
-1. Open the landing page and click **Begin**, or go to `/signup`.
-2. Provide a **username** and a **password** (both required, 1+ char). Email and display name are **optional**.
-3. You'll be signed in immediately and routed to onboarding.
+This is the first thing you'll do.
 
-If you don't provide an email, a placeholder address (`<username>@noemail.local`) is stored internally so the system has something to key on — you'll still log in by username + password and we won't email you.
+**You do:**
+1. Open the app at `http://127.0.0.1:3000` (or wherever your grown-up tells you).
+2. Click the big button that says **Begin gently**.
+3. On the next page, type:
+   - A **name** — anything! "Ren" or "Tiger" or your real name.
+   - A **username** — something just you remember. One letter is fine while testing.
+   - A **password** — anything. Even one letter. (Use a real one when this isn't a test.)
+   - **Email** — you can skip this. Leave it empty.
+4. Click **Create account**.
 
-### Signing in / out
-- `/login` accepts either username or email + password. Sessions live in a secure httpOnly cookie (`glimmora_session`) for 24 hours by default.
-- Sign out from the top-right of the app shell.
+**You should see:**
+The app takes you straight to a welcome page. On the left there's a little stripe with your name and the word **member** under it. That's your sidebar — it has all the rooms inside the app.
 
-### Forgot your password
-1. On the login page, click **Forgot password?**.
-2. Enter your email or username and submit. We always respond the same way — so an attacker can't tell whether an account exists.
-3. If we found a match we'll send a reset link valid for one hour. In dev environments without SMTP configured, the page shows the reset token in-line so you can finish the flow.
-4. On `/reset-password`, enter the token (pre-filled from the link) and your new password. You'll be redirected to sign in.
+---
 
-### Change your password
-While signed in, open **Profile → Security & data → Change password**. Enter your current password and the new one. The change is immediate and audit-logged.
+## 3. The four hello questions (onboarding)
 
-### Export your data
-**Profile → Security & data → Download my data** produces a single JSON file containing your user record, every reflection, every conversation (with messages), watch progress, and circle posts.
+The first time you log in, the app asks you four small questions. **You can skip any of them** by clicking the tiny "Skip for now →" in the top right.
 
-### Delete your account
-**Profile → Security & data → Delete account**. You'll need to retype your username to confirm. The deletion is immediate and cascades to your reflections, conversations, watch progress, posts, and pending creator application. Superadmin accounts cannot self-delete (use another admin for that).
+| # | Question | What to do |
+|---|---|---|
+| 1 | "What should we call you?" | Type a name. Anything. |
+| 2 | "In one sentence — what do you hope shifts, even a little?" | Just type *one* sentence. Like: "I'd like to feel less rushed in the mornings." Don't think too hard. |
+| 3 | "Pick up to four areas that feel alive for you." | Tap the squares: *Stillness, Becoming, Feeling, Grief, Joy, Relationships, Work, Sleep, Creativity*. Pick up to four. None is also OK. |
+| 4 | "Ready when you are." | Just click **Begin**. |
 
-### Default development account
-On first boot a superadmin is created automatically:
-- **Username:** `superadmin`
-- **Password:** value of `BOOTSTRAP_SUPERADMIN_PASSWORD` (defaults to `ChangeMe!2026`)
+**You should see:**
+The app drops you on the **Dashboard** (the home page). The Companion has already said hello to you in a new chat — you'll see it when you click Companion later.
 
-### Roles
-There are four roles, each additive:
+---
 
-| Role | What it grants |
+## 4. Today's three small steps
+
+Every day when you open the app, the Dashboard shows three tiny things you can do. They are **never required** — nobody is going to be mad if you skip a day.
+
+1. **Arrive** — say hi to the Companion (any message at all).
+2. **Notice** — watch one short Story.
+3. **Reflect** — write one sentence in your journal.
+
+Doing all three turns the **streak** number up by one. Missing a day is fine. Really. Nobody is keeping score.
+
+---
+
+## 5. Talking to the Companion
+
+Click **Companion** on the left.
+
+**You do:**
+- The first time, four soft "starter sentences" appear like buttons. Tap any one — it sends it as your first message. Or, type your own in the box at the bottom and press Enter.
+
+**You should see:**
+- Your message appears on the right in a peach bubble.
+- After a moment (1–3 seconds), the Companion writes back on the left.
+- Sometimes a small box appears under the reply that says **"A question to sit with"** — that's a gentle question you can answer in the journal if you want.
+
+**Important to know:**
+- The Companion is **not a therapist** and **not a real person**. It's an AI built to listen kindly.
+- If you write something serious like "I want to die," a rose-pink box pops up with phone numbers for real people who can help. **Please call them if you feel that way.**
+
+---
+
+## 6. Watching a Story
+
+Click **Stories** on the left.
+
+**You do:**
+1. You'll see groups of short series: *Still Mind*, *Becoming without pressure*, *Feeling the shape of feeling*.
+2. Click the picture of any series.
+3. Click an episode in the list. It will play.
+4. Watch it. Or watch part of it. Or pause and come back later — **the app remembers where you stopped.**
+
+**You should see:**
+- A video player.
+- Below the video, **"A question for after"** — one small question. You can write a reflection on it right there.
+- At the bottom, a **Next** card that takes you to the next episode in the series.
+- If you leave and come back to **Stories**, there will be a row at the top called **Continue watching** with a little gold bar showing how far you got. Click it to keep going.
+
+---
+
+## 7. Writing in your journal (Reflect)
+
+Click **Reflect** on the left.
+
+**You do:**
+1. Click **New reflection** in the top right.
+2. Write **one sentence**. That's enough. "I feel tired." "Good morning, brain." Anything.
+3. Optionally, tap a mood (a feeling word like "joyful" or "anxious").
+4. Optionally, drag the **intensity slider** between 1 and 10. (How big does the feeling feel?)
+5. Click **Save reflection**.
+
+**You should see:**
+- The page jumps back to your journal.
+- The numbers at the top change — Reflections goes up by one, the streak ticks if today was your first.
+- Your sentence appears in the list with a little date.
+- If the AI is turned on, there's a tiny ✦ line under your sentence — the Companion noticing something about what you wrote.
+
+You can write as many reflections in a day as you want. Or none.
+
+---
+
+## 8. Your inner-weather map
+
+Also on the **Reflect** page, below your journal.
+
+- **Reflections** — how many times you've written. Ever.
+- **Day streak** — days in a row you wrote at least one.
+- **Most-present** — the mood you've felt the most.
+- **Avg. intensity** — how strong your feelings have been, on average (1–10).
+
+There's a **Last 30 days** chart underneath. Each bar is one day. Taller bar = bigger feelings. The color tells you what mood. Empty days are faint stubs — and that's totally fine.
+
+**Milestones** appear on the right when you reach little markers like "first reflection logged" or "a week of noticing."
+
+---
+
+## 9. Profile — your tiny page about you
+
+Click **Profile** on the left.
+
+You can:
+- Change your **name**.
+- Add a **short bio** about yourself if you want.
+- Change your **avatar URL** (link to a profile picture).
+
+Click **Save** when you're done.
+
+---
+
+## 10. Dark mode and light mode
+
+Look in the top-right of any page. There's a small **moon** (or **sun**) button. Click it.
+
+The whole app switches between calm dark colors and soft light ones. The app remembers your choice for next time.
+
+---
+
+## 11. If something looks weird
+
+| What you see | What to do |
 |---|---|
-| **Member** (default) | Use the app, write reflections, post in circles, apply to be a creator. |
-| **Creator** | Publish series and episodes; see analytics for your own content. |
-| **Admin** | Approve creator applications, moderate flagged posts, change other users' roles, view platform stats. |
-| **Superadmin** | Everything; the only role that can grant *another* superadmin. |
+| White screen that won't load | Refresh the page (press F5). |
+| "Companion is resting" message | Wait 5 seconds, send again. |
+| You can't log in | Check the username and password — they care about CAPITAL letters. |
+| The video is just a black box | Try another episode. Some networks block certain videos. |
+| You're stuck on the welcome questions | Click "Skip for now →" in the top-right corner. |
 
-### Tiers
-- **Free** — full companion (short memory), all free Stories, journal, three circles.
-- **Premium** — long companion memory, all premium content, all circles, digital twin insights, creator tools.
-- Switch from **Profile → Membership** (in dev, the upgrade button flips you instantly; real billing webhooks plug in later).
-
-Role is *what you're trusted to do*. Tier is *what you've paid for*. Admins bypass tier gating for content.
+If nothing works, tell your grown-up — they can restart the app.
 
 ---
 
-## 3. Onboarding
+## 12. The safety rule
 
-URL: `/onboarding`
+**Glimmora is not a doctor or a therapist.** It is a calm space to think and feel.
 
-After signup (or any time you sign in before completing it), you'll see a four-step quiet sequence. Each step is one card; **Skip for now** is always present in the corner.
+If you are in real trouble — if you want to hurt yourself, or someone is hurting you — **please tell a real person you trust.** A parent. A teacher. A school counselor. Or call one of these numbers any time, day or night:
 
-| Step | What we ask | Why |
-|---|---|---|
-| 1 — Welcome | Your name (or any handle you like) and a few words on what brought you here. | Anchors the companion in a real person. |
-| 2 — Intention | "In one sentence — what do you hope shifts, even a little?" | Steers companion tone and quietly appears on your dashboard. |
-| 3 — Focus | Pick up to four areas: *stillness, becoming, emotion, grief, joy, relationships, work, sleep, creativity*. | Drives **Paths** recommendations on the dashboard. |
-| 4 — Begin | A soft confirmation; your companion writes its first hello. | Sets the tone — present, gentle, not pushy. |
+- **India:** iCall — 9152987821  ·  Vandrevala Foundation — 1860-2662-345
+- **US / Canada:** 988 (call or text)
+- **UK / ROI:** Samaritans — 116 123
+- **Anywhere else:** [findahelpline.com](https://findahelpline.com)
 
-After step 4 you land on `/dashboard`. The companion now has a first message waiting in **A first hello** (in your conversation list).
+The Companion will show you these numbers too if you write about wanting to hurt yourself. **Please use them.**
 
-You can skip any step. Skipping the whole flow marks you as onboarded with empty preferences; the app still works, but the dashboard's personalization (intention quote, Paths) will be sparse.
+You're not alone. Even at 3am.
 
 ---
 
-## 4. The daily ritual — "Today's three small steps"
-
-URL: `/dashboard`
-
-The dashboard's heartbeat. Three small, optional steps each day:
-
-| Step | What counts as done | Where it sends you |
-|---|---|---|
-| 1 — **Arrive** | Any message you send to the companion today. | `/companion` |
-| 2 — **Notice** | Watching at least ~60 seconds of any episode today. | `/watch` |
-| 3 — **Reflect** | Saving any journal entry today. | `/reflect/new` |
-
-Completing a step turns it gold and shows a check. Completing all three increments your **streak** (consecutive days ending today). The card refreshes daily at midnight UTC.
-
-There are **no push notifications or nags** — by design. The steps show up only when you open the app.
-
-The dashboard also shows: a greeting tuned to time of day, your intention (if you set one), the featured journey, your **Paths** (next section), continue-watching, and a quiet inner-weather summary.
-
----
-
-## 5. The AI companion
-
-URL: `/companion`
-
-### Starting a conversation
-- The first time, four soft starter prompts appear — click one or type your own.
-- After your first message a conversation is created automatically and appears in your conversation list.
-
-### How it responds
-- The companion classifies the emotional tone of your message (one of: *sad, anxious, angry, joyful, lonely, confused, hopeful, neutral*). The detected emotion appears as a small tag below your message.
-- The reply is short (2-5 sentences), warm, and present-tense. It never diagnoses or lectures.
-- After replying, the companion may offer **one question to sit with**. Click "Write a reflection on this →" to start a journal entry pre-filled with that prompt.
-
-### When `OPENAI_API_KEY` is set
-- The companion uses GPT-4o-mini (configurable via `OPENAI_MODEL`) and can adapt across the conversation.
-- It can recommend specific episodes from the catalog when relevant (based on keyword themes it derives from your message).
-
-### When `OPENAI_API_KEY` is **not** set
-- The companion gracefully falls back to a deterministic, rule-based responder. Replies are softer and shorter, the emotion tag uses a keyword lexicon, and episode recommendations are skipped. Your UX is never broken — but it's clearly less responsive.
-
-### Crisis safety
-- If your message explicitly mentions suicide, self-harm, or intent to die, a soft **"Stay with someone tonight"** card appears alongside the assistant reply. It lists crisis lines (India, US/Canada, UK/ROI, and a global directory) and reminds you it's okay to keep writing. It does not call services, does not change app state, and does not interrupt the conversation.
-
-### Privacy
-- Conversations are stored under your account. Only you (and platform admins, if escalated) can read them.
-- Deleting a conversation removes it and all its messages from the database immediately.
-
-### Conversation history & search
-A left-hand drawer on the companion page lists every prior conversation (up to 50, most recent first). Each row shows the title and a one-line preview. Click any row to resume that conversation — the URL becomes `/companion?c=<id>` so you can bookmark it. A search box above the list filters conversations by title **or** by message text. On mobile, tap the chat icon at the bottom-left of the screen to open the drawer.
-
-### Memory window
-The companion includes recent messages from the same conversation as context for each reply. **Free** accounts get an 8-turn rolling window. **Premium** accounts get 32 turns — so the companion can pick up details from earlier in a long sitting.
-
----
-
-## 6. Stories — the OTT library
-
-URL: `/watch`
-
-### Browsing
-- Series are grouped by **category** (meditation, growth, emotional-intelligence, etc.).
-- Premium series carry a small gold "premium" badge in the top-right.
-
-### Series detail (`/watch/<series-slug>`)
-- Cover hero, full description, tag pills, and the ordered episode list. Click **Begin** to open the first episode.
-
-### Episode player (`/watch/<series-slug>/<episode-slug>`)
-- Adaptive HLS streaming (native on Safari, `hls.js` elsewhere).
-- **Progress is saved every ~10 seconds**; the player picks up where you left off on the next visit (resume position is loaded from the server before play starts).
-- When the video ends — or any time during playback — the **reflection prompt** for that episode is offered. You can write a short reflection in place; it's saved to your journal and linked back to the episode.
-- A **Next** card at the bottom takes you to the next episode in the series.
-
-### Continue watching
-At the top of `/watch` (and on the dashboard), a **Continue watching** row surfaces episodes you've started but not finished. Each card shows a thin gold progress bar across the bottom and the percentage watched. Click any card to resume playback at the saved position. Episodes that played past 95% are marked completed and drop out of this row.
-
-### Premium gating
-If you try to open a premium episode on a free account, the API returns 402 and the UI surfaces an error. Upgrade in **Profile → Membership** to unlock.
-
----
-
-## 7. Reflection journal & digital twin
-
-URL: `/reflect`
-
-### Stats at the top
-- **Reflections** — total entries.
-- **Day streak** — consecutive days ending today with at least one entry.
-- **Most-present** — your most frequent mood across all entries.
-- **Avg. intensity** — average of the 1-10 intensity slider.
-
-### Trend chart with range toggle
-Above the chart are four range chips: **7d / 30d / 90d / 1y**. Click one to re-render the trend over that window. Each bar is one day. Bar height = average intensity that day. Bar color = dominant mood. Empty days appear as faint stubs. The selected range is reflected in the URL (`?range=30`) so the view is bookmarkable.
-
-### Journal feed
-Most recent first. Each entry shows: relative time, mood tag, intensity, the prompt (if any), the body, and — when AI is enabled — a one-sentence "noticing" generated by the companion (✦ in glimmer color).
-
-A search box at the top of the journal column filters entries live by content or prompt; a mood dropdown next to it narrows by mood. Both selections are reflected in the URL (`?q=…&mood=…`) so a filtered view is bookmarkable.
-
-### Editing & deleting entries
-Hover (or tap) an entry to reveal a ✎ and 🗑 button on the right. ✎ opens the entry in-place for editing — adjust content, mood, intensity, then ✓ to save (or ✗ to cancel). When the body changes, the AI-generated "noticing" is regenerated. 🗑 deletes the entry after confirmation.
-
-### Milestones
-Auto-derived: first reflection, week of noticing, 30 entries, streak achievements, dominant feeling.
-
-### Threads (tag cloud)
-Aggregates the comma-separated tags you've added to entries. More frequent tags appear larger.
-
-### Writing a reflection (`/reflect/new`)
-- Optional pre-filled prompt (passed via `?prompt=…` from the companion or an episode).
-- Required: a body (at least one character).
-- Optional: mood (one of eight pills), intensity slider (1-10), threads (comma-separated tags).
-
----
-
-## 8. Paths — content tuned to your focus
-
-The **Paths for you** section on the dashboard surfaces series whose category aligns with the focus areas you picked at onboarding. Examples:
-
-| Your focus | Categories shown |
-|---|---|
-| stillness, sleep, work | meditation |
-| becoming, work, creativity | growth |
-| emotion, grief, joy, relationships | emotional-intelligence |
-
-If you skipped onboarding (or chose no focus areas), Paths falls back to the four most recent series.
-
-You can edit your focus areas any time by re-running onboarding (`/onboarding`) — submitting the form replaces what's there. *(A direct "Edit focus" UI on the profile page is on the roadmap.)*
-
----
-
-## 9. Circles — the community space
-
-URL: `/circles`
-
-### How circles work
-Three themes ship by default: **The Quiet Circle**, **Becoming**, **First Light**. You appear under a soft anonymous handle (e.g. "Steady River") that is deterministic per-(you, circle) — within one circle people see a consistent name without knowing it's you.
-
-### Posting
-Open a circle, type into the share box, hit **Share**. A lightweight safety filter blocks a small set of harmful phrases at the API layer.
-
-### Reporting
-Each post has a small **Report** button. Reported posts are hidden from the feed immediately and surfaced in the admin queue.
-
----
-
-## 10. Profile & membership
-
-URL: `/profile`
-
-### You
-Edit your **name**, **bio**, and **avatar URL** — saved with one click. Email and username are set at signup and immutable through the UI for now.
-
-### Membership
-Shows your current tier and its features. **Try premium →** flips you to premium instantly in dev; in production this routes through a billing provider.
-
----
-
-## 11. Becoming a creator
-
-URL: `/creator/apply`
-
-Anyone with a Member account can apply. Tell us, in your own words:
-- **Pitch** — what kind of journey you'd create, who it's for, why it matters.
-- **Sample / portfolio** (optional) — a link to your existing work.
-
-After you submit, the application sits in `pending`. You'll see its status whenever you return to the apply page. An admin reviews each application by hand:
-
-- **Approved** → your role flips to *creator* and you can open `/creator` (Studio) from the sidebar.
-- **Denied** → your role stays as member; you're welcome to apply again later.
-
-You can only have one pending application at a time.
-
----
-
-## 12. Creator studio
-
-URL: `/creator` *(visible only to creators, admins, and superadmins)*
-
-### Overview
-- **Stats** — series count, episode count, total people who started watching, completions.
-- **Your series** — every series you own, with a "preview" link and a quick "+ Add episode" button.
-
-### Creating a series (`/creator/series/new`)
-Fields: title, slug (lowercase-hyphenated; this lives in the URL), tagline, description, category (meditation/growth/emotional-intelligence/wisdom), tier (free/premium), cover image URL, hero image URL, accent color, comma-separated tags.
-
-### Adding an episode (`/creator/series/<id>/episodes/new`)
-Fields: title, slug, synopsis, duration in seconds, order index (lower = earlier), **video URL** (HLS `.m3u8` or `.mp4`), poster URL, reflection prompt (the one quiet question shown after the episode plays), tier.
-
-For now, video files are referenced by URL — Glimmora doesn't host the transcoding pipeline. Use any HLS-capable host (Mux, Cloudflare Stream, your own S3 + MediaConvert, etc.) and paste the manifest URL.
-
-### Editing, unpublishing, deleting
-On the Studio overview, each series shows an **Edit** link that opens `/creator/series/<id>/edit`. From there you can:
-
-- Update any field on the series.
-- **Unpublish** to hide it from the public library without losing the content; **Publish** to bring it back.
-- ✎ next to each episode to edit it (title, video URL, reflection prompt, tier, order, etc.).
-- 🗑 next to each episode to delete it.
-- **Delete series** to remove the series and all its episodes. This cascades to watch-progress records as well.
-
-### Permissions
-You can only edit your own series. Admins and superadmins can edit any.
-
----
-
-## 13. Admin tools
-
-URL: `/admin` *(visible only to users with role `admin` or `superadmin`)*
-
-### What's here
-- **Platform stats** — counts of users, series, episodes, reflections, conversations, posts.
-- **Creator applications** — each pending application with the pitch and (if provided) sample link. Two buttons: **Approve** (flips the user to *creator* and marks the application approved) and **Deny** (leaves the role unchanged, marks the application denied).
-- **Users** — a search box (matches username, email, full name) with a role filter. Inline role drop-downs change a user's role; the **Disable / Enable** button toggles their active flag. Admins cannot promote anyone to superadmin; superadmins can.
-- **Content moderation** — every series on the platform, with **Publish**, **Unpublish**, and 🗑 (delete) actions. Use this to take down content that shouldn't be public without removing the underlying creator account.
-- **Audit log** — chronological record of moderator actions and security events (role changes, content takedowns, password changes, self-deletes, etc.) — most recent first.
-
----
-
-## 14. Troubleshooting
-
-| Symptom | Likely cause | Fix |
-|---|---|---|
-| Logged in but stuck at `/onboarding` | Hasn't been completed or skipped. | Run through the four steps or click **Skip for now**. |
-| `JWT_SECRET is not configured` on Next start | `.env.local` missing in `apps/web/`. | Copy `.env.example` to `apps/web/.env.local`, set `JWT_SECRET` (must match `backend/.env`). |
-| Login succeeds, then redirected to `/login` | Mismatched `JWT_SECRET` between web and api. | Make the two values identical and restart both processes. |
-| Companion replies are short and never recommend episodes | `OPENAI_API_KEY` is unset. | Add a key to `backend/.env`; restart the API. |
-| `Continue watching` empty after watching | Progress isn't being beaconed. | Check browser console for `/api/proxy/v1/content/progress` 4xx responses. |
-| Video player shows a black box | HLS stream blocked. | Demo streams are public Mux test feeds; some networks block them. Self-host or substitute. |
-| Creator studio shows "Apply to become a creator" instead of dashboard | Your role is still `member`. | Submit `/creator/apply`; wait for admin approval. |
-| `greenlet_spawn has not been called` errors in API logs | A SQLAlchemy async relationship was lazy-loaded outside a session context. | Eager-load with `selectinload(...)` in the offending query. |
-| Backend tables missing in prod | Alembic didn't run. | Confirm the `migrate` PRE_DEPLOY job in `.do/app.yaml` succeeded. |
-
----
-
-## 15. Safety & boundaries
-
-Glimmora ONE is a companion, not a clinician. It does not provide medical advice, diagnose conditions, or offer therapy. If you are in crisis or considering harming yourself, please reach out to someone you trust or a local crisis line — the companion will surface these resources automatically if it detects crisis language.
-
-- Your reflections and chats are stored under your account. They are not shared with other users.
-- Community circles are anonymous to other users but **not** anonymous to platform administrators — moderation requires that link.
-- Posts are subject to a lightweight write-time blocklist. Reported posts are hidden from public view immediately and reviewed by admins.
-
----
-
-## 16. Changelog
-
-> Newest at top. One line per release. Keep entries short — sections above describe *current* behavior, not history.
-
-- **2026-05-15 — v0.3.0** — feature-completion pass (everything except payments). New: forgot-password (`/forgot-password`) + reset-password (`/reset-password`) with one-hour tokens (dev mode shows the token in-page when SMTP is not configured); change-password, data-export (JSON download of everything you own), and self-delete account under **Profile → Security & data**. **Watch:** the player now resumes from your last position, and `/watch` shows a **Continue watching** row at the top. **Reflect:** entries can be edited in place; the journal has a search box + mood filter; the trend chart can be switched between 7d / 30d / 90d / 1y windows. **Companion:** a conversation drawer lists every prior chat, with live search across titles + message bodies; clicking one resumes it. Premium-tier accounts get a deeper rolling memory window (32 turns vs 8 on free). **Creator studio:** series and episodes can be edited, unpublished, or deleted from `/creator/series/<id>/edit`. **Admin:** user search + role filter; a new **Content moderation** panel (publish / unpublish / delete any series); an **Audit log** of moderator actions and security events. Backend gained the `password_resets` table (alembic `0003_password_resets`).
-- **2026-05-12 — v0.2.1** — signup now redirects straight to onboarding (no dashboard flicker). Sidebar shows `Role · Tier` (e.g. *Member · free*, *Creator · free*). Profile gained a **Your role** card with a role-aware CTA. Dashboard's "apply to become a creator" callout hides once an application exists; a "we're reading your application" card appears while pending. Theme toggle is now on login + signup. Added [`docs/TESTING_GUIDE.md`](./TESTING_GUIDE.md) with screenshots.
-- **2026-05-11 — v0.2.0** — added onboarding (`/onboarding`), the daily-ritual loop on the dashboard ("three small steps"), focus-area-tuned **Paths**, the creator application flow (`/creator/apply`) with admin review, the creator studio (`/creator`, `/creator/series/new`, `/creator/series/<id>/episodes/new`), the crisis safety card in the companion, and the roles/permissions matrix in `PRODUCT_FLOWS.md`. New backend modules: `routers/dashboard.py`, `models.CreatorApplication`, alembic `0002_creator_apps`.
-- **2026-05-11 — v0.1.1** — signup loosened: username + password 1-char minimum, email optional. If email omitted, a `<username>@noemail.local` placeholder is stored.
-- **2026-05-11 — v0.1.0** — initial release.
-
----
-
-## 17. How to keep this manual current
-
-### When to update
-In the same PR as any code change that affects:
-- A user-visible page, button, or flow.
-- Copy a user reads in the app.
-- An API endpoint a user-facing feature relies on.
-- Default values, tiers, roles, or auth behavior.
-- Safety guardrails or moderation rules.
-
-### How to update
-1. Edit the relevant numbered section so it describes the *new* current behavior. **Don't** add "now we also have X" — describe X as if it always existed.
-2. If you remove a feature, remove its section entirely.
-3. If you rename a route or endpoint, update every reference (search for the old name first).
-4. Bump the `Last updated` date at the top.
-5. Bump `Applies to app version` if you also bumped the version in `package.json` / `pyproject.toml`.
-6. Add a one-line entry to the [Changelog](#16-changelog) (newest at top).
-7. If the change involves roles, permissions, lifecycle states, or new workflows, also update `docs/PRODUCT_FLOWS.md`.
-
-### What NOT to put here
-- Architecture, deployment, env vars, or stack details — those live in `README.md` and `SKELETON.md`.
-- Code examples, schema definitions, or migration instructions — those belong in developer docs.
-- Marketing copy — keep the tone direct and informational.
-
-### Tone
-- Calm, plain, complete sentences. No jargon a new user wouldn't understand.
-- Speak to the user as "you." Refer to the product as "Glimmora ONE" or "the app."
-- If a feature is partial or in dev-only mode (e.g. the upgrade button), say so plainly.
+> That's the whole app. Five rooms. One you. Welcome.
