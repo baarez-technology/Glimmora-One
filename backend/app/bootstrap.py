@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .config import get_settings
-from .models import Circle, Episode, Series, User
+from .models import Episode, Series, User
 from .security import hash_password
 
 settings = get_settings()
@@ -107,16 +107,6 @@ DEMO_HLS_POOL = [
 ]
 
 
-DEMO_CIRCLES = [
-    {"slug": "the-quiet-circle", "name": "The Quiet Circle", "theme": "stillness",
-     "description": "For sharing what has been hard to say out loud."},
-    {"slug": "becoming", "name": "Becoming", "theme": "growth",
-     "description": "Notes from the long, slow work of changing."},
-    {"slug": "first-light", "name": "First Light", "theme": "morning-practice",
-     "description": "Tiny reflections from the first hour of the day."},
-]
-
-
 async def ensure_superadmin(db: AsyncSession) -> None:
     existing = (
         await db.execute(select(User).where(User.username == settings.bootstrap_superadmin_username))
@@ -170,8 +160,5 @@ async def ensure_demo_catalog(db: AsyncSession) -> None:
                     tier=ep.get("tier", payload.get("tier", "free")),
                 )
             )
-
-    for c in DEMO_CIRCLES:
-        db.add(Circle(slug=c["slug"], name=c["name"], theme=c["theme"], description=c["description"]))
 
     await db.commit()

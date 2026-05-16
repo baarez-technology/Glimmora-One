@@ -47,7 +47,7 @@ class TokenResponse(CamelModel):
 class UserPublic(CamelModel):
     id: str
     username: str
-    email: str  # may be a `<username>@noemail.local` placeholder; not validated as an address
+    email: str
     full_name: Optional[str] = None
     role: str
     avatar_url: Optional[str] = None
@@ -75,7 +75,7 @@ class OnboardingPayload(CamelModel):
 # ---------------- Daily ritual ----------------
 
 class DailyStep(CamelModel):
-    key: str  # arrive | notice | reflect
+    key: str
     title: str
     description: str
     done: bool
@@ -84,31 +84,12 @@ class DailyStep(CamelModel):
 
 
 class DailyPlan(CamelModel):
-    date: str  # YYYY-MM-DD
+    date: str
     intention: Optional[str] = None
     focus_areas: list[str] = Field(default_factory=list)
     steps: list[DailyStep]
     streak: int
     all_done: bool
-
-
-# ---------------- Creator application ----------------
-
-class CreatorApplicationCreate(CamelModel):
-    pitch: str = Field(min_length=1, max_length=2000)
-    sample_url: Optional[str] = None
-
-
-class CreatorApplicationPublic(CamelModel):
-    id: str
-    user_id: str
-    username: str
-    pitch: str
-    sample_url: Optional[str] = None
-    status: str
-    decided_by: Optional[str] = None
-    decided_at: Optional[datetime] = None
-    created_at: datetime
 
 
 # ---------------- Content ----------------
@@ -184,22 +165,7 @@ class ChatResponse(CamelModel):
     assistant_message: ChatMessage
     detected_emotion: Optional[str] = None
     suggested_reflection: Optional[str] = None
-    recommended_episode_ids: list[str] = Field(default_factory=list)
     crisis: bool = False
-
-
-class ConversationSummary(CamelModel):
-    id: str
-    title: str
-    updated_at: datetime
-    last_message_preview: Optional[str] = None
-
-
-class ConversationDetail(CamelModel):
-    id: str
-    title: str
-    created_at: datetime
-    messages: list[ChatMessage]
 
 
 # ---------------- Reflection ----------------
@@ -226,7 +192,7 @@ class ReflectionPublic(CamelModel):
 
 
 class EmotionTrendPoint(CamelModel):
-    date: str  # YYYY-MM-DD
+    date: str
     mood: Optional[str]
     intensity: float
     count: int
@@ -239,152 +205,4 @@ class DigitalTwinSnapshot(CamelModel):
     average_intensity: float
     last_30_days: list[EmotionTrendPoint]
     growth_milestones: list[str]
-    tag_cloud: list[dict[str, Any]]  # [{tag, count}]
-
-
-# ---------------- Community ----------------
-
-class CirclePublic(CamelModel):
-    id: str
-    name: str
-    slug: str
-    description: Optional[str] = None
-    theme: str
-    post_count: int = 0
-
-
-class CirclePostCreate(CamelModel):
-    body: str = Field(min_length=1, max_length=4000)
-
-
-class CirclePostPublic(CamelModel):
-    id: str
-    circle_id: str
-    anonymous_handle: str
-    body: str
-    flagged: bool
-    created_at: datetime
-
-
-# ---------------- Creator ----------------
-
-class SeriesCreate(CamelModel):
-    title: str
-    slug: str
-    tagline: Optional[str] = None
-    description: Optional[str] = None
-    category: str = "wisdom"
-    tier: str = "free"
-    cover_url: Optional[str] = None
-    hero_url: Optional[str] = None
-    accent_color: Optional[str] = None
-    tags: list[str] = Field(default_factory=list)
-
-
-class EpisodeCreate(CamelModel):
-    series_id: str
-    title: str
-    slug: str
-    synopsis: Optional[str] = None
-    duration_seconds: int = 0
-    order_index: int = 0
-    video_url: str
-    poster_url: Optional[str] = None
-    reflection_prompt: Optional[str] = None
-    tier: str = "free"
-
-
-# ---------------- Admin ----------------
-
-class AdminUserRow(CamelModel):
-    id: str
-    username: str
-    email: str
-    role: str
-    subscription_tier: str
-    is_active: bool
-    created_at: datetime
-
-
-class AdminStats(CamelModel):
-    users: int
-    series: int
-    episodes: int
-    reflections: int
-    conversations: int
-    posts: int
-
-
-# ---------------- Series / episode edit ----------------
-
-class SeriesUpdate(CamelModel):
-    title: Optional[str] = None
-    tagline: Optional[str] = None
-    description: Optional[str] = None
-    category: Optional[str] = None
-    tier: Optional[str] = None
-    cover_url: Optional[str] = None
-    hero_url: Optional[str] = None
-    accent_color: Optional[str] = None
-    tags: Optional[list[str]] = None
-    published: Optional[bool] = None
-
-
-class EpisodeUpdate(CamelModel):
-    title: Optional[str] = None
-    synopsis: Optional[str] = None
-    duration_seconds: Optional[int] = None
-    order_index: Optional[int] = None
-    video_url: Optional[str] = None
-    poster_url: Optional[str] = None
-    reflection_prompt: Optional[str] = None
-    tier: Optional[str] = None
-    published: Optional[bool] = None
-
-
-# ---------------- Reflection edit + search ----------------
-
-class ReflectionUpdate(CamelModel):
-    content: Optional[str] = Field(default=None, min_length=1, max_length=10000)
-    prompt: Optional[str] = None
-    mood: Optional[str] = None
-    intensity: Optional[int] = Field(default=None, ge=1, le=10)
-    tags: Optional[list[str]] = None
-    episode_id: Optional[str] = None
-
-
-# ---------------- Auth: password reset + change ----------------
-
-class PasswordChangeRequest(CamelModel):
-    current_password: str
-    new_password: str = Field(min_length=1, max_length=128)
-
-
-class PasswordResetRequest(CamelModel):
-    email: str
-
-
-class PasswordResetIssued(CamelModel):
-    sent: bool
-    # In dev mode (no SMTP), we return the token so the UI can show it.
-    dev_token: Optional[str] = None
-
-
-class PasswordResetConfirm(CamelModel):
-    token: str
-    new_password: str = Field(min_length=1, max_length=128)
-
-
-# ---------------- Account ----------------
-
-class AccountDeletePayload(CamelModel):
-    confirm_username: str
-
-
-class DataExport(CamelModel):
-    user: dict
-    reflections: list[dict]
-    conversations: list[dict]
-    watch_progress: list[dict]
-    posts: list[dict]
-    exported_at: datetime
+    tag_cloud: list[dict[str, Any]]

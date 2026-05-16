@@ -1,12 +1,8 @@
 """AI companion orchestration.
 
-A single entrypoint `respond()` that:
-  1. classifies the user's emotion (heuristic + LLM)
-  2. produces a calm, grounded assistant reply
-  3. suggests a reflection prompt and 0-3 episodes from the catalog
-
-If OPENAI_API_KEY is not configured, we degrade gracefully to a deterministic
-rule-based companion so the UX never breaks in dev.
+A single entrypoint `respond()` that classifies emotion, generates a calm reply,
+and suggests one reflection prompt. Gracefully degrades to a deterministic
+responder when OPENAI_API_KEY is not configured.
 """
 
 from __future__ import annotations
@@ -14,13 +10,11 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from typing import Iterable
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import get_settings
-from ..models import Episode, Message, Series
+from ..models import Message
 
 settings = get_settings()
 
@@ -50,11 +44,9 @@ class CompanionResult:
     reply: str
     emotion: str | None
     reflection_prompt: str | None
-    recommended_episode_ids: list[str]
     crisis: bool = False
 
 
-# Conservative crisis pattern — explicit only. Better to miss than to falsely interrupt.
 _CRISIS_RE = re.compile(
     r"\b(kill myself|end my life|suicide|suicidal|want to die|don'?t want to live|hurt myself|self[- ]harm)\b",
     re.IGNORECASE,
@@ -75,33 +67,8 @@ When you reply, return strict JSON with these keys:
   reply:               (string) your spoken reply to the user, 2-5 sentences
   emotion:             (string|null) one of: sad, anxious, angry, joyful, lonely, confused, hopeful, neutral
   reflection_prompt:   (string|null) one short question for them to sit with — or null
-  episode_keywords:    (array of 0-3 short strings) themes from the catalog to recommend
 
 Only output the JSON. No markdown."""
-
-
-async def _pick_episodes(db: AsyncSession, keywords: Iterable[str]) -> list[str]:
-    keywords = [k.lower() for k in keywords if k]
-    if not keywords:
-        return []
-    rows = (
-        await db.execute(
-            select(Episode, Series).join(Series, Series.id == Episode.series_id).where(
-                Series.published == True,  # noqa: E712
-                Episode.published == True,  # noqa: E712
-            ).limit(120)
-        )
-    ).all()
-    scored: list[tuple[int, str]] = []
-    for ep, s in rows:
-        hay = " ".join(
-            [ep.title, ep.synopsis or "", s.title, s.description or "", " ".join(s.tags or [])]
-        ).lower()
-        score = sum(1 for k in keywords if k in hay)
-        if score:
-            scored.append((score, ep.id))
-    scored.sort(reverse=True)
-    return [eid for _, eid in scored[:3]]
 
 
 def _fallback_reply(text: str, emotion: str | None) -> CompanionResult:
@@ -128,20 +95,15 @@ def _fallback_reply(text: str, emotion: str | None) -> CompanionResult:
         reply=openings.get(emotion or "", "Tell me a little more. I'm with you."),
         emotion=emotion,
         reflection_prompt=prompt_map.get(emotion),
-        recommended_episode_ids=[],
     )
 
 
-async def _llm_response(
-    history: list[Message],
-    user_text: str,
-    memory_window: int = 12,
-) -> tuple[str, str | None, str | None, list[str]]:
+async def _llm_response(history: list[Message], user_text: str) -> tuple[str, str | None, str | None]:
     from openai import AsyncOpenAI
 
     client = AsyncOpenAI(api_key=settings.openai_api_key)
     msgs: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
-    for m in history[-memory_window:]:
+    for m in history[-12:]:
         if m.role in ("user", "assistant"):
             msgs.append({"role": m.role, "content": m.content})
     msgs.append({"role": "user", "content": user_text})
@@ -164,15 +126,13 @@ async def _llm_response(
             "sad", "anxious", "angry", "joyful", "lonely", "confused", "hopeful", "neutral"
         } else None,
         data.get("reflection_prompt"),
-        list(data.get("episode_keywords") or [])[:3],
     )
 
 
 async def respond(
-    db: AsyncSession,
+    _db: AsyncSession,
     history: list[Message],
     user_text: str,
-    memory_window: int = 12,
 ) -> CompanionResult:
     heuristic = heuristic_emotion(user_text)
     crisis = is_crisis(user_text)
@@ -183,14 +143,12 @@ async def respond(
         return result
 
     try:
-        reply, llm_emotion, prompt, keywords = await _llm_response(history, user_text, memory_window)
+        reply, llm_emotion, prompt = await _llm_response(history, user_text)
         emotion = llm_emotion or heuristic
-        episode_ids = await _pick_episodes(db, keywords)
         return CompanionResult(
             reply=reply,
             emotion=emotion,
             reflection_prompt=prompt,
-            recommended_episode_ids=episode_ids,
             crisis=crisis,
         )
     except Exception:
@@ -200,7 +158,6 @@ async def respond(
 
 
 async def synthesize_reflection_insight(content: str, mood: str | None) -> str | None:
-    """Optional: compress a reflection into a one-sentence noticing."""
     if not settings.ai_enabled or not content.strip():
         return None
     try:

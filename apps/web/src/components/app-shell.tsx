@@ -9,7 +9,6 @@ import {
   LogOut,
   MessageCircle,
   Sparkles,
-  Users,
 } from 'lucide-react';
 import { Brand } from './brand';
 import { ThemeToggle } from './theme-toggle';
@@ -22,7 +21,6 @@ const items = [
   { href: '/companion',  icon: MessageCircle,   label: 'Companion' },
   { href: '/watch',      icon: Film,            label: 'Stories' },
   { href: '/reflect',    icon: Sparkles,        label: 'Reflect' },
-  { href: '/circles',    icon: Users,           label: 'Circles' },
   { href: '/profile',    icon: Compass,         label: 'Profile' },
 ];
 
@@ -58,32 +56,6 @@ export function AppShell({ user, children }: { user: User; children: React.React
               </Link>
             );
           })}
-          {(['creator', 'admin', 'superadmin'] as const).includes(user.role as any) && (
-            <Link
-              href="/creator"
-              className={cn(
-                'flex items-center gap-3 rounded-md px-3 py-2 transition-colors',
-                pathname?.startsWith('/creator')
-                  ? 'text-glimmer-500'
-                  : 'text-muted hover:text-app',
-              )}
-            >
-              <Sparkles className="h-4 w-4" /> Studio
-            </Link>
-          )}
-          {(user.role === 'admin' || user.role === 'superadmin') && (
-            <Link
-              href="/admin"
-              className={cn(
-                'flex items-center gap-3 rounded-md px-3 py-2 transition-colors mt-2 border-t border-app/50 pt-4',
-                pathname?.startsWith('/admin')
-                  ? 'text-glimmer-500'
-                  : 'text-muted hover:text-app',
-              )}
-            >
-              <Sparkles className="h-4 w-4" /> Admin
-            </Link>
-          )}
         </nav>
         <div className="mt-auto flex items-center gap-3 pt-6">
           <div className="h-9 w-9 rounded-full bg-glimmer-200 dark:bg-ink-700 grid place-items-center text-sm">
@@ -91,11 +63,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
           </div>
           <div className="min-w-0">
             <p className="truncate text-sm">{user.fullName || user.username}</p>
-            <p className="truncate text-xs text-muted">
-              <span className="capitalize">{user.role}</span>
-              <span className="mx-1 opacity-50">·</span>
-              <span>{user.subscriptionTier}</span>
-            </p>
+            <p className="truncate text-xs text-muted capitalize">{user.role}</p>
           </div>
         </div>
       </aside>
@@ -117,7 +85,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
         <main className="flex-1 min-w-0">{children}</main>
 
         <nav className="lg:hidden sticky bottom-0 z-20 flex items-center justify-around border-t border-app/60 bg-app/90 px-2 py-2 backdrop-blur">
-          {items.slice(0, 5).map(({ href, icon: Icon, label }) => {
+          {items.map(({ href, icon: Icon, label }) => {
             const active = pathname === href || pathname?.startsWith(href + '/');
             return (
               <Link

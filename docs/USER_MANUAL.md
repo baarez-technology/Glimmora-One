@@ -2,8 +2,10 @@
 
 > **This is a living document.** Whenever a feature is added, removed, or changed, update the matching section *in the same commit* as the code change. If you remove a feature, remove its section — don't leave stale instructions behind. The "Changelog" at the bottom is the diary; everything above it should describe the app *as it is right now*.
 
-**Last updated:** 2026-05-15
-**Applies to app version:** 0.3.0
+**Last updated:** 2026-05-16
+**Applies to app version:** 0.4.0-mvp (main branch)
+
+> **Note (branches):** `main` is intentionally a slim MVP — only the workflows essential to the daily ritual loop (auth, onboarding, dashboard, companion, stories, reflect, profile). The full v0.3.0 feature set (creator studio, admin panel, circles, billing scaffolding, password reset, data export, account deletion, conversation search, reflection edit) lives on the `progression` branch.
 
 For the *engineering* design behind the user-facing flows described here (roles matrix, state machines, where each flow lives in code), see [`docs/PRODUCT_FLOWS.md`](./PRODUCT_FLOWS.md).
 

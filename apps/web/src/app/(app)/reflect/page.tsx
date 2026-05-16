@@ -4,25 +4,13 @@ import { backendData } from '@/lib/backend';
 import type { DigitalTwinSnapshot, Reflection } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatRelative } from '@/lib/utils';
 import { TrendChart } from '@/components/trend-chart';
-import { ReflectionList } from '@/components/reflection-list';
 
-const VALID_RANGES = new Set(['7', '30', '90', '365']);
-
-export default async function ReflectPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ q?: string; mood?: string; range?: string }>;
-}) {
-  const sp = (await searchParams) ?? {};
-  const range = VALID_RANGES.has(sp.range ?? '') ? sp.range! : '30';
-  const params = new URLSearchParams();
-  if (sp.q) params.set('q', sp.q);
-  if (sp.mood) params.set('mood', sp.mood);
-
+export default async function ReflectPage() {
   const [reflections, twin] = await Promise.all([
-    backendData<Reflection[]>(`/v1/reflection${params.toString() ? `?${params.toString()}` : ''}`),
-    backendData<DigitalTwinSnapshot>(`/v1/reflection/insights/twin?days=${range}`),
+    backendData<Reflection[]>('/v1/reflection'),
+    backendData<DigitalTwinSnapshot>('/v1/reflection/insights/twin'),
   ]);
 
   return (
@@ -60,34 +48,7 @@ export default async function ReflectPage({
 
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <CardTitle>
-              {range === '7' && 'Last 7 days'}
-              {range === '30' && 'Last 30 days'}
-              {range === '90' && 'Last 90 days'}
-              {range === '365' && 'Last year'}
-            </CardTitle>
-            <div className="flex gap-1 text-xs">
-              {(['7', '30', '90', '365'] as const).map((r) => {
-                const otherParams = new URLSearchParams(params);
-                otherParams.set('range', r);
-                return (
-                  <Link
-                    key={r}
-                    href={`/reflect?${otherParams.toString()}`}
-                    className={
-                      'rounded-full px-3 py-1 border transition ' +
-                      (range === r
-                        ? 'border-glimmer-400 bg-glimmer-100/60 dark:bg-glimmer-900/30 text-glimmer-700 dark:text-glimmer-200'
-                        : 'border-app text-muted hover:text-app')
-                    }
-                  >
-                    {r === '365' ? '1y' : `${r}d`}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
+          <CardTitle>Last 30 days</CardTitle>
         </CardHeader>
         <CardContent>
           <TrendChart points={twin.last30Days} />
@@ -99,8 +60,30 @@ export default async function ReflectPage({
           <CardHeader>
             <CardTitle>Journal</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ReflectionList initial={reflections} q={sp.q ?? ''} mood={sp.mood ?? ''} />
+          <CardContent className="space-y-4">
+            {reflections.length === 0 && (
+              <p className="text-muted text-sm">Nothing yet. The first sentence is the hardest.</p>
+            )}
+            {reflections.map((r) => (
+              <div key={r.id} className="border-b border-app/60 last:border-0 pb-4 last:pb-0">
+                <div className="flex items-center justify-between text-xs text-muted">
+                  <span>{formatRelative(r.createdAt)}</span>
+                  <span className="flex items-center gap-2">
+                    {r.mood && <span className="rounded-full bg-glimmer-100 dark:bg-glimmer-900/40 text-glimmer-700 dark:text-glimmer-200 px-2 py-0.5">{r.mood}</span>}
+                    <span>intensity {r.intensity}</span>
+                  </span>
+                </div>
+                {r.prompt && (
+                  <p className="mt-2 text-sm italic text-muted">“{r.prompt}”</p>
+                )}
+                <p className="mt-1 leading-relaxed whitespace-pre-wrap">{r.content}</p>
+                {r.insights && (
+                  <p className="mt-3 text-sm text-glimmer-600 dark:text-glimmer-300">
+                    ✦ {r.insights}
+                  </p>
+                )}
+              </div>
+            ))}
           </CardContent>
         </Card>
 
@@ -119,22 +102,6 @@ export default async function ReflectPage({
                 </li>
               ))}
             </ul>
-            {twin.tagCloud.length > 0 && (
-              <div className="mt-6">
-                <p className="text-xs uppercase tracking-widest text-muted mb-2">Threads</p>
-                <div className="flex flex-wrap gap-2">
-                  {twin.tagCloud.map((t) => (
-                    <span
-                      key={t.tag}
-                      className="rounded-full border border-app px-3 py-1 text-sm"
-                      style={{ fontSize: `${Math.min(1.05, 0.75 + t.count * 0.05)}rem` }}
-                    >
-                      {t.tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       </section>

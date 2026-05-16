@@ -11,8 +11,6 @@ from ..schemas import (
     ChatMessage,
     ChatRequest,
     ChatResponse,
-    ConversationDetail,
-    ConversationSummary,
     Envelope,
 )
 
@@ -46,9 +44,7 @@ async def chat(payload: ChatRequest, user: CurrentUser, db: AsyncSession = Depen
     db.add(user_msg)
     await db.flush()
 
-    # Premium gets a deeper rolling memory window; free is intentionally lighter.
-    memory_window = 32 if user.subscription_tier == "premium" else 8
-    result = await respond(db, history, text, memory_window=memory_window)
+    result = await respond(db, history, text)
 
     assistant_msg = Message(
         conversation_id=conv.id,
@@ -69,88 +65,6 @@ async def chat(payload: ChatRequest, user: CurrentUser, db: AsyncSession = Depen
             assistant_message=ChatMessage.model_validate(assistant_msg),
             detected_emotion=result.emotion,
             suggested_reflection=result.reflection_prompt,
-            recommended_episode_ids=result.recommended_episode_ids,
             crisis=result.crisis,
         )
     )
-
-
-@router.get("/conversations", response_model=Envelope[list[ConversationSummary]])
-async def list_conversations(
-    user: CurrentUser,
-    db: AsyncSession = Depends(get_db),
-    q: str | None = None,
-):
-    stmt = select(Conversation).where(Conversation.user_id == user.id)
-    if q:
-        like = f"%{q.lower()}%"
-        from sqlalchemy import func as _f, or_ as _or
-        # Match either the conversation title or any message body inside it.
-        sub = (
-            select(Message.conversation_id)
-            .where(_f.lower(Message.content).like(like))
-            .scalar_subquery()
-        )
-        stmt = stmt.where(_or(_f.lower(Conversation.title).like(like), Conversation.id.in_(sub)))
-    stmt = stmt.order_by(desc(Conversation.updated_at)).limit(50)
-    rows = (await db.execute(stmt)).scalars().all()
-    summaries: list[ConversationSummary] = []
-    for c in rows:
-        last = (
-            await db.execute(
-                select(Message)
-                .where(Message.conversation_id == c.id)
-                .order_by(desc(Message.created_at))
-                .limit(1)
-            )
-        ).scalar_one_or_none()
-        summaries.append(
-            ConversationSummary(
-                id=c.id,
-                title=c.title,
-                updated_at=c.updated_at,
-                last_message_preview=(last.content[:140] if last else None),
-            )
-        )
-    return Envelope(data=summaries)
-
-
-@router.get("/conversations/{conversation_id}", response_model=Envelope[ConversationDetail])
-async def get_conversation(
-    conversation_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
-):
-    c = (
-        await db.execute(
-            select(Conversation)
-            .options(selectinload(Conversation.messages))
-            .where(Conversation.id == conversation_id, Conversation.user_id == user.id)
-        )
-    ).scalar_one_or_none()
-    if not c:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "conversation not found")
-    return Envelope(
-        data=ConversationDetail(
-            id=c.id,
-            title=c.title,
-            created_at=c.created_at,
-            messages=[ChatMessage.model_validate(m) for m in c.messages],
-        )
-    )
-
-
-@router.delete("/conversations/{conversation_id}", response_model=Envelope[dict])
-async def delete_conversation(
-    conversation_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
-):
-    c = (
-        await db.execute(
-            select(Conversation).where(
-                Conversation.id == conversation_id, Conversation.user_id == user.id
-            )
-        )
-    ).scalar_one_or_none()
-    if not c:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "conversation not found")
-    await db.delete(c)
-    await db.commit()
-    return Envelope(data={"deleted": True})
