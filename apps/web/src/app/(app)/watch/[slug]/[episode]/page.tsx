@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { backendData, BackendError } from '@/lib/backend';
 import { EpisodeWatcher } from '@/components/episode-watcher';
-import type { Series } from '@/lib/types';
+import type { Series, WatchProgress } from '@/lib/types';
 
 export default async function EpisodePage({
   params,
@@ -22,6 +22,14 @@ export default async function EpisodePage({
   const episode = series.episodes.find((e) => e.slug === epSlug);
   if (!episode) notFound();
 
+  const progress = await backendData<WatchProgress | null>(
+    `/v1/content/progress/${episode.id}`,
+  ).catch(() => null);
+  const startAt =
+    progress && !progress.completed && progress.positionSeconds > 5
+      ? progress.positionSeconds
+      : 0;
+
   const next = series.episodes[episode.orderIndex + 1];
 
   return (
@@ -33,7 +41,7 @@ export default async function EpisodePage({
       <p className="text-muted text-sm mt-1">{series.title} · Episode {episode.orderIndex + 1}</p>
 
       <div className="mt-6">
-        <EpisodeWatcher episode={episode} />
+        <EpisodeWatcher episode={episode} startAt={startAt} />
       </div>
 
       <p className="mt-6 text-muted leading-relaxed max-w-prose">{episode.synopsis}</p>

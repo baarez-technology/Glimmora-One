@@ -15,6 +15,7 @@ from ..schemas import (
     Envelope,
     ReflectionCreate,
     ReflectionPublic,
+    ReflectionUpdate,
 )
 
 router = APIRouter(prefix="/v1/reflection", tags=["reflection"])
@@ -42,17 +43,46 @@ async def create_reflection(
 
 @router.get("", response_model=Envelope[list[ReflectionPublic]])
 async def list_reflections(
-    user: CurrentUser, db: AsyncSession = Depends(get_db), limit: int = 50
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+    limit: int = 50,
+    q: str | None = None,
+    mood: str | None = None,
 ):
-    rows = (
-        await db.execute(
-            select(Reflection)
-            .where(Reflection.user_id == user.id)
-            .order_by(desc(Reflection.created_at))
-            .limit(min(limit, 200))
-        )
-    ).scalars().all()
+    stmt = select(Reflection).where(Reflection.user_id == user.id)
+    if q:
+        like = f"%{q.lower()}%"
+        from sqlalchemy import func as _f, or_ as _or
+        stmt = stmt.where(_or(_f.lower(Reflection.content).like(like), _f.lower(Reflection.prompt).like(like)))
+    if mood:
+        stmt = stmt.where(Reflection.mood == mood)
+    stmt = stmt.order_by(desc(Reflection.created_at)).limit(min(limit, 200))
+    rows = (await db.execute(stmt)).scalars().all()
     return Envelope(data=[ReflectionPublic.model_validate(r) for r in rows])
+
+
+@router.patch("/{reflection_id}", response_model=Envelope[ReflectionPublic])
+async def update_reflection(
+    reflection_id: str,
+    payload: ReflectionUpdate,
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+):
+    r = (
+        await db.execute(
+            select(Reflection).where(Reflection.id == reflection_id, Reflection.user_id == user.id)
+        )
+    ).scalar_one_or_none()
+    if not r:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "reflection not found")
+    data = payload.model_dump(exclude_unset=True)
+    for k, v in data.items():
+        setattr(r, k, v)
+    if "content" in data and data["content"]:
+        r.insights = await synthesize_reflection_insight(data["content"], r.mood)
+    await db.commit()
+    await db.refresh(r)
+    return Envelope(data=ReflectionPublic.model_validate(r))
 
 
 @router.get("/{reflection_id}", response_model=Envelope[ReflectionPublic])
@@ -86,7 +116,12 @@ async def delete_reflection(
 # ---- Digital twin: aggregates over the user's reflections ----
 
 @router.get("/insights/twin", response_model=Envelope[DigitalTwinSnapshot])
-async def digital_twin(user: CurrentUser, db: AsyncSession = Depends(get_db)):
+async def digital_twin(
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+    days: int = 30,
+):
+    days = max(7, min(days, 365))
     rows = (
         await db.execute(
             select(Reflection)
@@ -109,15 +144,15 @@ async def digital_twin(user: CurrentUser, db: AsyncSession = Depends(get_db)):
         streak += 1
         cursor = cursor - timedelta(days=1)
 
-    # Last 30 days trend.
+    # Last `days` days trend (configurable: 7/30/90/365).
     today = datetime.now(timezone.utc).date()
     by_day: dict[str, list[Reflection]] = defaultdict(list)
     for r in rows:
         d = r.created_at.date()
-        if (today - d).days <= 30:
+        if (today - d).days <= days:
             by_day[d.isoformat()].append(r)
     trend: list[EmotionTrendPoint] = []
-    for i in range(30, -1, -1):
+    for i in range(days, -1, -1):
         d = (today - timedelta(days=i)).isoformat()
         bucket = by_day.get(d, [])
         if bucket:

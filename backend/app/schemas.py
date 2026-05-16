@@ -313,3 +313,78 @@ class AdminStats(CamelModel):
     reflections: int
     conversations: int
     posts: int
+
+
+# ---------------- Series / episode edit ----------------
+
+class SeriesUpdate(CamelModel):
+    title: Optional[str] = None
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    tier: Optional[str] = None
+    cover_url: Optional[str] = None
+    hero_url: Optional[str] = None
+    accent_color: Optional[str] = None
+    tags: Optional[list[str]] = None
+    published: Optional[bool] = None
+
+
+class EpisodeUpdate(CamelModel):
+    title: Optional[str] = None
+    synopsis: Optional[str] = None
+    duration_seconds: Optional[int] = None
+    order_index: Optional[int] = None
+    video_url: Optional[str] = None
+    poster_url: Optional[str] = None
+    reflection_prompt: Optional[str] = None
+    tier: Optional[str] = None
+    published: Optional[bool] = None
+
+
+# ---------------- Reflection edit + search ----------------
+
+class ReflectionUpdate(CamelModel):
+    content: Optional[str] = Field(default=None, min_length=1, max_length=10000)
+    prompt: Optional[str] = None
+    mood: Optional[str] = None
+    intensity: Optional[int] = Field(default=None, ge=1, le=10)
+    tags: Optional[list[str]] = None
+    episode_id: Optional[str] = None
+
+
+# ---------------- Auth: password reset + change ----------------
+
+class PasswordChangeRequest(CamelModel):
+    current_password: str
+    new_password: str = Field(min_length=1, max_length=128)
+
+
+class PasswordResetRequest(CamelModel):
+    email: str
+
+
+class PasswordResetIssued(CamelModel):
+    sent: bool
+    # In dev mode (no SMTP), we return the token so the UI can show it.
+    dev_token: Optional[str] = None
+
+
+class PasswordResetConfirm(CamelModel):
+    token: str
+    new_password: str = Field(min_length=1, max_length=128)
+
+
+# ---------------- Account ----------------
+
+class AccountDeletePayload(CamelModel):
+    confirm_username: str
+
+
+class DataExport(CamelModel):
+    user: dict
+    reflections: list[dict]
+    conversations: list[dict]
+    watch_progress: list[dict]
+    posts: list[dict]
+    exported_at: datetime

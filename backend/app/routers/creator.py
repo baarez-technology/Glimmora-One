@@ -13,8 +13,10 @@ from ..schemas import (
     Envelope,
     EpisodeCreate,
     EpisodePublic,
+    EpisodeUpdate,
     SeriesCreate,
     SeriesPublic,
+    SeriesUpdate,
 )
 
 router = APIRouter(prefix="/v1/creator", tags=["creator"])
@@ -32,10 +34,17 @@ async def create_series(
     _ensure_can_create(user.role)
     if (await db.execute(select(Series).where(Series.slug == payload.slug))).scalar_one_or_none():
         raise HTTPException(status.HTTP_409_CONFLICT, "slug already in use")
+    from sqlalchemy.orm import selectinload as _si
     s = Series(**payload.model_dump(), creator_id=user.id)
     db.add(s)
     await db.commit()
-    await db.refresh(s)
+    # Re-fetch with eager-loaded episodes so pydantic validation doesn't trigger
+    # a lazy IO from inside model_validate.
+    s = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).where(Series.id == s.id)
+        )
+    ).scalar_one()
     return Envelope(data=SeriesPublic.model_validate(s))
 
 
@@ -54,6 +63,111 @@ async def create_episode(
     await db.commit()
     await db.refresh(ep)
     return Envelope(data=EpisodePublic.model_validate(ep))
+
+
+def _owns_or_admin(series: Series, user: User) -> bool:
+    return user.role in ("admin", "superadmin") or series.creator_id == user.id
+
+
+@router.patch("/series/{series_id}", response_model=Envelope[SeriesPublic])
+async def update_series(
+    series_id: str,
+    payload: SeriesUpdate,
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+):
+    from sqlalchemy.orm import selectinload as _si
+    _ensure_can_create(user.role)
+    s = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).where(Series.id == series_id)
+        )
+    ).scalar_one_or_none()
+    if not s:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "series not found")
+    if not _owns_or_admin(s, user):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "not your series")
+    data = payload.model_dump(exclude_unset=True)
+    for k, v in data.items():
+        setattr(s, k, v)
+    await db.commit()
+    s = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).where(Series.id == s.id)
+        )
+    ).scalar_one()
+    return Envelope(data=SeriesPublic.model_validate(s))
+
+
+@router.delete("/series/{series_id}", response_model=Envelope[dict])
+async def delete_series(
+    series_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
+):
+    _ensure_can_create(user.role)
+    s = (await db.execute(select(Series).where(Series.id == series_id))).scalar_one_or_none()
+    if not s:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "series not found")
+    if not _owns_or_admin(s, user):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "not your series")
+    await db.delete(s)
+    await db.commit()
+    return Envelope(data={"deleted": True})
+
+
+@router.patch("/episodes/{episode_id}", response_model=Envelope[EpisodePublic])
+async def update_episode(
+    episode_id: str,
+    payload: EpisodeUpdate,
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+):
+    _ensure_can_create(user.role)
+    ep = (await db.execute(select(Episode).where(Episode.id == episode_id))).scalar_one_or_none()
+    if not ep:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "episode not found")
+    s = (await db.execute(select(Series).where(Series.id == ep.series_id))).scalar_one_or_none()
+    if s and not _owns_or_admin(s, user):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "not your episode")
+    data = payload.model_dump(exclude_unset=True)
+    for k, v in data.items():
+        setattr(ep, k, v)
+    await db.commit()
+    await db.refresh(ep)
+    return Envelope(data=EpisodePublic.model_validate(ep))
+
+
+@router.delete("/episodes/{episode_id}", response_model=Envelope[dict])
+async def delete_episode(
+    episode_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
+):
+    _ensure_can_create(user.role)
+    ep = (await db.execute(select(Episode).where(Episode.id == episode_id))).scalar_one_or_none()
+    if not ep:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "episode not found")
+    s = (await db.execute(select(Series).where(Series.id == ep.series_id))).scalar_one_or_none()
+    if s and not _owns_or_admin(s, user):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "not your episode")
+    await db.delete(ep)
+    await db.commit()
+    return Envelope(data={"deleted": True})
+
+
+@router.get("/series/{series_id}", response_model=Envelope[SeriesPublic])
+async def get_my_series(
+    series_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
+):
+    _ensure_can_create(user.role)
+    from sqlalchemy.orm import selectinload as _si
+    s = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).where(Series.id == series_id)
+        )
+    ).scalar_one_or_none()
+    if not s:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "series not found")
+    if not _owns_or_admin(s, user):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "not your series")
+    return Envelope(data=SeriesPublic.model_validate(s))
 
 
 @router.get("/mine", response_model=Envelope[list[SeriesPublic]])

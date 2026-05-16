@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..db import get_db
 from ..deps import CurrentUser
 from ..models import (
+    AuditLog,
     Circle,
     CirclePost,
     Conversation,
@@ -16,7 +17,7 @@ from ..models import (
     Series,
     User,
 )
-from ..schemas import AdminStats, AdminUserRow, CreatorApplicationPublic, Envelope
+from ..schemas import AdminStats, AdminUserRow, CreatorApplicationPublic, Envelope, SeriesPublic, SeriesUpdate
 
 router = APIRouter(prefix="/v1/admin", tags=["admin"])
 
@@ -44,10 +45,109 @@ async def stats(user: CurrentUser, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/users", response_model=Envelope[list[AdminUserRow]])
-async def list_users(user: CurrentUser, db: AsyncSession = Depends(get_db)):
+async def list_users(
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+    q: str | None = None,
+    role: str | None = None,
+):
     _require_admin(user)
-    rows = (await db.execute(select(User).order_by(User.created_at.desc()).limit(500))).scalars().all()
+    stmt = select(User)
+    if q:
+        like = f"%{q.lower()}%"
+        from sqlalchemy import func as _f, or_ as _or
+        stmt = stmt.where(
+            _or(
+                _f.lower(User.username).like(like),
+                _f.lower(User.email).like(like),
+                _f.lower(User.full_name).like(like),
+            )
+        )
+    if role and role in ("member", "creator", "admin", "superadmin"):
+        stmt = stmt.where(User.role == role)
+    stmt = stmt.order_by(User.created_at.desc()).limit(500)
+    rows = (await db.execute(stmt)).scalars().all()
     return Envelope(data=[AdminUserRow.model_validate(u) for u in rows])
+
+
+@router.get("/audit-log", response_model=Envelope[list[dict]])
+async def audit_log(
+    user: CurrentUser, db: AsyncSession = Depends(get_db), limit: int = 100
+):
+    _require_admin(user)
+    rows = (
+        await db.execute(
+            select(AuditLog).order_by(AuditLog.created_at.desc()).limit(min(limit, 500))
+        )
+    ).scalars().all()
+    return Envelope(
+        data=[
+            {
+                "id": r.id,
+                "actorId": r.actor_id,
+                "action": r.action,
+                "target": r.target,
+                "meta": r.meta or {},
+                "createdAt": r.created_at.isoformat(),
+            }
+            for r in rows
+        ]
+    )
+
+
+@router.get("/series", response_model=Envelope[list[SeriesPublic]])
+async def list_all_series(user: CurrentUser, db: AsyncSession = Depends(get_db)):
+    _require_admin(user)
+    from sqlalchemy.orm import selectinload as _si
+    rows = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).order_by(Series.created_at.desc()).limit(500)
+        )
+    ).scalars().all()
+    return Envelope(data=[SeriesPublic.model_validate(s) for s in rows])
+
+
+@router.patch("/series/{series_id}", response_model=Envelope[SeriesPublic])
+async def admin_update_series(
+    series_id: str,
+    payload: SeriesUpdate,
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+):
+    from sqlalchemy.orm import selectinload as _si
+    _require_admin(user)
+    s = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).where(Series.id == series_id)
+        )
+    ).scalar_one_or_none()
+    if not s:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "series not found")
+    data = payload.model_dump(exclude_unset=True)
+    for k, v in data.items():
+        setattr(s, k, v)
+    db.add(AuditLog(actor_id=user.id, action="series_admin_edit", target=series_id, meta=data))
+    await db.commit()
+    s = (
+        await db.execute(
+            select(Series).options(_si(Series.episodes)).where(Series.id == s.id)
+        )
+    ).scalar_one()
+    return Envelope(data=SeriesPublic.model_validate(s))
+
+
+@router.delete("/series/{series_id}", response_model=Envelope[dict])
+async def admin_delete_series(
+    series_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
+):
+    _require_admin(user)
+    s = (await db.execute(select(Series).where(Series.id == series_id))).scalar_one_or_none()
+    if not s:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "series not found")
+    db.add(AuditLog(actor_id=user.id, action="series_admin_delete", target=series_id))
+    await db.delete(s)
+    await db.commit()
+    return Envelope(data={"deleted": True})
 
 
 @router.patch("/users/{user_id}/role", response_model=Envelope[AdminUserRow])

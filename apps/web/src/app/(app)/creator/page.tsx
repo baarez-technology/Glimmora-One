@@ -89,6 +89,9 @@ export default async function CreatorStudioPage() {
                   <Link href={`/watch/${s.slug}`}>Preview →</Link>
                 </Button>
                 <Button asChild variant="ghost" size="sm">
+                  <Link href={`/creator/series/${s.id}/edit`}>Edit</Link>
+                </Button>
+                <Button asChild variant="ghost" size="sm">
                   <Link href={`/creator/series/${s.id}/episodes/new`}>+ Add episode</Link>
                 </Button>
               </CardContent>

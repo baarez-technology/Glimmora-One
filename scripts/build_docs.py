@@ -318,6 +318,81 @@ def build_testing_guide():
     bullet(doc, "Backend won't start: port 8000 is busy → "
                 "run: taskkill /F /IM uvicorn.exe   then start again.")
 
+    page_break(doc)
+
+    h2(doc, "Part E — v0.3.0 additions")
+
+    h3(doc, "Forgot / reset password")
+    step(doc, 20, "Trigger a reset",
+         "Go to /login → click 'Forgot password?'. Type your email or username → 'Send reset link'.",
+         "A confirmation appears. In dev mode (no SMTP), a yellow box on the same page shows the reset token + a 'Continue to reset →' link.")
+    step(doc, 21, "Set a new password",
+         "On /reset-password the token is pre-filled. Type a new password → 'Set new password'.",
+         "After ~1.5s you land on /login. Old password fails; new password works.")
+
+    h3(doc, "Change password, export data, delete account")
+    step(doc, 22, "Change password",
+         "Profile → Security & data → enter current + new passwords → 'Update password'.",
+         "'Password updated.' inline. Sign out and sign in with the new password to confirm.")
+    step(doc, 23, "Export your data",
+         "Profile → Security & data → 'Download my data'.",
+         "A glimmora-<username>-export.json file downloads, with everything you own.")
+    step(doc, 24, "Delete account",
+         "Profile → Security & data → type your username in the confirm box → 'Permanently delete'.",
+         "You're signed out and dropped on the landing page. Logging back in with the same credentials fails.")
+
+    h3(doc, "Continue watching + resume")
+    step(doc, 25, "Build some progress",
+         "Open any episode, let it play 30+ seconds, navigate away. Visit /watch.",
+         "At the top of the page, a 'Continue watching' row shows the episode with a gold progress bar across the bottom and the % watched.")
+    step(doc, 26, "Resume",
+         "Click the continue card.",
+         "The video starts within ~1s of where you left it — not from zero.")
+
+    h3(doc, "Creator: edit, unpublish, delete")
+    step(doc, 27, "Edit a series",
+         "Studio → click 'Edit' on a series. Change tagline + tier → 'Save changes'.",
+         "Public /watch/<slug> reflects the new values immediately.")
+    step(doc, 28, "Unpublish",
+         "On the edit page, click 'Unpublish'.",
+         "The series disappears from the public library. 'Publish' brings it back.")
+    step(doc, 29, "Edit / delete an episode",
+         "Click ✎ next to an episode → change title → save. Then 🗑 on a different episode.",
+         "First episode updates; second disappears after confirm.")
+
+    h3(doc, "Admin: search, moderation, audit log")
+    step(doc, 30, "Search users",
+         "Admin → Users → type into the search box. Pick a role filter.",
+         "Table filters live. Change a role inline; toggle Disable/Enable.")
+    step(doc, 31, "Moderate content",
+         "Admin → Content moderation → 'Unpublish' a series, or 🗑 to delete it outright.",
+         "Series disappears from public. The action appears in the Audit log.")
+    step(doc, 32, "Audit log",
+         "Admin → Audit log.",
+         "Most-recent actions are listed (action, target, actor, when).")
+
+    h3(doc, "Reflect: edit, search, range")
+    step(doc, 33, "Edit a reflection",
+         "Reflect → hover an entry → ✎ → change content + intensity → ✓.",
+         "Entry updates in place. With OPENAI_API_KEY set, the ✦ noticing line is regenerated.")
+    step(doc, 34, "Search + mood filter",
+         "Type into the search box; pick a mood.",
+         "Entries filter; the URL updates with ?q=…&mood=… so the view is bookmarkable.")
+    step(doc, 35, "Range toggle",
+         "Click 7d / 30d / 90d / 1y above the trend chart.",
+         "Chart re-renders for the selected window.")
+
+    h3(doc, "Companion: drawer + search")
+    step(doc, 36, "Open conversation history",
+         "Open Companion. On desktop, the left drawer lists prior chats. On mobile, tap the chat icon bottom-left.",
+         "Drawer shows up to 50 conversations with previews. Active conversation is highlighted.")
+    step(doc, 37, "Search conversations",
+         "Type in the drawer search box.",
+         "Matches in either the title OR message text appear; debounced ~200 ms.")
+    step(doc, 38, "Resume a chat",
+         "Click any row.",
+         "Messages load; new replies continue in the same conversation (URL: /companion?c=<id>).")
+
     out = OUT / "TESTING_GUIDE.docx"
     doc.save(str(out))
     print(f"wrote {out}")
@@ -339,7 +414,7 @@ def build_user_manual():
               "guide so anyone, even a 10-year-old, can use the app on their "
               "own. Read through once, then keep it nearby for the first few days.")
 
-    body(doc, "App version: 0.2.1   ·   Last updated: 2026-05-12")
+    body(doc, "App version: 0.3.0   ·   Last updated: 2026-05-15")
 
     page_break(doc)
 
@@ -466,6 +541,19 @@ def build_user_manual():
               "for reflection. If you're in danger, please contact a real person — "
               "a trusted adult, or a local crisis line. The Companion will show "
               "you the closest crisis numbers on the safety card.")
+
+    h2(doc, "17. New in v0.3.0")
+    body(doc, "Things you can now do that didn't exist before:")
+    bullet(doc, "Forgot your password? Click 'Forgot password?' on the sign-in page. We'll email you a one-hour reset link (or, in dev mode, show the token in the page).")
+    bullet(doc, "Change your password from Profile → Security & data.")
+    bullet(doc, "Download every reflection, conversation, and watch record as one JSON file (Profile → Security & data → 'Download my data').")
+    bullet(doc, "Delete your account permanently (Profile → Security & data → 'Delete account'). Type your username to confirm.")
+    bullet(doc, "Your videos remember where you stopped. Open /watch and you'll see a 'Continue watching' row at the top.")
+    bullet(doc, "Reflect entries can be edited (✎) and deleted (🗑). The journal has a search box + mood filter + a 7d/30d/90d/1y range chooser on the trend chart.")
+    bullet(doc, "The Companion has a left-side drawer that lists every conversation you've ever had, with search across titles and message text. Tap any row to resume.")
+    bullet(doc, "Premium accounts get a deeper companion memory (32 turns vs 8 on free).")
+    bullet(doc, "Creators can edit, unpublish, or delete their series and episodes from /creator/series/<id>/edit.")
+    bullet(doc, "Admins now get a user search + role filter, a content moderation panel for any series, and a chronological audit log.")
 
     out = OUT / "USER_MANUAL.docx"
     doc.save(str(out))

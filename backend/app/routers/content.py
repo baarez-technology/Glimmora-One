@@ -10,7 +10,9 @@ from ..schemas import (
     ContinueWatchingItem,
     Envelope,
     EpisodePublic,
+    EpisodeUpdate,
     SeriesPublic,
+    SeriesUpdate,
     WatchProgressPublic,
     WatchProgressUpdate,
 )
@@ -54,6 +56,22 @@ async def get_episode(episode_id: str, user: CurrentUser, db: AsyncSession = Dep
     if ep.tier == "premium" and user.subscription_tier != "premium" and user.role not in ("admin", "superadmin"):
         raise HTTPException(status.HTTP_402_PAYMENT_REQUIRED, "premium subscription required")
     return Envelope(data=EpisodePublic.model_validate(ep))
+
+
+@router.get("/progress/{episode_id}", response_model=Envelope[WatchProgressPublic | None])
+async def get_progress(
+    episode_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
+):
+    wp = (
+        await db.execute(
+            select(WatchProgress).where(
+                WatchProgress.user_id == user.id, WatchProgress.episode_id == episode_id
+            )
+        )
+    ).scalar_one_or_none()
+    if not wp:
+        return Envelope(data=None)
+    return Envelope(data=WatchProgressPublic.model_validate(wp))
 
 
 @router.post("/progress", response_model=Envelope[WatchProgressPublic])

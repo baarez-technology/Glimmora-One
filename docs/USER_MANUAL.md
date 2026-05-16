@@ -2,8 +2,8 @@
 
 > **This is a living document.** Whenever a feature is added, removed, or changed, update the matching section *in the same commit* as the code change. If you remove a feature, remove its section — don't leave stale instructions behind. The "Changelog" at the bottom is the diary; everything above it should describe the app *as it is right now*.
 
-**Last updated:** 2026-05-12
-**Applies to app version:** 0.2.1
+**Last updated:** 2026-05-15
+**Applies to app version:** 0.3.0
 
 For the *engineering* design behind the user-facing flows described here (roles matrix, state machines, where each flow lives in code), see [`docs/PRODUCT_FLOWS.md`](./PRODUCT_FLOWS.md).
 
@@ -62,6 +62,21 @@ If you don't provide an email, a placeholder address (`<username>@noemail.local`
 ### Signing in / out
 - `/login` accepts either username or email + password. Sessions live in a secure httpOnly cookie (`glimmora_session`) for 24 hours by default.
 - Sign out from the top-right of the app shell.
+
+### Forgot your password
+1. On the login page, click **Forgot password?**.
+2. Enter your email or username and submit. We always respond the same way — so an attacker can't tell whether an account exists.
+3. If we found a match we'll send a reset link valid for one hour. In dev environments without SMTP configured, the page shows the reset token in-line so you can finish the flow.
+4. On `/reset-password`, enter the token (pre-filled from the link) and your new password. You'll be redirected to sign in.
+
+### Change your password
+While signed in, open **Profile → Security & data → Change password**. Enter your current password and the new one. The change is immediate and audit-logged.
+
+### Export your data
+**Profile → Security & data → Download my data** produces a single JSON file containing your user record, every reflection, every conversation (with messages), watch progress, and circle posts.
+
+### Delete your account
+**Profile → Security & data → Delete account**. You'll need to retype your username to confirm. The deletion is immediate and cascades to your reflections, conversations, watch progress, posts, and pending creator application. Superadmin accounts cannot self-delete (use another admin for that).
 
 ### Default development account
 On first boot a superadmin is created automatically:
@@ -153,6 +168,12 @@ URL: `/companion`
 - Conversations are stored under your account. Only you (and platform admins, if escalated) can read them.
 - Deleting a conversation removes it and all its messages from the database immediately.
 
+### Conversation history & search
+A left-hand drawer on the companion page lists every prior conversation (up to 50, most recent first). Each row shows the title and a one-line preview. Click any row to resume that conversation — the URL becomes `/companion?c=<id>` so you can bookmark it. A search box above the list filters conversations by title **or** by message text. On mobile, tap the chat icon at the bottom-left of the screen to open the drawer.
+
+### Memory window
+The companion includes recent messages from the same conversation as context for each reply. **Free** accounts get an 8-turn rolling window. **Premium** accounts get 32 turns — so the companion can pick up details from earlier in a long sitting.
+
 ---
 
 ## 6. Stories — the OTT library
@@ -168,9 +189,12 @@ URL: `/watch`
 
 ### Episode player (`/watch/<series-slug>/<episode-slug>`)
 - Adaptive HLS streaming (native on Safari, `hls.js` elsewhere).
-- **Progress is saved every ~10 seconds**; "Continue watching" picks it up on the dashboard.
+- **Progress is saved every ~10 seconds**; the player picks up where you left off on the next visit (resume position is loaded from the server before play starts).
 - When the video ends — or any time during playback — the **reflection prompt** for that episode is offered. You can write a short reflection in place; it's saved to your journal and linked back to the episode.
 - A **Next** card at the bottom takes you to the next episode in the series.
+
+### Continue watching
+At the top of `/watch` (and on the dashboard), a **Continue watching** row surfaces episodes you've started but not finished. Each card shows a thin gold progress bar across the bottom and the percentage watched. Click any card to resume playback at the saved position. Episodes that played past 95% are marked completed and drop out of this row.
 
 ### Premium gating
 If you try to open a premium episode on a free account, the API returns 402 and the UI surfaces an error. Upgrade in **Profile → Membership** to unlock.
@@ -187,11 +211,16 @@ URL: `/reflect`
 - **Most-present** — your most frequent mood across all entries.
 - **Avg. intensity** — average of the 1-10 intensity slider.
 
-### 30-day trend chart
-Each bar is one day. Bar height = average intensity that day. Bar color = dominant mood. Empty days appear as faint stubs.
+### Trend chart with range toggle
+Above the chart are four range chips: **7d / 30d / 90d / 1y**. Click one to re-render the trend over that window. Each bar is one day. Bar height = average intensity that day. Bar color = dominant mood. Empty days appear as faint stubs. The selected range is reflected in the URL (`?range=30`) so the view is bookmarkable.
 
 ### Journal feed
 Most recent first. Each entry shows: relative time, mood tag, intensity, the prompt (if any), the body, and — when AI is enabled — a one-sentence "noticing" generated by the companion (✦ in glimmer color).
+
+A search box at the top of the journal column filters entries live by content or prompt; a mood dropdown next to it narrows by mood. Both selections are reflected in the URL (`?q=…&mood=…`) so a filtered view is bookmarkable.
+
+### Editing & deleting entries
+Hover (or tap) an entry to reveal a ✎ and 🗑 button on the right. ✎ opens the entry in-place for editing — adjust content, mood, intensity, then ✓ to save (or ✗ to cancel). When the body changes, the AI-generated "noticing" is regenerated. 🗑 deletes the entry after confirmation.
 
 ### Milestones
 Auto-derived: first reflection, week of noticing, 30 entries, streak achievements, dominant feeling.
@@ -282,6 +311,15 @@ Fields: title, slug, synopsis, duration in seconds, order index (lower = earlier
 
 For now, video files are referenced by URL — Glimmora doesn't host the transcoding pipeline. Use any HLS-capable host (Mux, Cloudflare Stream, your own S3 + MediaConvert, etc.) and paste the manifest URL.
 
+### Editing, unpublishing, deleting
+On the Studio overview, each series shows an **Edit** link that opens `/creator/series/<id>/edit`. From there you can:
+
+- Update any field on the series.
+- **Unpublish** to hide it from the public library without losing the content; **Publish** to bring it back.
+- ✎ next to each episode to edit it (title, video URL, reflection prompt, tier, order, etc.).
+- 🗑 next to each episode to delete it.
+- **Delete series** to remove the series and all its episodes. This cascades to watch-progress records as well.
+
 ### Permissions
 You can only edit your own series. Admins and superadmins can edit any.
 
@@ -294,15 +332,9 @@ URL: `/admin` *(visible only to users with role `admin` or `superadmin`)*
 ### What's here
 - **Platform stats** — counts of users, series, episodes, reflections, conversations, posts.
 - **Creator applications** — each pending application with the pitch and (if provided) sample link. Two buttons: **Approve** (flips the user to *creator* and marks the application approved) and **Deny** (leaves the role unchanged, marks the application denied).
-- **Users table** — every user with role, tier, and active status.
-
-### Backend endpoints already wired
-- `PATCH /v1/admin/users/{id}/role` — change a user's role (`member`, `creator`, `admin`, `superadmin`).
-- `PATCH /v1/admin/users/{id}/active` — disable / re-enable an account.
-- `GET   /v1/admin/flagged-posts` — fetch reported community posts.
-- `DELETE /v1/admin/posts/{id}` — remove a community post.
-
-*(In-table role and active toggles, and a flagged-post moderation queue UI, are on the roadmap.)*
+- **Users** — a search box (matches username, email, full name) with a role filter. Inline role drop-downs change a user's role; the **Disable / Enable** button toggles their active flag. Admins cannot promote anyone to superadmin; superadmins can.
+- **Content moderation** — every series on the platform, with **Publish**, **Unpublish**, and 🗑 (delete) actions. Use this to take down content that shouldn't be public without removing the underlying creator account.
+- **Audit log** — chronological record of moderator actions and security events (role changes, content takedowns, password changes, self-deletes, etc.) — most recent first.
 
 ---
 
@@ -336,6 +368,7 @@ Glimmora ONE is a companion, not a clinician. It does not provide medical advice
 
 > Newest at top. One line per release. Keep entries short — sections above describe *current* behavior, not history.
 
+- **2026-05-15 — v0.3.0** — feature-completion pass (everything except payments). New: forgot-password (`/forgot-password`) + reset-password (`/reset-password`) with one-hour tokens (dev mode shows the token in-page when SMTP is not configured); change-password, data-export (JSON download of everything you own), and self-delete account under **Profile → Security & data**. **Watch:** the player now resumes from your last position, and `/watch` shows a **Continue watching** row at the top. **Reflect:** entries can be edited in place; the journal has a search box + mood filter; the trend chart can be switched between 7d / 30d / 90d / 1y windows. **Companion:** a conversation drawer lists every prior chat, with live search across titles + message bodies; clicking one resumes it. Premium-tier accounts get a deeper rolling memory window (32 turns vs 8 on free). **Creator studio:** series and episodes can be edited, unpublished, or deleted from `/creator/series/<id>/edit`. **Admin:** user search + role filter; a new **Content moderation** panel (publish / unpublish / delete any series); an **Audit log** of moderator actions and security events. Backend gained the `password_resets` table (alembic `0003_password_resets`).
 - **2026-05-12 — v0.2.1** — signup now redirects straight to onboarding (no dashboard flicker). Sidebar shows `Role · Tier` (e.g. *Member · free*, *Creator · free*). Profile gained a **Your role** card with a role-aware CTA. Dashboard's "apply to become a creator" callout hides once an application exists; a "we're reading your application" card appears while pending. Theme toggle is now on login + signup. Added [`docs/TESTING_GUIDE.md`](./TESTING_GUIDE.md) with screenshots.
 - **2026-05-11 — v0.2.0** — added onboarding (`/onboarding`), the daily-ritual loop on the dashboard ("three small steps"), focus-area-tuned **Paths**, the creator application flow (`/creator/apply`) with admin review, the creator studio (`/creator`, `/creator/series/new`, `/creator/series/<id>/episodes/new`), the crisis safety card in the companion, and the roles/permissions matrix in `PRODUCT_FLOWS.md`. New backend modules: `routers/dashboard.py`, `models.CreatorApplication`, alembic `0002_creator_apps`.
 - **2026-05-11 — v0.1.1** — signup loosened: username + password 1-char minimum, email optional. If email omitted, a `<username>@noemail.local` placeholder is stored.

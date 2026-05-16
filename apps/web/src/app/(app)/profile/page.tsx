@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { backendData } from '@/lib/backend';
 import type { User } from '@/lib/types';
 import { ProfileEditor } from '@/components/profile-editor';
+import { ProfileSecurity } from '@/components/profile-security';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const ROLE_BLURB: Record<string, string> = {
@@ -115,6 +116,15 @@ export default async function ProfilePage() {
               <p className="text-muted text-sm">You're on premium. Thank you for supporting Glimmora.</p>
             )}
           </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Security & data</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProfileSecurity user={user} />
         </CardContent>
       </Card>
     </div>

@@ -1,8 +1,12 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { backendData } from '@/lib/backend';
-import type { CreatorApplication, User } from '@/lib/types';
+import type { CreatorApplication, Series, User } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ApplicationsTable } from '@/components/applications-table';
+import { AdminUsers } from '@/components/admin-users';
+import { AdminAuditLog } from '@/components/admin-audit-log';
+import { AdminSeriesModeration } from '@/components/admin-series-moderation';
 
 type AdminStats = {
   users: number;
@@ -23,14 +27,25 @@ type AdminUserRow = {
   createdAt: string;
 };
 
+type AuditRow = {
+  id: string;
+  actorId: string | null;
+  action: string;
+  target: string | null;
+  meta: Record<string, unknown>;
+  createdAt: string;
+};
+
 export default async function AdminPage() {
   const me = await backendData<User>('/v1/auth/me');
   if (me.role !== 'admin' && me.role !== 'superadmin') redirect('/dashboard');
 
-  const [stats, users, applications] = await Promise.all([
+  const [stats, users, applications, audit, allSeries] = await Promise.all([
     backendData<AdminStats>('/v1/admin/stats'),
     backendData<AdminUserRow[]>('/v1/admin/users'),
     backendData<CreatorApplication[]>('/v1/admin/applications').catch(() => []),
+    backendData<AuditRow[]>('/v1/admin/audit-log').catch(() => []),
+    backendData<Series[]>('/v1/admin/series').catch(() => []),
   ]);
 
   return (
@@ -64,29 +79,29 @@ export default async function AdminPage() {
         <CardHeader>
           <CardTitle>Users</CardTitle>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="text-muted text-left">
-              <tr className="border-b border-app">
-                <th className="py-2 pr-3">User</th>
-                <th className="py-2 pr-3">Email</th>
-                <th className="py-2 pr-3">Role</th>
-                <th className="py-2 pr-3">Tier</th>
-                <th className="py-2 pr-3">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u) => (
-                <tr key={u.id} className="border-b border-app/40 last:border-0">
-                  <td className="py-2 pr-3">{u.username}</td>
-                  <td className="py-2 pr-3 text-muted">{u.email}</td>
-                  <td className="py-2 pr-3">{u.role}</td>
-                  <td className="py-2 pr-3">{u.subscriptionTier}</td>
-                  <td className="py-2 pr-3">{u.isActive ? 'active' : 'disabled'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <CardContent>
+          <AdminUsers initial={users} canPromoteToSuperadmin={me.role === 'superadmin'} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Content moderation</CardTitle>
+            <Link href="/watch" className="text-sm text-glimmer-500 hover:underline">Public library →</Link>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <AdminSeriesModeration initial={allSeries} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Audit log</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AdminAuditLog entries={audit} />
         </CardContent>
       </Card>
     </div>

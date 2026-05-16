@@ -135,12 +135,13 @@ def _fallback_reply(text: str, emotion: str | None) -> CompanionResult:
 async def _llm_response(
     history: list[Message],
     user_text: str,
+    memory_window: int = 12,
 ) -> tuple[str, str | None, str | None, list[str]]:
     from openai import AsyncOpenAI
 
     client = AsyncOpenAI(api_key=settings.openai_api_key)
     msgs: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
-    for m in history[-12:]:
+    for m in history[-memory_window:]:
         if m.role in ("user", "assistant"):
             msgs.append({"role": m.role, "content": m.content})
     msgs.append({"role": "user", "content": user_text})
@@ -171,6 +172,7 @@ async def respond(
     db: AsyncSession,
     history: list[Message],
     user_text: str,
+    memory_window: int = 12,
 ) -> CompanionResult:
     heuristic = heuristic_emotion(user_text)
     crisis = is_crisis(user_text)
@@ -181,7 +183,7 @@ async def respond(
         return result
 
     try:
-        reply, llm_emotion, prompt, keywords = await _llm_response(history, user_text)
+        reply, llm_emotion, prompt, keywords = await _llm_response(history, user_text, memory_window)
         emotion = llm_emotion or heuristic
         episode_ids = await _pick_episodes(db, keywords)
         return CompanionResult(

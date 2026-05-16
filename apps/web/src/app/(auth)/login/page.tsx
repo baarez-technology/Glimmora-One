@@ -40,12 +40,10 @@ export default function LoginPage() {
           <Button className="w-full" type="submit" disabled={isPending}>
             {isPending ? 'Signing in…' : 'Sign in'}
           </Button>
-          <p className="text-center text-sm text-muted">
-            New here?{' '}
-            <Link href="/signup" className="text-glimmer-500 hover:underline">
-              Create an account
-            </Link>
-          </p>
+          <div className="flex items-center justify-between text-sm">
+            <Link href="/forgot-password" className="text-muted hover:text-app">Forgot password?</Link>
+            <Link href="/signup" className="text-glimmer-500 hover:underline">Create an account</Link>
+          </div>
         </form>
       </CardContent>
     </Card>

@@ -178,6 +178,111 @@ You can press **Skip for now →** at any step.
 
 ---
 
+## 5a. v0.3.0 additions — Account & data flows
+
+### 5a.1 Change password
+**Do:** open **Profile → Security & data → Change password**. Enter current password + a new one. Click **Update password**.
+**Expected:** "Password updated." inline. The next login must use the new password.
+
+### 5a.2 Forgot password (dev mode)
+**Do:** open `/login` → **Forgot password?** → enter your email or username → **Send reset link**.
+**Expected:** the response page shows the dev-mode reset token (because SMTP is not configured in dev). Click **Continue to reset →**.
+**Then:** on `/reset-password`, the token is pre-filled. Enter a new password → **Set new password** → redirected to `/login`. Old password should be rejected; new password should sign you in.
+
+### 5a.3 Export my data
+**Do:** **Profile → Security & data → Download my data**.
+**Expected:** a `glimmora-<username>-export.json` file downloads — contains user, reflections, conversations (with messages), watch progress, and circle posts.
+
+### 5a.4 Delete account
+**Do:** **Profile → Security & data → Delete account**. Type your username exactly to confirm → **Permanently delete**.
+**Expected:** the account and all owned rows are deleted (DB cascade); you are signed out and redirected to `/`. Superadmin accounts cannot self-delete.
+
+---
+
+## 5b. v0.3.0 additions — Watch experience
+
+### 5b.1 Continue watching
+**Do:** open an episode, let it play past 10s, navigate away. Return to `/watch`.
+**Expected:** at the top of `/watch`, a **Continue watching** row appears with the episode card, a progress bar showing the % watched, and "resume" copy. Clicking jumps back into the episode at the saved position.
+
+### 5b.2 Resume from saved position
+**Do:** open the episode again from the Continue-watching card.
+**Expected:** the video starts within ~1s of the prior position (not from 0). Episodes that already played past 95% are marked completed and won't show on the continue row.
+
+---
+
+## 5c. v0.3.0 additions — Creator: edit / unpublish / delete
+
+### 5c.1 Edit a series
+**Do:** **Studio → series → Edit**. Update tagline, tier, tags. Click **Save changes**.
+**Expected:** the series detail under `/watch/<slug>` reflects the new values immediately.
+
+### 5c.2 Unpublish / publish
+**Do:** in the Edit Series page, click **Unpublish**.
+**Expected:** the series stops appearing on the public `/watch` library and on series listings. Clicking **Publish** restores visibility. Creator can only do this on their own series; admin can do it on any.
+
+### 5c.3 Edit an episode
+**Do:** **Studio → series → Edit → Episodes → ✎ on an episode**. Change title, video URL, reflection prompt, tier. Save.
+**Expected:** the episode page picks up the new values on next load.
+
+### 5c.4 Delete an episode / series
+**Do:** click 🗑 next to an episode (or "Delete series" on the editor). Confirm.
+**Expected:** the row disappears; on the public side, watch URLs return 404. Deleting a series cascades to its episodes and watch progress rows.
+
+---
+
+## 5d. v0.3.0 additions — Admin: moderation, search, audit
+
+### 5d.1 User search
+**Do:** **Admin → Users**. Type into the search box (matches username, email, full name). Optionally filter by role.
+**Expected:** the table filters live (≈200 ms debounce). Inline role select changes the user's role; **Disable / Enable** toggles the active flag.
+
+### 5d.2 Content moderation
+**Do:** **Admin → Content moderation**. Click **Unpublish** on a misbehaving series, or 🗑 to delete it outright.
+**Expected:** the series disappears (or stops appearing publicly). The audit log records `series_admin_edit` or `series_admin_delete`.
+
+### 5d.3 Audit log
+**Do:** **Admin → Audit log**.
+**Expected:** a table of recent moderator actions and security events (password changes, self-deletes, admin overrides), most recent first.
+
+---
+
+## 5e. v0.3.0 additions — Reflection: edit, search, filter
+
+### 5e.1 Edit a reflection
+**Do:** **Reflect**. Hover an entry → ✎. Edit content / mood / intensity → ✓ to save.
+**Expected:** the entry updates in place. AI insight is regenerated if the content changed (when `OPENAI_API_KEY` is set).
+
+### 5e.2 Search and filter
+**Do:** type into the search box at the top of the journal column; pick a mood from the dropdown.
+**Expected:** entries filter live; the URL updates (`?q=…&mood=…`), so the view is bookmarkable.
+
+### 5e.3 Range toggle on the trend chart
+**Do:** click **7d / 30d / 90d / 1y** above the trend chart.
+**Expected:** the band re-renders for the selected window; the URL parameter `range` reflects the choice.
+
+---
+
+## 5f. v0.3.0 additions — Companion: history & search
+
+### 5f.1 Conversation drawer
+**Do:** open **Companion**. On desktop, a left drawer lists prior conversations; on mobile, tap the chat icon at the bottom-left.
+**Expected:** drawer shows up to 50 conversations, most recent first, each with title and last-message preview. Active conversation is highlighted.
+
+### 5f.2 Search conversations
+**Do:** type in the drawer search box.
+**Expected:** matches in either the conversation title **or** any message body filter the list live.
+
+### 5f.3 Resume a conversation
+**Do:** click a conversation in the drawer.
+**Expected:** the chat loads with all prior messages; replies continue in the same conversation (URL: `/companion?c=<id>`).
+
+### 5f.4 Premium long memory
+**Do:** while on `premium` tier, send a message after >12 prior turns.
+**Expected:** the LLM context includes the last 32 turns (vs 8 for free) — visible as the companion referencing earlier details.
+
+---
+
 ## 6. Quick smoke (60 sec)
 
 ```bash

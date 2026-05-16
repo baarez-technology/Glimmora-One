@@ -46,7 +46,9 @@ async def chat(payload: ChatRequest, user: CurrentUser, db: AsyncSession = Depen
     db.add(user_msg)
     await db.flush()
 
-    result = await respond(db, history, text)
+    # Premium gets a deeper rolling memory window; free is intentionally lighter.
+    memory_window = 32 if user.subscription_tier == "premium" else 8
+    result = await respond(db, history, text, memory_window=memory_window)
 
     assistant_msg = Message(
         conversation_id=conv.id,
@@ -74,15 +76,24 @@ async def chat(payload: ChatRequest, user: CurrentUser, db: AsyncSession = Depen
 
 
 @router.get("/conversations", response_model=Envelope[list[ConversationSummary]])
-async def list_conversations(user: CurrentUser, db: AsyncSession = Depends(get_db)):
-    rows = (
-        await db.execute(
-            select(Conversation)
-            .where(Conversation.user_id == user.id)
-            .order_by(desc(Conversation.updated_at))
-            .limit(50)
+async def list_conversations(
+    user: CurrentUser,
+    db: AsyncSession = Depends(get_db),
+    q: str | None = None,
+):
+    stmt = select(Conversation).where(Conversation.user_id == user.id)
+    if q:
+        like = f"%{q.lower()}%"
+        from sqlalchemy import func as _f, or_ as _or
+        # Match either the conversation title or any message body inside it.
+        sub = (
+            select(Message.conversation_id)
+            .where(_f.lower(Message.content).like(like))
+            .scalar_subquery()
         )
-    ).scalars().all()
+        stmt = stmt.where(_or(_f.lower(Conversation.title).like(like), Conversation.id.in_(sub)))
+    stmt = stmt.order_by(desc(Conversation.updated_at)).limit(50)
+    rows = (await db.execute(stmt)).scalars().all()
     summaries: list[ConversationSummary] = []
     for c in rows:
         last = (
