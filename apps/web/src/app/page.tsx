@@ -93,7 +93,7 @@ export default function LandingPage() {
       <section id="journey" className="container py-20 max-w-3xl">
         <Reveal>
           <blockquote className="font-serif text-2xl md:text-3xl leading-relaxed text-app">
-            “The longest way is the safest way home — and the way home is mostly inward.”
+            “The quietest part of your day is often the most honest one.”
           </blockquote>
           <p className="mt-4 text-sm text-muted">— a small reminder from us to you</p>
         </Reveal>
