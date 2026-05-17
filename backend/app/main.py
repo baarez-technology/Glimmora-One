@@ -28,9 +28,10 @@ from .routers import (
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     settings = get_settings()
-    if settings.database_url.startswith("sqlite"):
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
+    # Idempotent — adds any missing tables. Safe to leave on for SQLite + Postgres.
+    # Alembic still owns destructive / schema-altering migrations in prod.
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     async with async_session_factory() as db:
         await ensure_superadmin(db)
         await ensure_demo_catalog(db)
