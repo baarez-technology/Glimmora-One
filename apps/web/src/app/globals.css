@@ -36,8 +36,31 @@ body {
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  /* Honor the user's OS-level reduced-motion preference everywhere. */
+  position: relative;
 }
+
+/* Atmospheric warm glow that lives behind every page — calm, never loud.
+   Fixed so it doesn't reflow on scroll. Subtle in light mode, slightly
+   more present in dark mode where the contrast carries it. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(80% 60% at 12% -5%, rgba(233, 169, 50, 0.10) 0%, transparent 55%),
+    radial-gradient(55% 45% at 92% 8%, rgba(191, 174, 147, 0.10) 0%, transparent 60%),
+    radial-gradient(70% 55% at 50% 110%, rgba(118, 100, 81, 0.08) 0%, transparent 60%);
+}
+.dark body::before {
+  background:
+    radial-gradient(80% 60% at 12% -5%, rgba(240, 192, 87, 0.10) 0%, transparent 55%),
+    radial-gradient(55% 45% at 92% 8%, rgba(154, 135, 112, 0.08) 0%, transparent 60%),
+    radial-gradient(70% 55% at 50% 110%, rgba(154, 135, 112, 0.05) 0%, transparent 60%);
+}
+/* Make sure all real content sits above the glow. */
+body > * { position: relative; z-index: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -163,6 +186,98 @@ body {
   background-clip: text;
   color: transparent;
   animation: shimmer 6s linear infinite;
+}
+
+/* ----- Polished surface treatments (cards, tiles, panels) ----- */
+
+/* A "panel" is the default elevated surface used across admin/moderator
+   pages: warm-tinted bg with a subtle inner highlight on top and a
+   hairline gradient border. Sits warmer than .bg-elev alone. */
+.panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.65), rgba(255, 252, 247, 0)) ,
+    rgb(var(--bg-elev));
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 1px 2px rgba(20, 16, 12, 0.04),
+    0 10px 30px -18px rgba(20, 16, 12, 0.10);
+}
+.dark .panel {
+  background:
+    linear-gradient(180deg, rgba(255, 232, 170, 0.04), rgba(255, 232, 170, 0)) ,
+    rgb(var(--bg-elev));
+  box-shadow:
+    0 1px 0 rgba(255, 232, 170, 0.04) inset,
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 24px 60px -28px rgba(0, 0, 0, 0.65);
+}
+
+/* Stat tile — a smaller panel used in hero strips on admin pages.
+   Small label, big number, optional sublabel underneath. */
+.stat-tile {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(233, 169, 50, 0.08), transparent 60%),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.55), rgba(255, 252, 247, 0)),
+    rgb(var(--bg-elev));
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 30px -18px rgba(20, 16, 12, 0.10);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dark .stat-tile {
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(240, 192, 87, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(255, 232, 170, 0.04), rgba(255, 232, 170, 0)),
+    rgb(var(--bg-elev));
+  box-shadow:
+    0 1px 0 rgba(255, 232, 170, 0.04) inset,
+    0 24px 60px -28px rgba(0, 0, 0, 0.55);
+}
+.stat-tile:hover {
+  transform: translateY(-2px);
+}
+.stat-tile .stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgb(var(--fg-muted));
+}
+.stat-tile .stat-value {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-top: 6px;
+  color: rgb(var(--fg));
+}
+.stat-tile .stat-sub {
+  font-size: 12px;
+  color: rgb(var(--fg-muted));
+  margin-top: 6px;
+}
+/* Optional accented tile (uses the brand glimmer as the dominant glow). */
+.stat-tile.accent {
+  background:
+    radial-gradient(140% 100% at 100% 0%, rgba(233, 169, 50, 0.22), transparent 65%),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.55), rgba(255, 252, 247, 0)),
+    rgb(var(--bg-elev));
+  border-color: rgba(233, 169, 50, 0.35);
+}
+.dark .stat-tile.accent {
+  background:
+    radial-gradient(140% 100% at 100% 0%, rgba(240, 192, 87, 0.18), transparent 65%),
+    linear-gradient(180deg, rgba(255, 232, 170, 0.06), rgba(255, 232, 170, 0)),
+    rgb(var(--bg-elev));
+  border-color: rgba(240, 192, 87, 0.25);
 }
 
 /* Animated dotted ring used to draw attention without yelling. */

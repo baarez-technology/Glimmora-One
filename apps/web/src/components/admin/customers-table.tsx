@@ -45,10 +45,10 @@ export function CustomersTable({ initial }: { initial: AdminUserRow[] }) {
         </select>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-app">
+      <div className="panel overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-muted text-left">
-            <tr className="border-b border-app bg-elev/40">
+            <tr className="border-b border-app">
               <th className="py-2 px-3">Name</th>
               <th className="py-2 px-3">Username</th>
               <th className="py-2 px-3">Email</th>
