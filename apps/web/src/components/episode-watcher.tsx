@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { VideoPlayer } from './video-player';
 import { Button } from './ui/button';
 import { Textarea } from './ui/input';
-import { Sparkles } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
+import { resolveVideoSource } from '@/lib/video-source';
 import type { Episode } from '@/lib/types';
 
 type Props = {
@@ -19,6 +20,14 @@ export function EpisodeWatcher({ episode, startAt = 0 }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [markedComplete, setMarkedComplete] = useState(false);
+  const [marking, setMarking] = useState(false);
+
+  const sourceKind = resolveVideoSource(episode.videoUrl).kind;
+  // YouTube + Drive iframes don't emit timeupdate / ended events, so the
+  // automatic progress tracking on the <video> tag can't reach them. Surface
+  // a manual mark-complete affordance so customers can still close the loop.
+  const isEmbed = sourceKind === 'youtube' || sourceKind === 'drive';
 
   async function reportProgress(positionSeconds: number, duration: number) {
     try {
@@ -34,6 +43,29 @@ export function EpisodeWatcher({ episode, startAt = 0 }: Props) {
       });
     } catch {
       // best-effort
+    }
+  }
+
+  async function markComplete() {
+    setMarking(true);
+    try {
+      await fetch('/api/proxy/v1/content/progress', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          episodeId: episode.id,
+          // Use duration if known, else a non-zero stand-in so the streak counts.
+          positionSeconds: episode.durationSeconds || 1,
+          completed: true,
+        }),
+      });
+      setMarkedComplete(true);
+      // Open the reflection card too — the natural onEnded won't fire for embeds.
+      if (episode.reflectionPrompt) setReflectionOpen(true);
+    } catch {
+      setError("Couldn't mark complete. Try again.");
+    } finally {
+      setMarking(false);
     }
   }
 
@@ -69,8 +101,33 @@ export function EpisodeWatcher({ episode, startAt = 0 }: Props) {
           poster={episode.posterUrl}
           startAt={startAt}
           onProgress={reportProgress}
-          onEnded={() => setReflectionOpen(true)}
+          onEnded={() => {
+            setMarkedComplete(true);
+            setReflectionOpen(true);
+          }}
         />
+      </div>
+
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs text-muted">
+          {isEmbed
+            ? "Embedded videos don't auto-track. Tap below when you're done."
+            : 'Your progress saves as you watch.'}
+        </p>
+        {markedComplete ? (
+          <span className="inline-flex items-center gap-2 text-sm text-emerald-400">
+            <Check className="h-4 w-4" /> Marked as watched
+          </span>
+        ) : (
+          <Button
+            variant={isEmbed ? 'primary' : 'outline'}
+            size="sm"
+            onClick={markComplete}
+            disabled={marking}
+          >
+            <Check className="h-4 w-4" /> {marking ? 'Saving…' : 'Mark as watched'}
+          </Button>
+        )}
       </div>
 
       {episode.reflectionPrompt && (
