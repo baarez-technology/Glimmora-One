@@ -4,7 +4,7 @@ region: blr
 services:
   - name: api
     dockerfile_path: backend/Dockerfile
-    source_dir: /
+    source_dir: backend
     github:
       repo: baarez-technology/Glimmora-One
       branch: main
