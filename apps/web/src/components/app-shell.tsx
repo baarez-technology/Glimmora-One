@@ -103,14 +103,6 @@ export function AppShell({ user, children }: { user: User; children: React.React
             );
           })}
 
-          {user.role === 'customer' && !user.hasPendingApplication && (
-            <Link
-              href="/apply"
-              className="mt-4 flex items-center gap-3 rounded-full px-3 py-2 text-sm text-glimmer-600 dark:text-glimmer-300 hover:bg-glimmer-400/10 border border-dashed border-glimmer-400/40 transition-all"
-            >
-              <Sparkles className="h-4 w-4" /> Apply to be a creator
-            </Link>
-          )}
         </nav>
 
         <div className="pointer-events-auto mt-auto flex items-center gap-3 pt-6">
