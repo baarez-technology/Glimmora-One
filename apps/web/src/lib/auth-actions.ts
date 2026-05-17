@@ -1,74 +1,87 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { backend, backendData, BackendError } from './backend';
+import { backend, BackendError } from './backend';
 import { clearSessionCookie, setSessionCookie } from './session';
 import type { User } from './types';
 
 type TokenEnv = { success: boolean; data: { accessToken: string; expiresIn: number } };
 
-async function persistToken(payload: TokenEnv) {
-  if (!payload.success || !payload.data?.accessToken) {
-    throw new Error('Invalid auth response');
-  }
-  await setSessionCookie(payload.data.accessToken, payload.data.expiresIn);
-}
+export type AuthSuccess = { ok: true; token: string; expiresIn: number; dest: string };
+export type AuthFailure = { ok: false; error: string };
+export type AuthResult = AuthSuccess | AuthFailure;
 
-/** Where this user should land after login, based on role + onboarding + pending app. */
-async function landingPathForCurrentUser(): Promise<string> {
+async function landingPathForToken(token: string): Promise<string> {
+  // Cookie isn't set yet (the client sets it after this returns) — use the
+  // token as a Bearer directly against the backend.
   try {
-    const me = await backendData<User>('/v1/auth/me');
-    if (me.hasPendingApplication) return '/under-review';
-    if (me.role === 'superadmin') return '/admin/customers';
-    if (me.role === 'moderator')  return '/moderate/applications';
-    const onboarded = Boolean((me.preferences as Record<string, unknown>)?.onboarded);
+    const url = `${process.env.BACKEND_URL ?? 'http://localhost:8000'}/v1/auth/me`;
+    const r = await fetch(url, {
+      headers: { authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+    if (!r.ok) return '/dashboard';
+    const env = (await r.json()) as { data: User };
+    const u = env.data;
+    if (u.hasPendingApplication) return '/under-review';
+    if (u.role === 'superadmin') return '/admin/customers';
+    if (u.role === 'moderator')  return '/moderate/applications';
+    const onboarded = Boolean((u.preferences as Record<string, unknown>)?.onboarded);
     return onboarded ? '/dashboard' : '/onboarding';
   } catch {
     return '/dashboard';
   }
 }
 
-export async function loginAction(formData: FormData): Promise<{ error?: string }> {
+export async function loginAction(formData: FormData): Promise<AuthResult> {
   const username = String(formData.get('username') ?? '').trim();
   const password = String(formData.get('password') ?? '');
-  if (!username || !password) return { error: 'Username and password required.' };
-  let dest = '/dashboard';
+  if (!username || !password) return { ok: false, error: 'Username and password required.' };
   try {
     const res = await backend<TokenEnv>('/v1/auth/login', {
       method: 'POST',
       body: { username, password },
       authed: false,
     });
-    await persistToken(res);
-    dest = await landingPathForCurrentUser();
+    if (!res.success || !res.data?.accessToken) {
+      return { ok: false, error: 'Invalid response from server.' };
+    }
+    const dest = await landingPathForToken(res.data.accessToken);
+    return { ok: true, token: res.data.accessToken, expiresIn: res.data.expiresIn, dest };
   } catch (e) {
-    if (e instanceof BackendError) return { error: e.message };
-    return { error: 'Could not sign you in. Try again.' };
+    if (e instanceof BackendError) return { ok: false, error: e.message };
+    return { ok: false, error: 'Could not sign you in. Try again.' };
   }
-  redirect(dest);
 }
 
-export async function signupAction(formData: FormData): Promise<{ error?: string }> {
+export async function signupAction(formData: FormData): Promise<AuthResult> {
   const username = String(formData.get('username') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
   const fullName = String(formData.get('fullName') ?? '').trim() || null;
-  if (!username || !password) return { error: 'Username and password are required.' };
+  if (!username || !password) return { ok: false, error: 'Username and password are required.' };
   try {
     const res = await backend<TokenEnv>('/v1/auth/signup', {
       method: 'POST',
       body: { username, password, fullName, ...(email ? { email } : {}) },
       authed: false,
     });
-    await persistToken(res);
+    if (!res.success || !res.data?.accessToken) {
+      return { ok: false, error: 'Invalid response from server.' };
+    }
+    // Brand-new signup → always start at onboarding.
+    return { ok: true, token: res.data.accessToken, expiresIn: res.data.expiresIn, dest: '/onboarding' };
   } catch (e) {
-    if (e instanceof BackendError) return { error: e.message };
-    return { error: 'Could not create your account. Try again.' };
+    if (e instanceof BackendError) return { ok: false, error: e.message };
+    return { ok: false, error: 'Could not create your account. Try again.' };
   }
-  redirect('/onboarding');
 }
 
+// Used by /api/auth/logout. Server action that clears the cookie + redirects.
 export async function logoutAction() {
   await clearSessionCookie();
   redirect('/');
 }
+
+// Keep setSessionCookie usable from server contexts (e.g. tests or scripts).
+export { setSessionCookie };

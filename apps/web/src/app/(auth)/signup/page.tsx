@@ -33,7 +33,20 @@ export default function SignupPage() {
             }
             startTransition(async () => {
               const res = await signupAction(fd);
-              if (res?.error) setError(res.error);
+              if (!res.ok) {
+                setError(res.error);
+                return;
+              }
+              const sess = await fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ token: res.token, expiresIn: res.expiresIn }),
+              });
+              if (!sess.ok) {
+                setError('Account created but the session could not be saved. Sign in to continue.');
+                return;
+              }
+              window.location.assign(res.dest);
             });
           }}
           className="space-y-4"

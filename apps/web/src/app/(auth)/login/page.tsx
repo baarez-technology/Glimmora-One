@@ -24,7 +24,23 @@ export default function LoginPage() {
             setError(null);
             startTransition(async () => {
               const res = await loginAction(fd);
-              if (res?.error) setError(res.error);
+              if (!res.ok) {
+                setError(res.error);
+                return;
+              }
+              // Persist the cookie via a route handler (works reliably across Next 15
+              // versions, unlike server-action redirect + cookie which has known issues).
+              const sess = await fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ token: res.token, expiresIn: res.expiresIn }),
+              });
+              if (!sess.ok) {
+                setError('Signed in but the session could not be saved. Reload and try again.');
+                return;
+              }
+              // Hard navigate so the new request includes the just-set cookie.
+              window.location.assign(res.dest);
             });
           }}
           className="space-y-4"
