@@ -1,16 +1,23 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 export function Brand({ className, href = '/' }: { className?: string; href?: string }) {
   return (
-    <Link href={href} className={cn('inline-flex items-center gap-2 group', className)}>
-      <span className="relative inline-flex h-7 w-7 items-center justify-center">
-        <span className="absolute inset-0 rounded-full bg-glimmer-300/40 blur-md group-hover:bg-glimmer-300/60 transition" />
-        <span className="relative inline-flex h-4 w-4 rounded-full bg-glimmer-400 animate-breathe shadow-glow" />
-      </span>
-      <span className="font-serif text-lg tracking-tight">
-        Glimmora <span className="text-glimmer-500">ONE</span>
-      </span>
+    <Link
+      href={href}
+      aria-label="Glimmora ONE"
+      className={cn('inline-flex items-center group', className)}
+    >
+      <Image
+        src="/logo.png"
+        alt="Glimmora ONE"
+        width={520}
+        height={290}
+        priority
+        sizes="(min-width: 1024px) 200px, 160px"
+        className="h-10 w-auto lg:h-12 select-none transition-transform duration-300 ease-soft group-hover:scale-[1.02] drop-shadow-[0_4px_18px_rgba(233,169,50,0.20)]"
+      />
     </Link>
   );
 }

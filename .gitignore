@@ -37,4 +37,5 @@ Thumbs.db
 .playwright-mcp/
 *.png
 !docs/screenshots/*.png
+!apps/web/public/*.png
 do.env
