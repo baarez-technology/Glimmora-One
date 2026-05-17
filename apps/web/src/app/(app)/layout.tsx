@@ -13,31 +13,35 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
   const pathname = (await headers()).get('x-pathname') ?? '';
 
-  // 1. Pending creator application → gate, regardless of role.
-  if (user.hasPendingApplication && !pathname.startsWith('/under-review')) {
-    redirect('/under-review');
+  // 1. Pending creator application — gate above EVERYTHING else.
+  //    Once gated, the user stays on /under-review until decision; no
+  //    onboarding check, no role check, no other redirects.
+  if (user.hasPendingApplication) {
+    if (!pathname.startsWith('/under-review')) redirect('/under-review');
+    return <AppShell user={user}>{children}</AppShell>;
   }
 
-  // 2. Role-based home redirects
+  // 2. Role-based home routing.
   if (user.role === 'superadmin') {
-    if (pathname === '/' || pathname === '/dashboard') redirect('/admin/customers');
-    if (pathname.startsWith('/companion') || pathname.startsWith('/watch') ||
-        pathname.startsWith('/reflect') || pathname.startsWith('/onboarding')) {
+    if (pathname === '/' || pathname === '/dashboard' ||
+        pathname.startsWith('/companion') || pathname.startsWith('/watch') ||
+        pathname.startsWith('/reflect') || pathname.startsWith('/onboarding') ||
+        pathname.startsWith('/moderate') || pathname.startsWith('/under-review')) {
       redirect('/admin/customers');
     }
   } else if (user.role === 'moderator') {
-    if (pathname === '/' || pathname === '/dashboard') redirect('/moderate/applications');
-    if (pathname.startsWith('/companion') || pathname.startsWith('/watch') ||
+    if (pathname === '/' || pathname === '/dashboard' ||
+        pathname.startsWith('/companion') || pathname.startsWith('/watch') ||
         pathname.startsWith('/reflect') || pathname.startsWith('/onboarding') ||
-        pathname.startsWith('/admin')) {
+        pathname.startsWith('/admin') || pathname.startsWith('/under-review')) {
       redirect('/moderate/applications');
     }
   } else {
     // customer / creator
-    if (pathname.startsWith('/admin') || pathname.startsWith('/moderate')) {
+    if (pathname.startsWith('/admin') || pathname.startsWith('/moderate') ||
+        pathname.startsWith('/under-review')) {
       redirect('/dashboard');
     }
-    // onboarding gate for everyone with normal product access
     const onboarded = Boolean((user.preferences as Record<string, unknown>)?.onboarded);
     if (!onboarded && !pathname.startsWith('/onboarding')) {
       redirect('/onboarding');
