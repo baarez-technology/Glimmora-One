@@ -3,14 +3,12 @@ region: blr
 
 services:
   - name: api
-    source_dir: backend
+    dockerfile_path: backend/Dockerfile
+    source_dir: /
     github:
-      repo: glimmora/glimmora-one
+      repo: baarez-technology/Glimmora-One
       branch: main
       deploy_on_push: true
-    environment_slug: python
-    build_command: pip install -e .
-    run_command: uvicorn app.main:app --host 0.0.0.0 --port 8080
     http_port: 8080
     routes:
       - path: /v1
@@ -22,22 +20,28 @@ services:
         type: SECRET
       - key: JWT_SECRET
         type: SECRET
+      - key: BOOTSTRAP_SUPERADMIN_USERNAME
+        value: superadmin
       - key: BOOTSTRAP_SUPERADMIN_PASSWORD
         type: SECRET
+      - key: BOOTSTRAP_SUPERADMIN_EMAIL
+        value: admin@glimmora.ai
+      - key: JWT_EXPIRES_HOURS
+        value: "24"
       - key: OPENAI_API_KEY
         type: SECRET
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
       - key: ALLOWED_ORIGINS
         value: ${APP_URL}
 
   - name: web
+    dockerfile_path: apps/web/Dockerfile
     source_dir: /
     github:
-      repo: glimmora/glimmora-one
+      repo: baarez-technology/Glimmora-One
       branch: main
       deploy_on_push: true
-    environment_slug: node-js
-    build_command: corepack enable && pnpm install --frozen-lockfile && cd apps/web && pnpm run build
-    run_command: cd apps/web && pnpm next start -p 8080
     http_port: 8080
     routes:
       - path: /
@@ -45,15 +49,4 @@ services:
       - key: BACKEND_URL
         value: ${api.PRIVATE_URL}
       - key: JWT_SECRET
-        type: SECRET
-
-jobs:
-  - name: migrate
-    kind: PRE_DEPLOY
-    source_dir: backend
-    environment_slug: python
-    build_command: pip install -e .
-    run_command: alembic upgrade head
-    envs:
-      - key: DATABASE_URL
         type: SECRET

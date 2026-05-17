@@ -18,5 +18,5 @@ RUN corepack enable
 WORKDIR /repo
 COPY --from=build /repo /repo
 WORKDIR /repo/apps/web
-EXPOSE 3000
-CMD ["pnpm", "next", "start", "-p", "3000"]
+EXPOSE 8080
+CMD ["pnpm", "next", "start", "-p", "8080"]
