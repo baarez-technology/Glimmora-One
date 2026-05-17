@@ -206,3 +206,38 @@ class DigitalTwinSnapshot(CamelModel):
     last_30_days: list[EmotionTrendPoint]
     growth_milestones: list[str]
     tag_cloud: list[dict[str, Any]]
+
+
+# ---------------- Spiritual Knowledge Graph (SKG) ----------------
+
+class WisdomFramework(CamelModel):
+    slug: str
+    name: str
+    tradition: str  # e.g. "Buddhism", "Stoicism", "Modern psychology"
+    summary: str    # one-paragraph framework
+
+
+class WisdomPractice(CamelModel):
+    slug: str
+    name: str
+    instruction: str  # one-line actionable practice
+
+
+class LifeSituation(CamelModel):
+    slug: str
+    title: str             # how the user picks it: "I'm dealing with a breakup"
+    tagline: str
+    description: str
+    emotional_patterns: list[str]
+    common_thoughts: list[str]
+    keywords: list[str]    # for free-text → situation classifier later
+    frameworks: list[WisdomFramework]
+    practices: list[WisdomPractice]
+
+
+class LifeSituationSummary(CamelModel):
+    """Lightweight version for list views."""
+    slug: str
+    title: str
+    tagline: str
+    emotional_patterns: list[str]

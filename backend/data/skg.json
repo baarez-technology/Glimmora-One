@@ -1,0 +1,762 @@
+{
+  "version": "0.1.0",
+  "description": "Glimmora ONE — Spiritual Knowledge Graph seed. 12 life situations, each with 5 wisdom frameworks and 3 practices. Hand-curated. Update via PR; do not generate.",
+  "situations": [
+    {
+      "slug": "breakup",
+      "title": "I'm dealing with a breakup",
+      "tagline": "Love that ended, and a self that needs rebuilding.",
+      "description": "Whether you left, were left, or both — a breakup is the slow, layered loss of a future you imagined. The pain is real, the longing is real, and so is the self that survives it.",
+      "emotional_patterns": ["grief", "longing", "anger", "self-doubt", "relief mixed with sadness"],
+      "common_thoughts": [
+        "Maybe I made a mistake.",
+        "I should have done more.",
+        "I'll never feel this way about anyone again.",
+        "Why am I not over this yet?"
+      ],
+      "keywords": ["breakup", "ex", "left me", "broke up", "ended it", "miss them", "relationship ended", "divorce", "split up"],
+      "frameworks": [
+        {
+          "slug": "attachment-vs-love",
+          "name": "Attachment vs love",
+          "tradition": "Buddhism",
+          "summary": "Buddhist teaching distinguishes love (wanting the other person's wellbeing) from attachment (needing the other person for your own). Most of what feels unbearable in a breakup is attachment — the loss of who you were when you were with them. Love itself does not have to end; the grasping does."
+        },
+        {
+          "slug": "amor-fati",
+          "name": "Amor fati — love your fate",
+          "tradition": "Stoicism",
+          "summary": "The Stoics taught that suffering comes not from events but from resisting them. To accept that this relationship ending was part of your life is not to celebrate it — it is to stop fighting reality. Only then can what comes next find you."
+        },
+        {
+          "slug": "the-self-that-remains",
+          "name": "The self that remains",
+          "tradition": "Modern psychology",
+          "summary": "When a relationship dissolves, parts of your identity dissolve with it — the routines, the inside jokes, the future plans. Rebuilding is the slow, deliberate work of asking: who am I now, separately? Not who do I want to become, but who is already here?"
+        },
+        {
+          "slug": "wu-wei-the-watercourse",
+          "name": "Wu wei — the watercourse way",
+          "tradition": "Taoism",
+          "summary": "Water does not strain to reach the sea; it follows the lowest path and arrives. Trying to force closure, to think your way out of grief, to be over it by Friday — these are upstream efforts. The Taoist response is to let grief move through you the way water moves through stone."
+        },
+        {
+          "slug": "the-witness",
+          "name": "The witness underneath",
+          "tradition": "Osho / Advaita",
+          "summary": "Beneath the pain is something that watches the pain — calm, unchanged. You are not your sadness; you are the awareness in which sadness appears. Sitting with this witness, even for sixty seconds, breaks the spell of total identification with the wound."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "name-the-loss",
+          "name": "Name the loss specifically",
+          "instruction": "Write one sentence: 'What I am actually mourning is ___' — not the person, but the specific thing (their laugh, the morning routine, the future plan). Specificity dissolves vagueness."
+        },
+        {
+          "slug": "the-empty-chair",
+          "name": "The empty chair, three minutes",
+          "instruction": "Sit across from an empty chair. Say out loud what you wish you could tell them — without sending. End with one thing you are willing to keep, and one you are willing to release."
+        },
+        {
+          "slug": "one-faithful-act",
+          "name": "One faithful act tomorrow",
+          "instruction": "Pick one small thing — a walk, a meal cooked, a friend texted — that the version of you you want to become would do. Do only that. Repeat the day after."
+        }
+      ]
+    },
+    {
+      "slug": "loneliness",
+      "title": "I feel lonely",
+      "tagline": "Not the absence of people — the absence of being met.",
+      "description": "Loneliness is not always about being alone. It is the gap between how known you feel and how known you want to be. It can sit beside you in a crowd, in a marriage, in a busy week.",
+      "emotional_patterns": ["loneliness", "longing", "shame", "invisibility", "quiet sadness"],
+      "common_thoughts": [
+        "No one really gets me.",
+        "There's something wrong with me.",
+        "It's too late to make real friends.",
+        "I'd be a burden if I reached out."
+      ],
+      "keywords": ["lonely", "alone", "isolated", "no one", "nobody", "by myself", "disconnected", "unseen", "invisible"],
+      "frameworks": [
+        {
+          "slug": "two-kinds-of-aloneness",
+          "name": "Two kinds of aloneness",
+          "tradition": "Existential psychology",
+          "summary": "There is aloneness as ache (loneliness) and aloneness as ground (solitude). The same situation can be either, depending on what you bring to it. Most of the work of loneliness is moving — not the situation, but your relationship to it."
+        },
+        {
+          "slug": "the-radical-otherness",
+          "name": "The radical otherness of every person",
+          "tradition": "Phenomenology",
+          "summary": "No one will ever fully meet you. Not because they don't care — because no consciousness can fully enter another. Recognising this is not despair; it is what makes the partial meetings precious instead of inadequate."
+        },
+        {
+          "slug": "the-buddhas-mirror",
+          "name": "The Buddha's mirror",
+          "tradition": "Buddhism",
+          "summary": "Loneliness often hides a thirst — to be seen by a perfect witness who will tell us we are real. The teaching is that this witness exists, and it is your own awareness. Learning to be the one who notices you can shift the urgency."
+        },
+        {
+          "slug": "philia-vs-eros",
+          "name": "Philia vs eros — the friendship hunger",
+          "tradition": "Ancient Greek philosophy",
+          "summary": "The Greeks distinguished many kinds of love. Loneliness in adulthood is often a hunger for philia (friendship-love) being mistaken for a need for eros (romantic love). Asking 'what kind of love am I missing?' is the start of the answer."
+        },
+        {
+          "slug": "the-one-honest-message",
+          "name": "The one honest message",
+          "tradition": "Modern relational therapy",
+          "summary": "Loneliness self-perpetuates because reaching out feels risky. The research shows that brief, honest contact — 'I've been thinking about you' — almost never lands the way the lonely mind fears. The cure is small acts, not large solutions."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "thirty-seconds-of-witness",
+          "name": "Thirty seconds of witness",
+          "instruction": "Sit. Put a hand on your chest. Say silently: 'I'm here. I see you.' Stay until it stops feeling silly. (It will. It always does.)"
+        },
+        {
+          "slug": "one-honest-message",
+          "name": "One honest message today",
+          "instruction": "Pick one person. Send: 'I've been thinking of you — no need to reply.' That's the whole practice. The point is the sending, not the receiving."
+        },
+        {
+          "slug": "name-the-hunger",
+          "name": "Name the hunger",
+          "instruction": "Write one sentence: 'The kind of being-met I miss most right now is ___' (a deep listener / playful peers / family / a community of practice). Knowing the shape makes it findable."
+        }
+      ]
+    },
+    {
+      "slug": "anxiety",
+      "title": "I'm anxious",
+      "tagline": "A future that hasn't happened, lived in advance.",
+      "description": "Anxiety is the cost of imagining ten possible futures and trying to insure against all of them at once. The body cannot tell the difference between an imagined threat and a real one — it just keeps the engine running.",
+      "emotional_patterns": ["anxious", "tense", "restless", "tired-but-wired", "dread"],
+      "common_thoughts": [
+        "What if it all falls apart?",
+        "I should be doing more.",
+        "Something bad is about to happen.",
+        "I can't slow down — there's too much."
+      ],
+      "keywords": ["anxious", "anxiety", "worried", "nervous", "stressed", "panic", "racing", "overwhelmed", "tense", "on edge"],
+      "frameworks": [
+        {
+          "slug": "dichotomy-of-control",
+          "name": "The dichotomy of control",
+          "tradition": "Stoicism",
+          "summary": "Epictetus opened his manual with this: some things are up to us, others are not. Anxiety lives in the space where we try to control what isn't ours. Naming what is and isn't yours to move — explicitly, on paper — collapses much of the loop."
+        },
+        {
+          "slug": "anxiety-as-protection",
+          "name": "Anxiety as protection, misfired",
+          "tradition": "Modern psychology",
+          "summary": "Anxiety is not a malfunction; it is a watchman doing its job too eagerly. Asking 'what is this trying to protect me from?' turns it from enemy to over-protective ally — easier to thank and dismiss than to fight."
+        },
+        {
+          "slug": "the-second-arrow",
+          "name": "The second arrow",
+          "tradition": "Buddhism",
+          "summary": "The first arrow is the experience itself. The second arrow is your reaction to it — the anxiety about being anxious, the shame about being unable to function. Most suffering is the second arrow, and the second arrow is the one you can drop."
+        },
+        {
+          "slug": "wu-wei-for-the-mind",
+          "name": "Wu wei for the mind",
+          "tradition": "Taoism",
+          "summary": "Effort against anxiety often feeds it. The Taoist move is the opposite: less doing, slower breath, a return to the body. Not surrender to the anxiety — surrender of the war against it."
+        },
+        {
+          "slug": "the-narrowing",
+          "name": "The narrowing",
+          "tradition": "Cognitive-behavioural therapy",
+          "summary": "Anxiety widens the field — every email is a crisis, every silence is a sign. The practice is deliberate narrowing: this hour, this room, this one task. The wide field returns; the work is the narrowing, again and again."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-list-of-two-columns",
+          "name": "The list of two columns",
+          "instruction": "On paper, write two columns: 'Mine to act on' and 'Not mine.' List every worry under one. Act on one item from the first column today. Leave the second column on the page."
+        },
+        {
+          "slug": "four-seven-eight",
+          "name": "Four-seven-eight breath",
+          "instruction": "Breathe in 4 counts. Hold 7. Breathe out 8. Do four cycles. This is not a trick — it is a direct signal to your nervous system that the danger has passed."
+        },
+        {
+          "slug": "name-three-things",
+          "name": "Name three things you can see",
+          "instruction": "Out loud, name three things you can see, two you can hear, one you can feel touching your skin. Anxiety lives in the future; this returns you to the room."
+        }
+      ]
+    },
+    {
+      "slug": "career-confusion",
+      "title": "I'm not sure what to do with my work / career",
+      "tagline": "When the path you were on stops making sense.",
+      "description": "Career confusion isn't only about jobs — it's about the story you were telling about your life. When the story stops fitting, the confusion is a signal, not a failure.",
+      "emotional_patterns": ["restless", "stuck", "drained", "envious of others", "ashamed of being unsure"],
+      "common_thoughts": [
+        "Everyone else seems to have figured it out.",
+        "I've wasted years on the wrong thing.",
+        "If I leave, I'm starting over.",
+        "I don't even know what I want."
+      ],
+      "keywords": ["career", "job", "work", "burnout", "quit", "stuck at work", "wrong path", "lost direction", "midlife", "purpose"],
+      "frameworks": [
+        {
+          "slug": "ikigai",
+          "name": "Ikigai — the intersection",
+          "tradition": "Japanese philosophy",
+          "summary": "Ikigai is the meeting point of what you love, what you're good at, what the world needs, and what someone will pay you for. Few people sit at the perfect centre; most are close on three and stretched on one. The practice is honest mapping — not finding."
+        },
+        {
+          "slug": "the-via-negativa",
+          "name": "The via negativa",
+          "tradition": "Apophatic / Taleb",
+          "summary": "When you don't know what you want, start by removing what you know you don't want. Subtracting bad options is easier and more honest than choosing the best one. The remaining shape is your answer, in negative."
+        },
+        {
+          "slug": "the-sunk-cost-trap",
+          "name": "The sunk cost trap",
+          "tradition": "Behavioural economics",
+          "summary": "The years you've already spent are spent, regardless of what you do next. Decisions made out of 'I've come too far to change' are paying twice — once for the past, once with your future. Ask: if I started today, would I choose this?"
+        },
+        {
+          "slug": "the-craft-frame",
+          "name": "Craft over passion",
+          "tradition": "Modern career research",
+          "summary": "Passion follows mastery, not the other way around. Most people in deeply meaningful careers did not start by knowing — they started by getting good at something nearby, and meaning grew. Lower the question from 'what is my calling' to 'what skill is worth one more year'."
+        },
+        {
+          "slug": "right-livelihood",
+          "name": "Right livelihood",
+          "tradition": "Buddhism (Eightfold Path)",
+          "summary": "Work is one of the eight aspects of an ethical life. Right livelihood is not about prestige — it is about whether the work harms or helps, and whether you can do it without contracting your soul. The test is the body, not the salary."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-anti-resume",
+          "name": "The anti-résumé",
+          "instruction": "On one page, write the work you are most glad you stopped doing. Notice the patterns. What you have left behind is data about what you actually want."
+        },
+        {
+          "slug": "the-five-people",
+          "name": "The five people exercise",
+          "instruction": "Name five people whose work-life you quietly envy. Write one sentence under each: what exactly do you envy? Not the title — the underlying texture."
+        },
+        {
+          "slug": "the-one-year-test",
+          "name": "The one-year test",
+          "instruction": "Ask: 'If I knew this current path would still be available in 12 months, what would I try in the meantime?' Then take the smallest version of that thing this week."
+        }
+      ]
+    },
+    {
+      "slug": "grief",
+      "title": "I'm grieving",
+      "tagline": "The price of having loved.",
+      "description": "Grief is not a problem to solve. It is the long, irregular work of carrying what you cannot put down. It does not move in stages and it does not end on a schedule.",
+      "emotional_patterns": ["sadness", "numbness", "anger", "longing", "guilt", "waves"],
+      "common_thoughts": [
+        "I should be over this by now.",
+        "I can't believe they're gone.",
+        "If I had done more...",
+        "How can the world keep going?"
+      ],
+      "keywords": ["grief", "loss", "died", "death", "passed away", "mourning", "miss them", "lost my", "funeral"],
+      "frameworks": [
+        {
+          "slug": "grief-is-love-with-no-place-to-go",
+          "name": "Grief is love with no place to go",
+          "tradition": "Modern bereavement therapy",
+          "summary": "The intensity of your grief is the measure of the love. Trying to make grief smaller is trying to make the love smaller — and the love is the only thing worth keeping. The work is not shrinking the grief but learning to carry it."
+        },
+        {
+          "slug": "the-ball-in-the-box",
+          "name": "The ball in the box",
+          "tradition": "Modern psychology",
+          "summary": "Imagine a box with a pain button on one wall and a ball bouncing inside. At first the ball is huge and hits the button constantly. Over time the ball shrinks — but it still hits the button, just less often. The ball never disappears. You build a larger box around it."
+        },
+        {
+          "slug": "death-as-teacher",
+          "name": "Death as teacher",
+          "tradition": "Stoicism",
+          "summary": "The Stoics practiced memento mori — remembering death — not as morbidity but as clarification. The person you lost is teaching the rest of us, painfully, what matters. Letting that teaching land is one way of keeping them in the world."
+        },
+        {
+          "slug": "the-bardo",
+          "name": "The bardo — the in-between",
+          "tradition": "Tibetan Buddhism",
+          "summary": "The Tibetan tradition holds that grief, like dying, is a bardo — a liminal space where the old form is gone and the new has not arrived. The work is not to rush across it but to be honest with the strangeness while you are inside it."
+        },
+        {
+          "slug": "continuing-bonds",
+          "name": "Continuing bonds",
+          "tradition": "Modern grief research",
+          "summary": "Older grief theory said you must 'let go' to heal. Current research shows the opposite: the bereaved who heal best maintain an internal relationship with the one they lost — talking to them, asking what they would say, marking dates. You do not have to choose between holding on and moving forward."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-grief-window",
+          "name": "A grief window each day",
+          "instruction": "Set 15 minutes a day for grief, on purpose. Cry, look at photos, say their name. The point is not to feel better — it is to give grief a place so it stops ambushing the rest of the day."
+        },
+        {
+          "slug": "what-they-would-say",
+          "name": "What they would say",
+          "instruction": "When you don't know what to do, ask: 'What would they tell me?' Write the answer in your own hand. This is not pretending — it is using a relationship that is still in you."
+        },
+        {
+          "slug": "one-small-honouring",
+          "name": "One small honouring",
+          "instruction": "Once a week, do one small thing in their memory: cook their dish, walk their walk, send their kind of email. Tiny rituals of continued bond."
+        }
+      ]
+    },
+    {
+      "slug": "success-pressure",
+      "title": "I feel pressured to keep succeeding",
+      "tagline": "When the prize stopped feeling like the prize.",
+      "description": "The treadmill of achievement keeps speeding up. Each goal hit becomes the baseline for the next. The strange ache of getting what you wanted, and still feeling restless, is its own kind of suffering.",
+      "emotional_patterns": ["restless", "ungrounded", "anxious about losing it", "shame about feeling unsatisfied", "isolation at the top"],
+      "common_thoughts": [
+        "I should be happier than I am.",
+        "If I stop, I'll fall behind.",
+        "Other people would kill for what I have.",
+        "I have to prove I deserve it."
+      ],
+      "keywords": ["pressure", "success", "achievement", "competitive", "burnout", "treadmill", "imposter", "high performer", "should be happy"],
+      "frameworks": [
+        {
+          "slug": "hedonic-adaptation",
+          "name": "Hedonic adaptation",
+          "tradition": "Modern positive psychology",
+          "summary": "We adapt to good and bad circumstances faster than we predict. The new role, the new home, the new income — all flatten into the baseline within months. Knowing this is not depressing; it is liberating. The wins were never going to do what you hoped."
+        },
+        {
+          "slug": "preferred-indifferents",
+          "name": "Preferred indifferents",
+          "tradition": "Stoicism",
+          "summary": "The Stoics distinguished goods (virtue) from preferred indifferents (wealth, status, reputation) — things it is fine to want, but not to mistake for what makes a life. Pursuing the second category as though it were the first is the engine of the treadmill."
+        },
+        {
+          "slug": "the-second-mountain",
+          "name": "The second mountain",
+          "tradition": "Modern moral philosophy",
+          "summary": "The first mountain is about building the self — credentials, identity, status. The second mountain is about giving the self away — to people, to causes, to a life larger than your résumé. Most quiet success-malaise is the call to step off the first and start climbing the second."
+        },
+        {
+          "slug": "the-bhagavad-gita-on-action",
+          "name": "Action without attachment to the fruit",
+          "tradition": "Bhagavad Gita",
+          "summary": "Krishna teaches Arjuna to act fully while releasing his grip on the outcome. The work is not less ambitious; the relationship to the result is different. You can run hard and not be enslaved to whether you win — and that is the only way to stay free."
+        },
+        {
+          "slug": "shadow-of-success",
+          "name": "The shadow of success",
+          "tradition": "Jungian psychology",
+          "summary": "Everything you build casts a shadow — the parts of you that you have suppressed to become the achiever. Restlessness at the top is often the shadow's tap on the shoulder: a buried artist, a buried rest, a buried softer self asking to be let back in."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-enough-line",
+          "name": "Draw the 'enough' line",
+          "instruction": "Write, in one sentence: 'I will know I have enough when ___.' Notice if your answer is a number that keeps moving. Set it specifically. Revisit in three months."
+        },
+        {
+          "slug": "the-non-achievement-hour",
+          "name": "One non-achievement hour a day",
+          "instruction": "Schedule one hour a day where no one — including you — is measuring you. Walk, draw, sit. The rule is: produce nothing. This is the antidote to performance, not its enemy."
+        },
+        {
+          "slug": "the-shadow-prompt",
+          "name": "The shadow prompt",
+          "instruction": "Ask: 'Which part of me did I have to put away to become this version of me?' Write its name. Plan one small thing this week that lets it speak."
+        }
+      ]
+    },
+    {
+      "slug": "family-conflict",
+      "title": "Something is hard with my family",
+      "tagline": "The oldest, deepest patterns — and the slowest to shift.",
+      "description": "Family conflict is rarely about the immediate thing. It is about decades of role, history, and unspoken contract. The fight is the present; the wound is older.",
+      "emotional_patterns": ["anger", "guilt", "old hurt", "obligation", "love mixed with frustration"],
+      "common_thoughts": [
+        "They'll never change.",
+        "I shouldn't have to explain myself again.",
+        "I'm a bad son/daughter/sibling for feeling this.",
+        "Why does it always come back to this?"
+      ],
+      "keywords": ["family", "parents", "mother", "father", "sibling", "fight", "estranged", "in-laws", "argument", "boundaries"],
+      "frameworks": [
+        {
+          "slug": "differentiation",
+          "name": "Differentiation of self",
+          "tradition": "Bowen family systems",
+          "summary": "Mature family relating is the ability to stay connected to your family while remaining yourself — not collapsing into them, not cutting off from them. Most family conflict is a failure of differentiation on both sides. The work is internal before it is interpersonal."
+        },
+        {
+          "slug": "the-family-script",
+          "name": "The family script",
+          "tradition": "Modern family therapy",
+          "summary": "Every family gives each member a role — the responsible one, the difficult one, the peacemaker, the success. Adults are still performing childhood roles long after they no longer fit. Naming the script is the first step in choosing whether to keep playing it."
+        },
+        {
+          "slug": "filial-piety-reconsidered",
+          "name": "Filial piety, honestly held",
+          "tradition": "Confucianism",
+          "summary": "Confucius taught deep duty to parents — but also that the duty includes honest remonstrance when they err. Care does not require silence. The hardest filial work is sometimes the hardest truth, offered without contempt."
+        },
+        {
+          "slug": "right-speech",
+          "name": "Right speech",
+          "tradition": "Buddhism (Eightfold Path)",
+          "summary": "Right speech is true, useful, kind, and timely — all four. Most family conflicts violate one. The discipline is asking before speaking: is this true? Useful? Kind? Timely? If any answer is no, wait."
+        },
+        {
+          "slug": "boundaries-not-walls",
+          "name": "Boundaries, not walls",
+          "tradition": "Modern relational therapy",
+          "summary": "A boundary is a statement about what you will do, not a demand for what they must do. 'If you raise your voice, I will leave the room' is a boundary. 'You can't raise your voice' is a wall. Boundaries preserve the relationship; walls end it."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-role-rewrite",
+          "name": "Rewrite your role",
+          "instruction": "Write the role your family casts you in (the difficult one, the strong one, the kid). Write the role you'd choose now. The gap is your work."
+        },
+        {
+          "slug": "the-twenty-four-hour-pause",
+          "name": "The 24-hour pause",
+          "instruction": "Before responding to a heated message or call, wait 24 hours. Draft your reply — don't send. The pause is the practice."
+        },
+        {
+          "slug": "one-small-boundary",
+          "name": "One small boundary",
+          "instruction": "Pick one small 'I will' boundary this week ('I will end the call if X happens'). Keep it. Notice you survive the keeping."
+        }
+      ]
+    },
+    {
+      "slug": "lost-direction",
+      "title": "I don't know what I want anymore",
+      "tagline": "The quiet crisis of having lost the thread.",
+      "description": "Sometimes the question isn't a single decision — it's the underlying compass. When the old desires stopped pulling and the new ones haven't arrived, the in-between is its own valid season.",
+      "emotional_patterns": ["flat", "unmotivated", "ashamed of being lost", "envy of certainty", "quiet sadness"],
+      "common_thoughts": [
+        "I should know by now.",
+        "Everyone else has a plan.",
+        "I used to care about this — what changed?",
+        "What's wrong with me?"
+      ],
+      "keywords": ["lost", "directionless", "no purpose", "no meaning", "don't know what I want", "no motivation", "drifting", "stuck"],
+      "frameworks": [
+        {
+          "slug": "the-fertile-void",
+          "name": "The fertile void",
+          "tradition": "Gestalt therapy",
+          "summary": "Not-knowing is treated in our culture as failure. In gestalt it is the fertile void — the necessary empty space before the next form arises. Trying to fill it too quickly produces premature, unstable answers. Waiting in it well is a skill."
+        },
+        {
+          "slug": "the-shoshin-mind",
+          "name": "Beginner's mind (shoshin)",
+          "tradition": "Zen",
+          "summary": "Suzuki: 'In the beginner's mind there are many possibilities; in the expert's mind there are few.' Losing your old direction is also losing your old certainties. The same condition that feels like failure is the prerequisite for a wider life."
+        },
+        {
+          "slug": "logotherapy",
+          "name": "The will to meaning",
+          "tradition": "Logotherapy (Viktor Frankl)",
+          "summary": "Frankl distinguished pleasure, power, and meaning as the drivers of human life — and argued meaning was primary. When pleasure and power feel empty, it is often because meaning has receded. The question to ask is not 'what do I want' but 'what does life seem to want of me right now'."
+        },
+        {
+          "slug": "values-vs-goals",
+          "name": "Values, not goals",
+          "tradition": "Acceptance and commitment therapy",
+          "summary": "Goals can be achieved and then leave a vacuum. Values are directions you keep moving in — 'becoming a person who cares for others' rather than 'help 100 people'. When you've lost direction, asking after values is more useful than asking after goals."
+        },
+        {
+          "slug": "the-callings-plural",
+          "name": "Callings, plural",
+          "tradition": "Modern vocational research",
+          "summary": "The myth of the one True Calling causes more confusion than it resolves. Most lives are made of three or four overlapping callings, taken up in seasons. Losing one is not losing the thread — it is one chapter ending so another can begin."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-energy-audit",
+          "name": "The energy audit",
+          "instruction": "For seven days, note one thing each day that gave you energy and one that drained you. At the end of the week, look at the patterns. Direction starts as a body knowing, not a head decision."
+        },
+        {
+          "slug": "the-values-shortlist",
+          "name": "The five-values shortlist",
+          "instruction": "From a long list of values (curiosity, freedom, care, beauty, justice, etc.), pick the five you would not negotiate. The next direction will honour those five. Discard plans that don't."
+        },
+        {
+          "slug": "ten-minute-walk-no-phone",
+          "name": "A ten-minute walk, no phone",
+          "instruction": "Walk for ten minutes with no input. No music, no podcast, no calls. Many lost directions are buried under noise that has not been allowed to settle."
+        }
+      ]
+    },
+    {
+      "slug": "anger",
+      "title": "I'm angry",
+      "tagline": "Anger is a signal, not a sin.",
+      "description": "Anger gets a bad reputation. It's usually a signal that a value was crossed, a need wasn't met, or a boundary was breached. The problem isn't the anger — it's what you do with it.",
+      "emotional_patterns": ["anger", "resentment", "frustration", "shame about being angry", "righteousness"],
+      "common_thoughts": [
+        "I shouldn't be this angry.",
+        "How could they?",
+        "If I let myself feel it, I'll lose control.",
+        "It's not fair."
+      ],
+      "keywords": ["angry", "furious", "frustrated", "rage", "resentful", "pissed off", "annoyed", "bitter", "mad"],
+      "frameworks": [
+        {
+          "slug": "anger-as-information",
+          "name": "Anger as information",
+          "tradition": "Modern emotion research",
+          "summary": "Anger is a fast, primitive read on injustice. It is usually pointing at something real — a value violated, a line crossed. The work is not to suppress the signal but to slow down enough to read what it is telling you before acting."
+        },
+        {
+          "slug": "the-empty-boat",
+          "name": "The empty boat",
+          "tradition": "Zhuangzi (Taoism)",
+          "summary": "If a boat drifts into yours and bumps it, you are not angry — there is no one to be angry at. The same bump from a boat with a person in it makes you furious. Zhuangzi's point: the bump is the same. Often the boat that hurt you was, in some real sense, empty — running on its own programming, not aimed at you."
+        },
+        {
+          "slug": "the-protective-flare",
+          "name": "The protective flare",
+          "tradition": "Internal family systems",
+          "summary": "Anger is often a protector — a part of you that flared up to keep a softer, more vulnerable part safe. The question is not 'how do I get rid of the angry part' but 'what is the angry part protecting?' Knowing the underneath changes everything."
+        },
+        {
+          "slug": "stoic-anger-discipline",
+          "name": "Seneca on the brief insanity",
+          "tradition": "Stoicism",
+          "summary": "Seneca called anger a 'brief madness'. His remedy was not suppression but delay — count, breathe, walk away — until the madness passes. Most regrettable actions happen inside the madness. Almost none happen after twenty minutes."
+        },
+        {
+          "slug": "right-action-vs-revenge",
+          "name": "Right action vs revenge",
+          "tradition": "Buddhism",
+          "summary": "There is fierce, lucid action that comes from caring about justice — and there is revenge that comes from wanting them to suffer the way you did. The first builds; the second corrodes. The same situation can produce either; the inside state determines which."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "name-what-was-crossed",
+          "name": "Name what was crossed",
+          "instruction": "Write: 'The value that got crossed here is ___.' (Fairness? Being heard? Respect? Safety?) Anger gets quieter when its purpose is named."
+        },
+        {
+          "slug": "the-twenty-minute-rule",
+          "name": "The 20-minute rule",
+          "instruction": "When hot anger comes, do nothing for twenty minutes. Walk, breathe, splash water. Then decide what to do. Almost every regrettable thing happens in minute three, not minute twenty-three."
+        },
+        {
+          "slug": "the-underneath",
+          "name": "The underneath letter",
+          "instruction": "Write a letter (don't send) starting 'Underneath the anger, I am ___' (hurt, scared, sad, disappointed). The anger gets to soften because the underneath is finally getting heard."
+        }
+      ]
+    },
+    {
+      "slug": "jealousy",
+      "title": "I feel jealous",
+      "tagline": "Jealousy is a map to what you want and fear losing.",
+      "description": "Jealousy is uncomfortable because it shows you the parts of yourself that feel small. It is information about your attachments — what you want, what you're afraid of, where you don't trust yourself.",
+      "emotional_patterns": ["jealousy", "insecurity", "shame", "possessiveness", "comparison"],
+      "common_thoughts": [
+        "Am I not enough?",
+        "What if they leave me for them?",
+        "I shouldn't feel this way.",
+        "It's because of who I am."
+      ],
+      "keywords": ["jealous", "jealousy", "envious", "insecure", "comparison", "possessive", "left out", "compete"],
+      "frameworks": [
+        {
+          "slug": "jealousy-vs-envy",
+          "name": "Jealousy vs envy",
+          "tradition": "Modern psychology",
+          "summary": "Jealousy is the fear of losing what you have. Envy is the ache for what someone else has. They feel similar but require different responses — jealousy asks you to look at trust; envy asks you to look at unmet longing. Name which one is in the room."
+        },
+        {
+          "slug": "the-mirror-of-jealousy",
+          "name": "The mirror",
+          "tradition": "Modern depth psychology",
+          "summary": "Jealousy of someone else's life often shows you what you secretly want for yourself. The jealousy is not the problem — it is a map, drawn by your unconscious, pointing at a direction you haven't given yourself permission to take."
+        },
+        {
+          "slug": "the-attachment-pattern",
+          "name": "The attachment pattern underneath",
+          "tradition": "Attachment theory",
+          "summary": "Romantic jealousy often follows your attachment style — anxious styles run hot, avoidant styles run cold-and-distant. Knowing your pattern doesn't excuse the jealousy, but it explains it, which is the first step in working with it instead of being driven by it."
+        },
+        {
+          "slug": "mudita",
+          "name": "Mudita — sympathetic joy",
+          "tradition": "Buddhism",
+          "summary": "The Buddhist antidote to envy is mudita — the practice of feeling joy for another's good fortune. It is genuinely difficult and it does not come for free. But it is the only response that does not eat you from the inside while changing nothing outside."
+        },
+        {
+          "slug": "abundance-as-discipline",
+          "name": "Abundance as a discipline",
+          "tradition": "Modern wellbeing research",
+          "summary": "Scarcity thinking — 'their win is my loss' — is wired in but malleable. People who consciously practise abundance ('there is enough good for me too') report lower jealousy over time. The shift is not a feeling, it is a repeated stance."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-jealousy-map",
+          "name": "The jealousy map",
+          "instruction": "When jealousy spikes, write: 'I am jealous of ___ because ___ and underneath it I want ___ for myself.' Three blanks, one minute. Most of the work happens in filling them in."
+        },
+        {
+          "slug": "name-it-aloud",
+          "name": "Name it aloud (with safety)",
+          "instruction": "If it's about a person you trust, say to them: 'I'm noticing some jealousy. I'm not making it your problem — I'm naming it so it doesn't run me.' Spoken jealousy loses half its power."
+        },
+        {
+          "slug": "mudita-practice",
+          "name": "One mudita act this week",
+          "instruction": "Do one small thing that celebrates the person you're jealous of — a genuine congratulations, a share, an introduction. Notice how it feels. It's hard. It also works."
+        }
+      ]
+    },
+    {
+      "slug": "comparison",
+      "title": "I keep comparing myself to others",
+      "tagline": "Thief of joy — and a habit you can interrupt.",
+      "description": "Comparison is automatic and exhausting. It runs in the background of social feeds, work, friendships. The work is not to never compare — it's to notice when it's happening and choose what to do with it.",
+      "emotional_patterns": ["inadequate", "envious", "ashamed", "drained", "anxious"],
+      "common_thoughts": [
+        "Look at how much they've done.",
+        "I should be further along.",
+        "What's wrong with me?",
+        "Everyone else has it figured out."
+      ],
+      "keywords": ["comparing", "comparison", "instagram", "social media", "behind", "behind everyone", "not enough", "feeds"],
+      "frameworks": [
+        {
+          "slug": "the-highlight-reel",
+          "name": "Their highlight reel vs your behind-the-scenes",
+          "tradition": "Modern media literacy",
+          "summary": "You see other people's edited public moments and compare them to your unedited internal experience. It is structurally an unfair fight. Knowing this does not eliminate the comparison; it lets you greet it with skepticism instead of agreement."
+        },
+        {
+          "slug": "comparison-as-data",
+          "name": "Comparison as data, not verdict",
+          "tradition": "Modern cognitive therapy",
+          "summary": "A comparison is just a noticing — 'they have X, I don't.' The verdict ('therefore I'm less than') is added by the mind. Separating noticing from verdict lets you take the useful information (maybe you want X) without taking the verdict (you are deficient)."
+        },
+        {
+          "slug": "the-tao-of-incomparability",
+          "name": "The Tao of incomparability",
+          "tradition": "Taoism",
+          "summary": "Lao Tzu: 'When you are content to be simply yourself and don't compare or compete, everybody will respect you.' The Taoist move is to recognise that you and another person are not the same kind of thing being measured on the same scale. The comparison is a category error."
+        },
+        {
+          "slug": "lifecourse-asymmetry",
+          "name": "Asymmetric lifecourse",
+          "tradition": "Modern life-stage research",
+          "summary": "Different people peak in different decades. Some flourish at 22, others at 45, others at 65. Comparing your 28-year-old self to someone else's 28-year-old self assumes you are on the same timeline — and you are almost certainly not."
+        },
+        {
+          "slug": "the-vertical-comparison",
+          "name": "Vertical comparison",
+          "tradition": "Modern positive psychology",
+          "summary": "Horizontal comparison (you vs them) is rarely useful. Vertical comparison (you-now vs you-six-months-ago) is reliably useful. The same comparing instinct redirected gives you signal instead of noise."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-input-audit",
+          "name": "The input audit",
+          "instruction": "For one week, write down which accounts / people / feeds left you feeling worse. Unfollow / mute three of them. The comparing mind is partly a function of what you're feeding it."
+        },
+        {
+          "slug": "vertical-comparison-prompt",
+          "name": "Vertical comparison prompt",
+          "instruction": "Each Sunday for a month, write: 'Six months ago, I could not yet ___. Now I can.' Build the habit of comparing you-now to you-then, on purpose."
+        },
+        {
+          "slug": "name-and-redirect",
+          "name": "Name and redirect",
+          "instruction": "When you catch a comparison: say silently 'comparison' — then return to the actual task in front of you. Naming interrupts the spiral; redirecting prevents the verdict."
+        }
+      ]
+    },
+    {
+      "slug": "burnout",
+      "title": "I think I'm burning out",
+      "tagline": "When the well has run dry.",
+      "description": "Burnout is not just tiredness. It is the slow erosion of meaning, the dulling of feeling, the dread that used to be enthusiasm. The body warns first. The work is listening early.",
+      "emotional_patterns": ["exhausted", "cynical", "numb", "irritable", "going through the motions"],
+      "common_thoughts": [
+        "I just need a vacation.",
+        "Everyone is dealing with the same thing.",
+        "If I slow down, I'll fall apart.",
+        "I used to love this."
+      ],
+      "keywords": ["burnout", "burnt out", "exhausted", "tired", "depleted", "nothing left", "running on empty", "drained", "fried"],
+      "frameworks": [
+        {
+          "slug": "the-three-dimensions",
+          "name": "The three dimensions of burnout",
+          "tradition": "Maslach burnout inventory",
+          "summary": "Burnout has three legs: exhaustion (energy gone), cynicism (caring gone), and ineffectiveness (sense of accomplishment gone). Most people focus on the first. Recovery requires addressing all three. Sleep alone does not cure cynicism."
+        },
+        {
+          "slug": "the-yin-shortage",
+          "name": "The yin shortage",
+          "tradition": "Taoism",
+          "summary": "Modern life is overwhelmingly yang — outward, active, producing. Burnout is often a yin deficiency: the receptive, slow, inward, restorative half of life has been starved. The cure is not more yang (a productive vacation) — it is yin (genuine emptiness, rest, being)."
+        },
+        {
+          "slug": "the-energy-deficit",
+          "name": "Energy deficits, not time deficits",
+          "tradition": "Modern performance research",
+          "summary": "We treat tiredness as a time problem ('I just need more hours'). It is usually an energy problem. Energy has four sources — physical, emotional, mental, spiritual — and burnout is depletion across all four. Each is restored differently."
+        },
+        {
+          "slug": "the-meaning-leak",
+          "name": "The meaning leak",
+          "tradition": "Existential psychology",
+          "summary": "Burnout accelerates when the work has lost its meaning even though the workload hasn't. Volume you used to handle becomes crushing when you no longer know why. Asking 'why am I doing this' is not a luxury — it is the diagnostic."
+        },
+        {
+          "slug": "rest-is-not-the-opposite-of-work",
+          "name": "Rest is not the opposite of work",
+          "tradition": "Modern recovery science",
+          "summary": "Active rest, deep rest, social rest, sensory rest, creative rest, emotional rest, spiritual rest — seven kinds, each restoring something different. Most burned-out people rest one way (sleep) and wonder why it isn't working. The rest you need is usually the one you avoid."
+        }
+      ],
+      "practices": [
+        {
+          "slug": "the-seven-kinds-of-rest",
+          "name": "The seven kinds of rest audit",
+          "instruction": "List the seven types: physical, mental, emotional, sensory, creative, social, spiritual. Rate yourself 1–10 on each. Schedule one act this week that addresses your lowest."
+        },
+        {
+          "slug": "the-no-list",
+          "name": "The 'no' list",
+          "instruction": "Write five things you will say no to this week. Big or small. Tell anyone affected today. The 'no' is the practice — the relief is the result."
+        },
+        {
+          "slug": "the-meaning-check",
+          "name": "The meaning check-in",
+          "instruction": "Ask: 'If this work were meaningful again, what would have to change?' Write three honest answers. You are not required to act yet — only to look."
+        }
+      ]
+    }
+  ]
+}

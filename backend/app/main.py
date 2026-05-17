@@ -17,6 +17,7 @@ from .routers import (
     content,
     dashboard,
     reflection,
+    skg,
     users,
 )
 
@@ -58,6 +59,7 @@ def create_app() -> FastAPI:
     app.include_router(content.router)
     app.include_router(ai_router.router)
     app.include_router(reflection.router)
+    app.include_router(skg.router)
 
     uploads = Path(__file__).resolve().parents[1] / "uploads"
     uploads.mkdir(parents=True, exist_ok=True)
