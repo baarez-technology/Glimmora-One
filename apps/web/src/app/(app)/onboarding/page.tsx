@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ArrowRight, ChevronLeft, Sparkles } from 'lucide-react';
-import { Brand } from '@/components/brand';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input, Textarea } from '@/components/ui/input';
@@ -66,14 +65,15 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-app flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <div className="absolute inset-0 aurora pointer-events-none" />
-      <header className="container py-6 flex items-center justify-between relative">
-        <Brand href="/" />
+      {/* Skip lives below the floating top-right utility cluster (bell / theme / sign-out).
+          16 (cluster top offset) + ~36 (cluster height) + 12 breathing room = 64px ≈ pt-16. */}
+      <header className="container pt-16 pb-4 flex items-center justify-end relative">
         <button
           onClick={() => submit(true)}
           disabled={submitting}
-          className="text-sm text-muted hover:text-app"
+          className="text-sm text-muted hover:text-app underline-offset-4 hover:underline"
         >
           Skip for now →
         </button>
