@@ -50,6 +50,25 @@ async def lifespan(_app: FastAPI):
             await conn.execute(text(
                 "CREATE INDEX IF NOT EXISTS ix_series_creator_id ON series(creator_id)"
             ))
+            # Widen URL columns to TEXT — base64 data URLs, Drive links and
+            # signed image URLs routinely blow past VARCHAR(512/1024).
+            # Probe information_schema first so we don't rewrite the table on
+            # every boot once the column is already TEXT.
+            url_cols = [
+                ("series", "cover_url"),
+                ("series", "hero_url"),
+                ("episodes", "video_url"),
+                ("episodes", "poster_url"),
+            ]
+            for table, col in url_cols:
+                row = (await conn.execute(text(
+                    "SELECT data_type FROM information_schema.columns "
+                    "WHERE table_name = :t AND column_name = :c"
+                ), {"t": table, "c": col})).first()
+                if row and row[0] != "text":
+                    await conn.execute(text(
+                        f"ALTER TABLE {table} ALTER COLUMN {col} TYPE TEXT"
+                    ))
         elif dialect == "sqlite":
             # SQLite: probe and add if missing.
             res = await conn.exec_driver_sql("PRAGMA table_info(users)")

@@ -7,6 +7,8 @@ import { ArrowLeft, Loader2, Plus, Sparkles, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Textarea } from '@/components/ui/input';
+import { AutoTextarea } from '@/components/studio/auto-textarea';
+import { CategorySelect } from '@/components/studio/category-select';
 import type {
   AIOutlineEpisode,
   AISeriesFromTitle,
@@ -17,14 +19,6 @@ import type {
 
 type Envelope<T> = { success: boolean; data: T; error?: string };
 
-const CATEGORIES = [
-  'meditation',
-  'growth',
-  'emotional-intelligence',
-  'wisdom',
-  'relationships',
-  'purpose',
-];
 const ACCENTS = ['#c89b6c', '#a78b6b', '#b9805a', '#8b7355', '#d4a574', '#9c7b5e'];
 
 export default function NewSeriesPage() {
@@ -336,28 +330,18 @@ export default function NewSeriesPage() {
 
             <div className="space-y-2">
               <label className="text-xs uppercase tracking-widest text-muted">Description</label>
-              <Textarea
+              <AutoTextarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Two or three short sentences about what's inside."
-                rows={4}
+                minRows={4}
               />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-xs uppercase tracking-widest text-muted">Category</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-app bg-elev px-3 text-sm text-app"
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
+                <CategorySelect value={category} onChange={setCategory} />
               </div>
               <div className="space-y-2">
                 <label className="text-xs uppercase tracking-widest text-muted">Tier</label>

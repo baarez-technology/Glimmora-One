@@ -7,6 +7,9 @@ import { ArrowLeft, Loader2, Plus, Sparkles, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Textarea } from '@/components/ui/input';
+import { AutoTextarea } from '@/components/studio/auto-textarea';
+import { DurationInput } from '@/components/studio/duration-input';
+import { resolveVideoSource, videoSourceLabel } from '@/lib/video-source';
 import type { AIEpisodeFromTitle, StudioEpisode } from '@/lib/types';
 
 type Envelope<T> = { success: boolean; data: T; error?: string };
@@ -179,11 +182,11 @@ export default function NewEpisodePage({
 
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-widest text-muted">Synopsis</label>
-            <Textarea
+            <AutoTextarea
               value={synopsis}
               onChange={(e) => setSynopsis(e.target.value)}
               placeholder="One or two short sentences about what's inside."
-              rows={3}
+              minRows={3}
             />
           </div>
 
@@ -201,11 +204,11 @@ export default function NewEpisodePage({
                 <Wand2 className="h-3 w-3" /> Suggest a question
               </button>
             </div>
-            <Textarea
+            <AutoTextarea
               value={reflectionPrompt}
               onChange={(e) => setReflectionPrompt(e.target.value)}
               placeholder="One open question the viewer sits with after watching."
-              rows={2}
+              minRows={2}
             />
             <p className="text-[11px] text-muted">
               Shown to the viewer after the episode ends. Keep it open and short — no advice.
@@ -219,25 +222,31 @@ export default function NewEpisodePage({
             <Input
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="https://… (HLS .m3u8, MP4, or any direct video URL)"
+              placeholder="https://… (YouTube, Google Drive, MP4, or HLS .m3u8)"
             />
-            <p className="text-[11px] text-muted">
-              Paste a hosted video URL (Cloudflare Stream, Mux, S3, etc). Upload-to-Glimmora is
-              coming later.
-            </p>
+            {videoUrl.trim() ? (
+              <p
+                className={`text-[11px] ${
+                  resolveVideoSource(videoUrl).kind === 'invalid' ? 'text-amber-400' : 'text-muted'
+                }`}
+              >
+                {videoSourceLabel(resolveVideoSource(videoUrl))}
+              </p>
+            ) : (
+              <p className="text-[11px] text-muted">
+                Paste a YouTube URL, a Google Drive share link (set to "anyone with the link"), or a
+                direct video URL (Cloudflare Stream, Mux, S3, MP4, HLS).
+              </p>
+            )}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-muted">
-                Duration <span className="text-muted/60">(seconds)</span>
-              </label>
-              <Input
-                type="number"
-                min={0}
-                value={durationSeconds || ''}
-                onChange={(e) => setDurationSeconds(Math.max(0, Number(e.target.value) || 0))}
-                placeholder="e.g. 540"
+              <label className="text-xs uppercase tracking-widest text-muted">Duration</label>
+              <DurationInput
+                value={durationSeconds}
+                onChange={setDurationSeconds}
+                videoUrl={videoUrl}
               />
             </div>
             <div className="space-y-2">

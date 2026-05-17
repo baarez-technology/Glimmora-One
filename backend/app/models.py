@@ -56,8 +56,11 @@ class Series(Base):
     tagline: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     category: Mapped[str] = mapped_column(String(64), default="wisdom")
-    cover_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
-    hero_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    # URLs use Text so signed image URLs / base64 data URLs / Drive links
+    # (which routinely exceed 512 chars) don't blow up with a column-length
+    # error from the DB.
+    cover_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    hero_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     accent_color: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
     tier: Mapped[str] = mapped_column(String(32), default="free")
     published: Mapped[bool] = mapped_column(Boolean, default=True)
@@ -79,8 +82,8 @@ class Episode(Base):
     synopsis: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     duration_seconds: Mapped[int] = mapped_column(Integer, default=0)
     order_index: Mapped[int] = mapped_column(Integer, default=0)
-    video_url: Mapped[str] = mapped_column(String(1024))
-    poster_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    video_url: Mapped[str] = mapped_column(Text)
+    poster_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     reflection_prompt: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     tier: Mapped[str] = mapped_column(String(32), default="free")
     published: Mapped[bool] = mapped_column(Boolean, default=True)

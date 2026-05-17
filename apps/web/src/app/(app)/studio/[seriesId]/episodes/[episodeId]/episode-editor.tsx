@@ -7,6 +7,9 @@ import { ArrowLeft, Loader2, Save, Sparkles, Trash2, Wand2 } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Textarea } from '@/components/ui/input';
+import { AutoTextarea } from '@/components/studio/auto-textarea';
+import { DurationInput } from '@/components/studio/duration-input';
+import { resolveVideoSource, videoSourceLabel } from '@/lib/video-source';
 import type { AIEpisodeFromTitle, StudioEpisode } from '@/lib/types';
 
 type Envelope<T> = { success: boolean; data: T; error?: string };
@@ -173,10 +176,10 @@ export function EpisodeEditor({
 
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-widest text-muted">Synopsis</label>
-            <Textarea
+            <AutoTextarea
               value={synopsis}
               onChange={(e) => setSynopsis(e.target.value)}
-              rows={3}
+              minRows={3}
               placeholder="One or two short sentences."
             />
           </div>
@@ -203,10 +206,10 @@ export function EpisodeEditor({
                 )}
               </button>
             </div>
-            <Textarea
+            <AutoTextarea
               value={reflectionPrompt}
               onChange={(e) => setReflectionPrompt(e.target.value)}
-              rows={2}
+              minRows={2}
               placeholder="One open question the viewer sits with after watching."
             />
           </div>
@@ -218,20 +221,26 @@ export function EpisodeEditor({
             <Input
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="https://…"
+              placeholder="https://… (YouTube, Drive, MP4, or HLS)"
             />
+            {videoUrl.trim() && (
+              <p
+                className={`text-[11px] ${
+                  resolveVideoSource(videoUrl).kind === 'invalid' ? 'text-amber-400' : 'text-muted'
+                }`}
+              >
+                {videoSourceLabel(resolveVideoSource(videoUrl))}
+              </p>
+            )}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-muted">
-                Duration <span className="text-muted/60">(seconds)</span>
-              </label>
-              <Input
-                type="number"
-                min={0}
-                value={durationSeconds || ''}
-                onChange={(e) => setDurationSeconds(Math.max(0, Number(e.target.value) || 0))}
+              <label className="text-xs uppercase tracking-widest text-muted">Duration</label>
+              <DurationInput
+                value={durationSeconds}
+                onChange={setDurationSeconds}
+                videoUrl={videoUrl}
               />
             </div>
             <div className="space-y-2">

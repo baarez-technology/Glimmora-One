@@ -433,7 +433,7 @@ class StudioEpisodeCreate(CamelModel):
     title: str = Field(min_length=1, max_length=255)
     synopsis: Optional[str] = None
     duration_seconds: int = Field(default=0, ge=0)
-    video_url: str = Field(min_length=1, max_length=1024)
+    video_url: str = Field(min_length=1)
     poster_url: Optional[str] = None
     reflection_prompt: Optional[str] = None
     tier: str = Field(default="free", pattern="^(free|premium)$")
@@ -443,7 +443,7 @@ class StudioEpisodeUpdate(CamelModel):
     title: Optional[str] = Field(default=None, min_length=1, max_length=255)
     synopsis: Optional[str] = None
     duration_seconds: Optional[int] = Field(default=None, ge=0)
-    video_url: Optional[str] = Field(default=None, min_length=1, max_length=1024)
+    video_url: Optional[str] = Field(default=None, min_length=1)
     poster_url: Optional[str] = None
     reflection_prompt: Optional[str] = None
     tier: Optional[str] = Field(default=None, pattern="^(free|premium)$")
