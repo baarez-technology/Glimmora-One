@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 export function MarketingNav() {
   return (
     <header className="sticky top-0 z-30 border-b border-app/60 bg-app/70 backdrop-blur">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-20 items-center justify-between">
         <Brand />
         <nav className="hidden md:flex items-center gap-7 text-sm text-muted">
           <Link href="/#stories" className="hover:text-app">Stories</Link>

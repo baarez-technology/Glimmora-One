@@ -139,8 +139,8 @@ export function AppShell({ user, children }: { user: User; children: React.React
       </div>
 
       {/* MOBILE — brand + utility bar across the top (still no card chrome, just spacing) */}
-      <div className="lg:hidden sticky top-0 z-20 flex h-14 items-center justify-between px-4 backdrop-blur-md bg-app/30">
-        <Brand href={brandHrefFor(user.role)} />
+      <div className="lg:hidden sticky top-0 z-20 flex h-16 items-center justify-between px-4 backdrop-blur-md bg-app/30">
+        <Brand href={brandHrefFor(user.role)} size="sm" />
         <div className="flex items-center gap-1">
           <NotificationBell />
           <ThemeToggle />
