@@ -1,5 +1,5 @@
 import 'server-only';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { jwtVerify } from 'jose';
 
 const COOKIE_NAME = 'glimmora_session';
@@ -34,11 +34,22 @@ export async function getSession(): Promise<SessionClaims | null> {
 }
 
 export async function setSessionCookie(token: string, maxAgeSeconds: number) {
+  // Detect the ORIGINAL scheme — DigitalOcean (and most PaaS) terminate TLS at
+  // the edge and forward HTTP to the container, so process.env.NODE_ENV alone
+  // can't tell us if the browser ↔ edge connection was HTTPS. The
+  // x-forwarded-proto header (set by the proxy) is the source of truth.
+  const h = await headers();
+  const forwardedProto = (h.get('x-forwarded-proto') || '').split(',')[0].trim().toLowerCase();
+  const isHttps = forwardedProto === 'https';
+
   const jar = await cookies();
   jar.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    // Only mark Secure if the request actually came in over HTTPS at the edge.
+    // Otherwise the browser may reject the cookie (rare) or fail to send it
+    // back on a same-domain follow-up that the proxy presents as HTTP.
+    secure: isHttps,
     path: '/',
     maxAge: maxAgeSeconds,
   });
