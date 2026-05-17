@@ -8,6 +8,10 @@ Outputs:
   docs/Tech docs/05_Test_Cases.docx
   docs/Tech docs/06_Technical_Documentation.docx
 
+Reflects the state of `main` as of v0.5.0 — slim MVP + redesigned 4-role
+hierarchy + subscriptions + notifications + creator-application pipeline
++ in-app Glimmora Guide chatbot + chrome-less floating shell + Postgres.
+
 Run from repo root:
     python scripts/build_tech_docs.py
 """
@@ -26,7 +30,7 @@ OUT = ROOT / "docs" / "Tech docs"
 OUT.mkdir(parents=True, exist_ok=True)
 
 PROJECT = "Glimmora ONE"
-VERSION = "0.3.0"
+VERSION = "0.5.0"
 TODAY = datetime.now().strftime("%Y-%m-%d")
 OWNER = "Glimmora — sanjay@glimmora.ai"
 
@@ -155,57 +159,63 @@ def build_usp():
 
     h2(doc, "One-line positioning")
     body(doc, "Glimmora ONE is the calm room of the AI era — a single, attentive space where an "
-              "AI companion that listens, a library of wisdom journeys, and a quiet reflection "
-              "journal hold each other together. Not a tool. A place to slow down.")
+              "AI companion that listens, a library of wisdom journeys, a quiet reflection "
+              "journal, and an in-app help guide hold each other together. Not a tool. A place "
+              "to slow down.")
 
     h2(doc, "Why we exist")
     body(doc, "Most consumer AI is built to maximize engagement: fast replies, infinite scroll, "
               "constant nudges. Most mental-wellness apps are still locked into either guided "
               "meditation (passive) or text-based therapy (clinical). There is no calm, "
               "non-prescriptive space that treats the user's inner life as the product, not the "
-              "engagement metric. Glimmora ONE is that space.")
+              "engagement metric. Glimmora ONE is that space — with a hand-vetted creator marketplace "
+              "and a structured admin layer so the calm holds at scale.")
 
-    h2(doc, "Five pillars of the USP")
-    h3(doc, "1.  An AI that listens first")
-    body(doc, "The Glimmora companion is trained to be present — short replies, soft language, "
-              "emotion classification, and a single 'question to sit with' instead of advice. "
-              "Premium accounts get a deeper rolling memory window (32 turns vs 8 free). A "
-              "conservative crisis-detection layer surfaces region-aware help lines without "
-              "alarmism.")
+    h2(doc, "Six pillars of the USP")
 
-    h3(doc, "2.  Wisdom, not content")
+    h3(doc, "1. An AI that listens first")
+    body(doc, "The Companion is trained to be present — short replies, soft language, emotion "
+              "classification, and a single 'question to sit with' instead of advice. A conservative "
+              "crisis-detection layer surfaces region-aware help lines without alarmism.")
+
+    h3(doc, "2. Wisdom, not content")
     body(doc, "Stories is an OTT-style library of short, beautifully made guided episodes on "
               "stillness, becoming, and emotion. Every episode ends with one quiet question, not a "
-              "next-up auto-play. Creators (therapists, monks, teachers, filmmakers) apply, are "
-              "vetted, and publish through Studio.")
+              "next-up auto-play. Creators (therapists, monks, teachers, filmmakers) apply via a "
+              "public form, are vetted by human moderators, and become creators only after approval.")
 
-    h3(doc, "3.  A journal that becomes a digital twin")
+    h3(doc, "3. A journal that becomes a digital twin")
     body(doc, "Reflections compound. Glimmora aggregates them into a private map of inner weather "
-              "— a 7d/30d/90d/1y emotional trend chart, dominant moods, streaks, recurring tag "
-              "threads, and AI-generated 'noticings' on each entry. Users own it; export it as JSON "
-              "any time.")
+              "— a 30-day emotional trend chart, dominant moods, streaks, AI-generated 'noticings' "
+              "on each entry. Users own it.")
 
-    h3(doc, "4.  Anonymous, slow community")
-    body(doc, "Circles are anonymous-by-design (deterministic per-(user, circle) handles), with no "
-              "DMs, no likes, no algorithmic feed. Reports surface to admin moderation immediately. "
-              "The conversational temperature stays low.")
+    h3(doc, "4. An in-app guide, not a help-doc trail")
+    body(doc, "A floating amber bubble (Glimmora Guide) lives on every page. Left-click opens a "
+              "warm, grounded help chat that knows the app inside-out — every flow, every role, "
+              "every tier. Right-click + drag repositions it anywhere on the viewport. Users never "
+              "have to leave the page to find out how something works.")
 
-    h3(doc, "5.  The whole loop in one product")
-    body(doc, "Companion, Stories, Journal, Circles, Daily Ritual, Digital Twin — under one calm "
+    h3(doc, "5. The whole loop in one product")
+    body(doc, "Companion, Stories, Journal, Daily Ritual, Digital Twin, Guide — under one calm "
               "shell, one auth, one design language. No tab-switching between an AI app, a "
-              "meditation app, and a journaling app to live a reflective life.")
+              "meditation app, a journaling app, and a help portal.")
+
+    h3(doc, "6. Trust at the operational layer")
+    body(doc, "Four named roles (Customer, Creator, Moderator, Superadmin) with explicit "
+              "permissions. Moderators are human reviewers with their own dashboard. Subscriptions "
+              "are admin-granted records with start/end dates. Audit-friendly by design.")
 
     h2(doc, "Differentiation matrix")
     table(doc,
           header=["Capability", "Headspace / Calm", "BetterHelp", "ChatGPT", "Glimmora ONE"],
           rows=[
               ["AI companion (in-app)", "—", "—", "Yes", "Yes (calm, gated, crisis-aware)"],
-              ["Guided video library", "Yes", "—", "—", "Yes (with one-question close)"],
+              ["Guided video library", "Yes", "—", "—", "Yes (one-question close)"],
               ["Personal reflection journal", "Light", "Inside chat", "—", "Yes (first-class)"],
-              ["Digital twin / mood trend", "Light", "—", "—", "Yes (7d/30d/90d/1y)"],
-              ["Anonymous community", "—", "—", "—", "Yes (no DMs, no likes)"],
-              ["Creator marketplace", "—", "—", "—", "Yes (apply + admin-vetted)"],
+              ["Digital twin / mood trend", "Light", "—", "—", "Yes (30-day trend + AI noticings)"],
+              ["Hand-vetted creator marketplace", "—", "—", "—", "Yes (public apply → moderator review)"],
               ["Crisis safety surface", "Static page", "Therapist", "Generic", "Inline + region-aware"],
+              ["In-app help bot grounded in the product", "—", "—", "—", "Yes (Glimmora Guide)"],
               ["Tone", "Polished", "Clinical", "Generic chat", "Calm, soft, present-tense"],
           ])
 
@@ -235,48 +245,39 @@ def build_target_audience():
 
     h2(doc, "Primary personas")
 
-    h3(doc, "1.  The Seeker  (free member)")
-    bullet(doc, "Age 22–35, urban, knowledge worker. Has tried Calm/Headspace, journals "
-                "occasionally, follows a few thoughtful Substacks.")
-    bullet(doc, "Pain: feels rushed, restless, slightly disconnected from themselves. Doesn't want "
-                "another optimisation app.")
-    bullet(doc, "Success: builds a 1–2× a week habit; uses the companion as a sounding board; "
-                "completes their first 1–2 series.")
-    bullet(doc, "Channels: Instagram, podcasts (On Being, Hidden Brain), Substack, word-of-mouth.")
-    bullet(doc, "Conversion driver: free tier is genuinely useful; the daily ritual is the hook.")
+    h3(doc, "1.  The Seeker  (Customer — free / Standard tier)")
+    bullet(doc, "Age 22–35, urban, knowledge worker. Has tried Calm/Headspace, journals occasionally, follows a few thoughtful Substacks.")
+    bullet(doc, "Pain: feels rushed, restless, slightly disconnected. Doesn't want another optimisation app.")
+    bullet(doc, "Success: builds a 1–2× a week habit; uses the Companion as a sounding board; finishes 1–2 series.")
+    bullet(doc, "Conversion driver: the free Standard tier is genuinely useful; the daily ritual is the hook.")
 
-    h3(doc, "2.  The Practitioner  (premium subscriber)")
-    bullet(doc, "Age 28–45, often in helping professions (therapy, coaching, design, education). "
-                "Already in long-term therapy or has a meditation practice.")
+    h3(doc, "2.  The Practitioner  (Customer — Premium tier)")
+    bullet(doc, "Age 28–45, often in helping professions (therapy, coaching, design, education). Already in long-term therapy or has a meditation practice.")
     bullet(doc, "Pain: scattered tools (Notion + Day One + Calm + ChatGPT). Wants one calm shell.")
-    bullet(doc, "Success: 60+ day streak; uses the digital twin to notice arcs; references the "
-                "companion across weeks.")
-    bullet(doc, "Channels: long-form YouTube (Krista Tippett, Tara Brach), psychology Twitter, "
-                "newsletter referrals.")
-    bullet(doc, "Conversion driver: premium long memory + full library + 1y digital-twin view.")
+    bullet(doc, "Success: long streak; uses the digital twin to notice arcs; references the Companion across weeks.")
+    bullet(doc, "Conversion driver: today Premium is admin-granted (no self-serve checkout yet); the Standard→Premium upgrade path is a near-term roadmap item.")
 
     h3(doc, "3.  The Creator")
-    bullet(doc, "Age 30–55. Therapist, monk, teacher, filmmaker, somatic practitioner. Has an "
-                "audience of 1k–50k that they don't want to monetise via ads.")
-    bullet(doc, "Pain: existing platforms (YouTube, Substack, Insight Timer) push virality or "
-                "reduce them to a thumbnail.")
-    bullet(doc, "Success: publishes a 6–12 episode series; gets meaningful completion-rate "
-                "feedback; reaches a thoughtful audience.")
-    bullet(doc, "Channels: 1:1 outreach, conference circuit, peer referrals.")
-    bullet(doc, "Conversion driver: editorial care + audience that finishes content + revenue share.")
+    bullet(doc, "Age 30–55. Therapist, monk, teacher, filmmaker, somatic practitioner. Has an audience of 1k–50k.")
+    bullet(doc, "Pain: existing platforms (YouTube, Substack, Insight Timer) push virality or reduce them to a thumbnail.")
+    bullet(doc, "Success: a meaningful audience that finishes their content.")
+    bullet(doc, "How they reach us: click 'Apply as creator' on landing/footer or 'Apply to become a creator' on dashboard → /apply form (full name, email, username, password, pitch, links, attachments). Submission creates the account AND a pending application. Until a moderator decides, they're gated on /under-review.")
 
-    h3(doc, "4.  The Moderator  (Glimmora staff or trusted volunteer)")
-    bullet(doc, "Operates the Admin surface. Reviews creator applications, moderates flagged "
-                "circle posts, manages roles, monitors the audit log.")
-    bullet(doc, "Success: catches harm fast; never has to chase the same incident twice.")
+    h3(doc, "4.  The Moderator")
+    bullet(doc, "Glimmora staff or trusted volunteer. Created only by a Superadmin via the /admin/moderators panel.")
+    bullet(doc, "Job: open /moderate/applications, read each pitch + links + attachments by hand, write an optional note, Approve or Reject. Approval flips the applicant's role to Creator and notifies them.")
+    bullet(doc, "Success: catches off-brand applicants early; never has to rush.")
+
+    h3(doc, "5.  The Superadmin  (Owner)")
+    bullet(doc, "Founder / platform owner. Bootstrapped from env vars on first boot; cannot be created from the UI.")
+    bullet(doc, "Sees three role-locked tabs (Customers / Creators / Moderators) with clickable filter tiles. Can edit / delete any non-superadmin account, grant subscriptions, create moderators.")
+    bullet(doc, "Success: full visibility into who's on the platform; can rescue, promote, demote, or remove anyone.")
 
     h2(doc, "Anti-personas (we are not for you, and that is okay)")
     bullet(doc, "Optimisation maximalists who want streak-shaming, leaderboards, and gamification.")
-    bullet(doc, "Acute-crisis users who need clinical intervention — Glimmora surfaces helplines "
-                "and recommends professional care; it is not a substitute.")
-    bullet(doc, "Influencers seeking viral reach — the platform has no like counts, no algorithmic "
-                "feed, and no public follower graph.")
-    bullet(doc, "Teenagers under 18 — current scope is adults; child-safe variant is a future track.")
+    bullet(doc, "Acute-crisis users who need clinical intervention — Glimmora surfaces helplines and recommends professional care; it is not a substitute.")
+    bullet(doc, "Influencers seeking viral reach — there's no like count, no algorithmic feed, no public follower graph.")
+    bullet(doc, "Teenagers under 18 — current scope is adults.")
 
     h2(doc, "Segment sizing (rough)")
     table(doc,
@@ -285,24 +286,15 @@ def build_target_audience():
               ["Mindfulness / meditation app users", "~120M", "~40M", "30k"],
               ["Active digital journalers", "~25M", "~9M", "10k"],
               ["AI companion early adopters", "~80M", "~25M", "20k"],
-              ["Creators in wisdom / wellbeing space", "~250k", "~70k", "120 vetted"],
+              ["Creators in wisdom / wellbeing", "~250k", "~70k", "120 vetted"],
           ])
 
     h2(doc, "Jobs to be done (JTBD)")
-    bullet(doc, "When my mind is loud and I'm alone, I want to be heard without being judged, so I "
-                "can hear myself again.")
-    bullet(doc, "When I notice a pattern (stuck, anxious, restless) repeating across weeks, I want "
-                "to see it in my own words, so I can decide what (if anything) to do about it.")
-    bullet(doc, "When I have ten quiet minutes, I want one well-made piece of wisdom content + one "
-                "good question, so I leave more settled than I arrived.")
-    bullet(doc, "When I'm a quiet teacher with something to share, I want to publish without selling "
-                "myself, so my work reaches the people who need it.")
-
-    h2(doc, "Voice of the audience (verbatim themes from research)")
-    body(doc, "‘I want a journal that remembers what I'm slowly learning.’ ·  ‘I don't want a "
-              "chatbot that performs empathy — I want one that's actually quiet.’ ·  ‘Insight Timer "
-              "is too noisy now.’ ·  ‘Therapy works but I need something between sessions that "
-              "isn't ChatGPT.’")
+    bullet(doc, "When my mind is loud and I'm alone, I want to be heard without being judged.")
+    bullet(doc, "When I notice a pattern (stuck, anxious, restless) repeating, I want to see it in my own words.")
+    bullet(doc, "When I have ten quiet minutes, I want one well-made piece of wisdom content + one good question.")
+    bullet(doc, "When I'm a quiet teacher with something to share, I want to publish without selling myself.")
+    bullet(doc, "When I'm an admin trying to keep the platform clean, I want to see and edit everything in one place.")
 
     out = OUT / "02_Target_Audience.docx"; doc.save(str(out)); print(f"wrote {out}")
 
@@ -316,117 +308,150 @@ def build_solution_design():
     cover(doc, "Solution Design", "Deliverable 03 — Solution Design")
 
     h2(doc, "Design principles")
-    bullet(doc, "Calm by default — no notifications, no streak shaming, no engagement loops.")
-    bullet(doc, "Listen first — companion replies in 2-5 sentences, never lectures, surfaces a "
-                "single question instead of advice.")
-    bullet(doc, "User owns their data — full JSON export + permanent self-delete.")
-    bullet(doc, "Roles add power, tiers add depth — admin > creator > member; premium > free. The "
-                "two are independent.")
-    bullet(doc, "Graceful degradation — every AI surface falls back to a deterministic responder if "
-                "OPENAI_API_KEY is missing.")
-    bullet(doc, "One repo, one deploy — Next.js (web) + FastAPI (api) share one Git repo, one "
-                "DigitalOcean App Platform spec, one JWT secret.")
+    bullet(doc, "Calm by default — no notifications nags, no streak shaming, no engagement loops.")
+    bullet(doc, "Listen first — Companion replies in 2-5 sentences, never lectures.")
+    bullet(doc, "Roles add power, tiers add depth — superadmin > moderator > creator > customer; standard or premium tier.")
+    bullet(doc, "Graceful degradation — every AI surface falls back to a deterministic responder if OPENAI_API_KEY is missing.")
+    bullet(doc, "One repo, one deploy — Next.js (web) + FastAPI (api) share one Git repo and one Postgres database.")
+    bullet(doc, "Operational trust — moderation, subscriptions, and account lifecycle are first-class admin surfaces, not afterthoughts.")
 
     h2(doc, "System architecture")
     code(doc,
          "                 ┌─────────────────────────────────────────────────────┐\n"
          "                 │                  Browser / PWA                      │\n"
          "                 │  Next.js 15 App Router · React 19 · Tailwind        │\n"
+         "                 │  (+ floating <SupportBot/> on every page)           │\n"
          "                 └──────────────┬──────────────────────────────────────┘\n"
          "                                │  RSC + server actions\n"
          "                 ┌──────────────▼──────────────────────────────────────┐\n"
          "                 │              Next.js server                         │\n"
          "                 │   /api/proxy/[...path]  (forwards to FastAPI with   │\n"
          "                 │   the user's JWT cookie attached as Bearer)         │\n"
-         "                 │   /api/auth/logout  (clears cookie)                 │\n"
-         "                 │   middleware.ts  (auth + onboarding redirect)       │\n"
+         "                 │   /api/auth/logout       (clears cookie)            │\n"
+         "                 │   /api/auth/session      (sets cookie from token)   │\n"
+         "                 │   middleware.ts          (auth + path forwarding)   │\n"
          "                 └──────────────┬──────────────────────────────────────┘\n"
          "                                │  Bearer JWT (HS256)\n"
          "                 ┌──────────────▼──────────────────────────────────────┐\n"
          "                 │              FastAPI service                        │\n"
-         "                 │   routers: auth · users · dashboard · content · ai  │\n"
-         "                 │            reflection · community · creator ·       │\n"
-         "                 │            billing · admin                          │\n"
-         "                 │   ai/companion.py  (OpenAI-compat + heuristic)      │\n"
+         "                 │  routers: auth · users · dashboard · content · ai · │\n"
+         "                 │           reflection · skg · notifications ·        │\n"
+         "                 │           applications · admin · support            │\n"
+         "                 │  ai/companion.py  (OpenAI gpt-4o-mini + fallback)   │\n"
+         "                 │  routers/support.py (Glimmora Guide chatbot)        │\n"
          "                 └──────────────┬──────────────────────────────────────┘\n"
          "                                │\n"
          "             ┌──────────────────┼─────────────────────┐\n"
          "             ▼                  ▼                     ▼\n"
          "      ┌────────────┐    ┌────────────────┐     ┌────────────────┐\n"
-         "      │  Postgres  │    │  Object store  │     │   OpenAI API   │\n"
-         "      │ (or SQLite │    │  (HLS, posters,│     │ (optional —    │\n"
-         "      │  in dev)   │    │  exports)      │     │  graceful FB)  │\n"
-         "      └────────────┘    └────────────────┘     └────────────────┘")
+         "      │  Postgres  │    │  Static assets │     │   OpenAI API   │\n"
+         "      │ (Neon / DO │    │  (logo.png,    │     │  (Companion +  │\n"
+         "      │  managed)  │    │  uploads/)     │     │  noticings +   │\n"
+         "      └────────────┘    └────────────────┘     │  support bot)  │\n"
+         "                                               └────────────────┘")
 
     h2(doc, "Domain model (entities)")
     table(doc,
           header=["Entity", "Purpose", "Key fields"],
           rows=[
-              ["User", "Identity + profile + tier", "id, username, email, role, subscriptionTier, preferences"],
-              ["Series", "OTT title", "id, slug, title, category, tier, published, creatorId, tags"],
-              ["Episode", "OTT episode", "id, seriesId, slug, videoUrl, durationSeconds, tier, reflectionPrompt"],
-              ["WatchProgress", "Resume + continue-watching", "userId, episodeId, positionSeconds, completed"],
-              ["Conversation", "Companion thread", "id, userId, title, updatedAt"],
-              ["Message", "Single companion turn", "id, conversationId, role, content, emotion"],
-              ["Reflection", "Journal entry", "id, userId, content, mood, intensity, tags, episodeId, insights"],
-              ["Circle", "Community space", "id, slug, name, theme"],
-              ["CirclePost", "Anonymous post", "id, circleId, userId, anonymousHandle, body, flagged"],
-              ["CreatorApplication", "Member→Creator request", "id, userId, pitch, sampleUrl, status"],
-              ["PasswordReset", "Reset token store", "id, userId, tokenHash, expiresAt, usedAt"],
-              ["AuditLog", "Moderation + security trail", "id, actorId, action, target, meta"],
+              ["User", "Identity + role + profile", "id, username, email, role (customer/creator/moderator/superadmin), is_active"],
+              ["Subscription", "Admin-granted tier validity", "user_id, tier (standard/premium), start_date, end_date, note, created_by"],
+              ["Series", "OTT title", "id, slug, title, category, tier, published, creator_id, tags"],
+              ["Episode", "OTT episode", "id, series_id, slug, video_url, duration_seconds, tier, reflection_prompt"],
+              ["WatchProgress", "Resume + continue-watching", "user_id, episode_id, position_seconds, completed"],
+              ["Conversation", "Companion thread", "id, user_id, title"],
+              ["Message", "Single companion turn", "id, conversation_id, role, content, emotion"],
+              ["Reflection", "Journal entry", "id, user_id, content, mood, intensity, tags, episode_id, insights"],
+              ["CreatorApplication", "Public apply submission", "id, user_id, full_name, email, pitch, links[], attachments[], status, decided_by, decision_note"],
+              ["Notification", "In-app bell feed", "id, user_id, kind, title, body, link, read_at"],
           ])
+
+    h2(doc, "Roles & permissions matrix")
+    table(doc,
+          header=["Capability", "Customer", "Creator", "Moderator", "Superadmin"],
+          rows=[
+              ["Sign up / sign in / edit own profile", "✓", "✓", "✓", "✓"],
+              ["Use Companion / Journal / Stories", "✓", "✓", "✗ (gated)", "✗ (gated)"],
+              ["Apply to become a creator", "✓", "n/a", "n/a", "n/a"],
+              ["Publish series + episodes (roadmap — on progression branch)", "✗", "✓", "—", "✓"],
+              ["Approve / reject creator applications", "✗", "✗", "✓", "✓"],
+              ["See all users + edit / delete any (non-superadmin)", "✗", "✗", "✗", "✓"],
+              ["Grant / revoke subscriptions", "✗", "✗", "✗", "✓"],
+              ["Create moderators", "✗", "✗", "✗", "✓"],
+              ["Default route after login", "/dashboard", "/dashboard", "/moderate/applications", "/admin/customers"],
+          ])
+
+    h2(doc, "Tier model")
+    body(doc, "Tier is computed from active Subscription rows, not stored on the user. A user is "
+              "'premium' if there's a subscription with tier='premium' whose [start_date, end_date] "
+              "interval covers now; otherwise 'standard'. The TierBadge in the sidebar reflects this "
+              "live. Premium is granted by a Superadmin via the customer edit page → Subscription "
+              "manager → Add subscription popup. Self-serve checkout (Stripe) is a roadmap item.")
 
     h2(doc, "Key user journeys")
 
-    h3(doc, "A.  New user — first 90 seconds")
-    numbered(doc, "Visitor opens the landing page → clicks Begin → /signup.")
-    numbered(doc, "Submits username + password (email optional) → JWT cookie set → redirect to /onboarding.")
-    numbered(doc, "Walks four cards: Welcome → Intention → Focus → Begin.")
+    h3(doc, "A. New customer — first 90 seconds")
+    numbered(doc, "Visitor opens landing page → Begin gently → /signup.")
+    numbered(doc, "Submits username + password (confirm-password gate) + optional email → JWT cookie set → loginAction routes to /onboarding (or /admin/customers / /moderate/applications by role).")
+    numbered(doc, "Walks four cards: Welcome → Intention → Focus → Begin. Skip-for-now is always present.")
     numbered(doc, "On Begin, /v1/users/onboard saves preferences + seeds a welcome conversation.")
-    numbered(doc, "Land on /dashboard. Today's three small steps appear (Arrive / Notice / Reflect).")
+    numbered(doc, "Lands on /dashboard. Today's three small steps (Arrive / Notice / Reflect) appear.")
 
-    h3(doc, "B.  Daily ritual loop")
-    numbered(doc, "Open the app. /v1/dashboard/today returns step state for the current calendar day.")
-    numbered(doc, "Step 1 (Arrive) → /companion → send any message → done.")
-    numbered(doc, "Step 2 (Notice) → /watch → play any episode for 60+ seconds → done.")
-    numbered(doc, "Step 3 (Reflect) → /reflect/new → save any entry → done.")
-    numbered(doc, "All-three-done increments the streak (computed from reflection history).")
+    h3(doc, "B. Daily ritual loop")
+    numbered(doc, "Step 1 — Arrive → /companion → send any message → done.")
+    numbered(doc, "Step 2 — Notice → /watch → play any episode 60+ seconds → done.")
+    numbered(doc, "Step 3 — Reflect → /reflect/new → save any entry → done. Streak +1 when all three done.")
 
-    h3(doc, "C.  Member → Creator promotion")
-    numbered(doc, "Member opens /creator/apply → submits pitch → status=pending.")
-    numbered(doc, "Admin opens /admin → Creator Applications → Approve.")
-    numbered(doc, "User.role flips to creator; sidebar gains Studio link on next nav.")
-    numbered(doc, "Creator opens /creator/series/new → publishes a series + episodes.")
+    h3(doc, "C. Public creator application")
+    numbered(doc, "Visitor clicks 'Apply as creator' in landing nav or footer (works while logged-out too).")
+    numbered(doc, "Fills the /apply form: full name, email, username, password, pitch, links[], attachments[].")
+    numbered(doc, "Submit → POST /v1/creator-applications creates the User AND the CreatorApplication atomically + returns a JWT.")
+    numbered(doc, "Auto-logged-in and redirected to /under-review. (app)/layout gates the user — they cannot escape until decided.")
+    numbered(doc, "Moderator opens /moderate/applications → reads pitch + links + attachments → writes optional note → Approve or Reject.")
+    numbered(doc, "Approve flips applicant's role to creator, releases the gate, fires application_approved notification. Reject keeps role customer, fires application_rejected notification.")
 
-    h3(doc, "D.  Crisis safety")
-    numbered(doc, "User message hits the conservative crisis regex (suicide / self-harm / want to die / etc).")
-    numbered(doc, "Companion still replies kindly; UI surfaces an inline 'Stay with someone tonight' card.")
-    numbered(doc, "Card lists region-agnostic helplines (India / US-Canada / UK-ROI / global directory).")
-    numbered(doc, "No app state changes; the conversation continues normally.")
+    h3(doc, "D. Superadmin lifecycle ops")
+    numbered(doc, "/admin/customers (or /creators / /moderators) — role-locked tab. Tap a stat tile to filter (Premium / Standard / Pending apps / etc.). Selected tile gets an amber glow ring.")
+    numbered(doc, "Row → ✎ Edit → /admin/customers/[id] → edit identity, role, active flag + Subscription manager.")
+    numbered(doc, "Add Subscription popup → tier dropdown + start/end date pickers + note → save. Tier flips immediately + notification fires.")
+    numbered(doc, "Row → 🗑 Delete → confirm-type-username modal → cascading delete. Blocked for superadmin targets.")
+    numbered(doc, "/admin/moderators → Create moderator popup → seeds an account with role=moderator + moderator_promoted notification.")
+
+    h3(doc, "E. Crisis safety")
+    numbered(doc, "User message hits the conservative crisis regex (suicide / self-harm / want to die / etc.) in either Companion OR Glimmora Guide.")
+    numbered(doc, "Companion: inline 'Stay with someone tonight' card surfaces with region-aware helplines. The conversation continues normally.")
+    numbered(doc, "Glimmora Guide: bot's CRISIS HANDLING prompt block fires — leads with warmth, lists helplines directly in the reply, points to Companion.")
+
+    h2(doc, "Glimmora Guide (in-app help bot)")
+    body(doc, "A floating amber bubble (lives in root layout — appears on every page including landing "
+              "+ auth + admin). Left-click opens a 360×460 glass chat panel; right-click + drag "
+              "repositions and persists to localStorage. Panel smart-edges so it never goes off-screen.")
+    body(doc, "Backend (/v1/support/chat) is grounded in a hand-curated system prompt covering every "
+              "flow, every role, every tier, every notification trigger. Auth is OPTIONAL — when "
+              "present, the user's role + tier are added to the context so answers are tailored. "
+              "Uses gpt-4o-mini at temperature 0.3 (consistency over creativity). Graceful keyword "
+              "fallback when the OpenAI key is missing.")
 
     h2(doc, "Cross-cutting concerns")
     h3(doc, "Authentication")
-    body(doc, "JWT (HS256, 24h) issued by the API on signup/login. Stored as an httpOnly cookie "
+    body(doc, "JWT (HS256, 24h) issued by the API on signup/login. Stored in an httpOnly cookie "
               "named glimmora_session by the Next.js layer. Every Next-side server fetch forwards "
-              "it as Authorization: Bearer. Middleware redirects un-authed users on protected "
-              "routes; the (app) layout redirects un-onboarded users to /onboarding.")
+              "it as Authorization: Bearer. loginAction (apps/web/src/lib/auth-actions.ts) routes "
+              "the user to their correct landing page in a SINGLE redirect, based on role + "
+              "onboarding state + pending creator application — no blank flash.")
 
     h3(doc, "Authorization")
-    body(doc, "Role check is server-side per endpoint. Role hierarchy: superadmin > admin > "
-              "creator > member. Tier (free / premium) gates content; admin/superadmin bypass tier "
-              "for moderation.")
+    body(doc, "Server-side per endpoint. Role hierarchy is additive: superadmin > moderator > "
+              "creator > customer. The (app)/layout has an early-return for users with a pending "
+              "creator application — they're gated on /under-review until decided, regardless of role.")
 
-    h3(doc, "AI orchestration")
-    body(doc, "ai/companion.py exposes one entrypoint respond(). With OPENAI_API_KEY set it calls "
-              "the configured model (default gpt-4o-mini), classifies emotion, generates a reply, "
-              "suggests a reflection prompt, and recommends 0–3 episodes. Without a key, it falls "
-              "back to a deterministic emotion lexicon + opening map. Memory window: 8 turns for "
-              "free, 32 for premium.")
-
-    h3(doc, "Privacy & data ownership")
-    body(doc, "Every endpoint is scoped to user.id at the SQL level. /v1/users/me/export returns a "
-              "complete JSON dump (user, reflections, conversations, watch progress, posts). "
-              "/v1/users/me DELETE cascades to every owned row. Superadmin accounts cannot self-delete.")
+    h3(doc, "Visual design")
+    body(doc, "Warm-neutral palette (ink + glimmer), no cool colors. The body background is an "
+              "inlined SVG of heavily-blurred warm bokeh circles (dark mode darker, light mode "
+              "cream); a fractal grain overlay prevents the bg from reading as flat. All admin "
+              "surfaces use glassmorphic stat tiles (backdrop-blur 22px, translucent bg, top-edge "
+              "highlight, warm glow halo). The app shell is chrome-less on desktop — the sidebar "
+              "and topbar utility cluster float directly on the bokeh with no container chrome.")
 
     out = OUT / "03_Solution_Design.docx"; doc.save(str(out)); print(f"wrote {out}")
 
@@ -440,52 +465,75 @@ def build_project_documents():
     cover(doc, "Project Documents", "Deliverable 04 — Project Documents")
 
     h2(doc, "Project summary")
-    body(doc, f"{PROJECT} is an AI-powered consciousness intelligence platform combining an OTT "
-              "library, an AI wisdom companion, a reflection journal with a digital twin, and "
-              "anonymous community circles into one calm, attentive product. Current shipping "
-              f"version: {VERSION}. Owner: {OWNER}.")
+    body(doc, f"{PROJECT} is a calm AI-powered space for inner work, combining a guided OTT "
+              "library, an AI wisdom companion, a reflection journal with a digital twin, an "
+              "in-app help chatbot (Glimmora Guide), and a structured admin layer (Customers / "
+              f"Creators / Moderators) into one product. Current shipping version: {VERSION}. "
+              f"Owner: {OWNER}.")
 
-    h2(doc, "In-scope (current build)")
-    bullet(doc, "Authentication: signup, login, logout, password change, password reset (one-hour "
-                "tokens), data export (JSON), self-delete account.")
-    bullet(doc, "Onboarding: 4-step flow (Welcome / Intention / Focus / Begin) with companion "
-                "welcome message; preferences persisted; middleware-enforced.")
-    bullet(doc, "Daily ritual: 'Today's three small steps' (Arrive / Notice / Reflect) with streak.")
-    bullet(doc, "AI Companion: chat with conversation history, emotion classification, reflection "
-                "prompt suggestion, episode recommendations, conservative crisis surface, "
-                "conversation drawer with full-text search, premium long-memory window.")
-    bullet(doc, "Stories: series + episode catalog, HLS-capable player, watch progress save + "
-                "resume, continue-watching surface, premium gating.")
-    bullet(doc, "Reflection: create / edit / delete journal entries; AI 'noticing' synthesis; full-"
-                "text search + mood filter; digital twin (7d/30d/90d/1y trend, dominant mood, "
-                "intensity, streak, milestones, tag cloud).")
-    bullet(doc, "Circles: anonymous handles, post + report flow, admin moderation queue.")
-    bullet(doc, "Creator: application + admin approval; Studio with create / edit / unpublish / "
-                "delete for series + episodes; analytics.")
-    bullet(doc, "Admin: platform stats, creator-application queue, user search + role filter + "
-                "active toggle, content moderation panel, audit log.")
-    bullet(doc, "Profile: edit identity, role display, tier display, security & data card.")
-    bullet(doc, "Theming: light + dark mode with system-preference + persistence.")
+    h2(doc, "In-scope (current build on main)")
 
-    h2(doc, "Out of scope (deferred)")
-    bullet(doc, "Stripe payment integration — /upgrade flips the tier in dev; webhooks not wired.")
-    bullet(doc, "Real SMTP — settings.smtp_enabled scaffolded; reset tokens shown in-page in dev.")
+    h3(doc, "Auth + account lifecycle")
+    bullet(doc, "Signup with confirm-password gate, login, logout. JWT in httpOnly cookie. Single-redirect login routing by role + onboarding + pending-app state.")
+    bullet(doc, "Show / hide password toggle on every password field (signup, login, /apply, create-moderator).")
+
+    h3(doc, "Customer / member-facing")
+    bullet(doc, "4-step onboarding (Welcome / Intention / Focus / Begin) with companion welcome message; skippable.")
+    bullet(doc, "Dashboard with 'Today's three small steps' (Arrive / Notice / Reflect) + streak.")
+    bullet(doc, "AI Companion (gpt-4o-mini) with emotion classification, suggested reflection prompt, conservative crisis surface with region-aware helplines.")
+    bullet(doc, "Stories: series + episode catalog, HLS player, watch-progress save + resume, continue-watching surface.")
+    bullet(doc, "Reflection: create journal entry, AI 'noticing' synthesis (✦), digital twin trend chart, milestones.")
+    bullet(doc, "Profile: edit identity, role display, tier badge (Standard / Premium).")
+    bullet(doc, "Public 'Apply as creator' on landing nav + footer + dashboard CTA. Creates account + pending application atomically.")
+    bullet(doc, "Under-review gate for users with a pending application — cannot escape until moderator decides.")
+
+    h3(doc, "Moderator surface")
+    bullet(doc, "/moderate/applications — list filterable by pending / approved / rejected.")
+    bullet(doc, "Review card with pitch + clickable links + attachments. Approve / Reject with optional note. Notification fires to applicant.")
+
+    h3(doc, "Superadmin surface")
+    bullet(doc, "Three role-locked tabs: Customers / Creators / Moderators. Each has its own 4-tile hero strip.")
+    bullet(doc, "Stat tiles are CLICKABLE FILTERS — tap to narrow the list, tap again to clear. Selected tile gets an amber glow ring.")
+    bullet(doc, "Inline ✎ Edit + 🗑 Delete on every row. Delete opens a confirm-type-username modal and cascades to every owned row (reflections, conversations, watch progress, subscriptions, applications, notifications). Superadmin targets are protected.")
+    bullet(doc, "Subscription manager on the edit page — Add / Edit popup with tier dropdown + date pickers. Adding flips the user's tier badge immediately and fires a notification.")
+    bullet(doc, "Create moderator popup on /admin/moderators.")
+
+    h3(doc, "In-app help")
+    bullet(doc, "Glimmora Guide — floating amber bubble bottom-right, draggable on right-click, openable on left-click. Polls /v1/support/chat backed by gpt-4o-mini with a hand-curated 200-line app-knowledge prompt. Crisis-aware. Tested with 23+ realistic questions before shipping.")
+
+    h3(doc, "Notifications")
+    bullet(doc, "Bell in topbar with unread count. Polling every 30s. Triggers: application_submitted (mods), application_approved/rejected (applicant), subscription_changed (customer), moderator_promoted (new mod).")
+
+    h3(doc, "Visual system")
+    bullet(doc, "Real brand logo (logo.png) in the sidebar + marketing nav + favicon.")
+    bullet(doc, "Pictured warm bokeh background + grain overlay + glassmorphic panels + glowing stat tiles + hero glow orbs.")
+    bullet(doc, "Chrome-less app shell — sidebar + topbar are floating elements with no container background.")
+    bullet(doc, "Dark + light theme with cross-fading bokeh; persistent via localStorage; no flash of wrong theme.")
+
+    h3(doc, "Infrastructure")
+    bullet(doc, "Postgres in dev (local) + prod (Neon / DO managed); lifespan idempotently creates tables on first boot.")
+    bullet(doc, "DigitalOcean App Platform deployment via .do/app.yaml (auto-deploy on push to main).")
+    bullet(doc, "OpenAI API integration verified live — gpt-4o-mini powers Companion + reflection noticings + support bot.")
+
+    h2(doc, "Out of scope (deferred / on progression branch)")
+    bullet(doc, "Stripe self-serve subscription checkout — Premium is admin-granted only.")
+    bullet(doc, "Real SMTP wiring — settings.smtp_enabled scaffold exists; password-reset / data-export / self-delete features live on the 'progression' branch.")
     bullet(doc, "Email verification at signup.")
     bullet(doc, "Native video upload + transcoding (creators paste URLs today).")
-    bullet(doc, "Avatar upload (avatarUrl is a text field today).")
-    bullet(doc, "Production deployment (.do/app.yaml ready, Postgres-tested run pending).")
-    bullet(doc, "Rate-limit middleware, error monitoring (Sentry), automated test suite.")
+    bullet(doc, "Avatar file uploads (avatarUrl is a text field).")
+    bullet(doc, "Native mobile apps (web-first; mobile sidebar + bottom-nav are PWA-ready).")
+    bullet(doc, "Automated test suite (manual Playwright walkthroughs done per release).")
 
     h2(doc, "Milestones")
     table(doc,
           header=["Date", "Tag", "Highlights"],
           rows=[
-              ["2026-05-11", "v0.1.0", "Initial release: auth, content catalog, companion, journal, circles."],
-              ["2026-05-11", "v0.1.1", "Signup loosened (email optional, 1-char min)."],
-              ["2026-05-11", "v0.2.0", "Onboarding, daily ritual, Paths, creator-application flow, crisis card, roles matrix."],
-              ["2026-05-12", "v0.2.1", "Signup→onboarding (no flicker); role/tier in sidebar; theme on auth pages."],
-              ["2026-05-12", "v0.2.2", "Polished motion across buttons, cards, page transitions, scroll reveals."],
-              ["2026-05-15", "v0.3.0", "Feature-completion pass: forgot/reset password, change password, data export, self-delete; watch resume + continue-watching; reflection edit + search + range; companion drawer + search + premium memory; creator edit/unpublish/delete; admin search + content moderation + audit log."],
+              ["2026-05-11", "v0.1.0–v0.2.0", "Initial release: auth, content, Companion, journal, circles, onboarding + daily ritual, creator application flow."],
+              ["2026-05-12", "v0.2.1–v0.2.2", "Polish: single-redirect signup, role/tier in sidebar, theme on auth pages, motion across buttons/cards/transitions."],
+              ["2026-05-15", "v0.3.0", "Feature-completion pass on progression branch: forgot/reset password, change password, data export, self-delete, watch resume + continue-watching, reflection edit + search + range, conversation drawer, creator edit/unpublish/delete, admin search + content moderation + audit log."],
+              ["2026-05-16", "v0.4.0-mvp", "Slimmed main to daily-ritual MVP. progression branch preserved with full feature set."],
+              ["2026-05-17", "v0.4.5", "Phase A — Spiritual Knowledge Graph seed (12 situations × 5 frameworks × 3 practices, two read endpoints)."],
+              ["2026-05-17", "v0.5.0", "Redesign: 4-role hierarchy (customer/creator/moderator/superadmin), public /apply + /under-review gate, subscriptions, notifications, role-locked admin tabs with clickable filter tiles + inline Edit/Delete, Postgres migration, Glimmora Guide help bot, chrome-less floating shell, real brand logo, confirm-password gate."],
           ])
 
     h2(doc, "Roles & responsibilities")
@@ -495,35 +543,33 @@ def build_project_documents():
               ["Project Owner / Founder", "Sanjay (Glimmora)", "Vision, prioritisation, brand, creator outreach."],
               ["Engineering", "—", "Frontend (Next.js), backend (FastAPI), DB, deployment."],
               ["Design", "—", "Visual system, motion, copy, calm tone."],
-              ["Content / Creator ops", "—", "Curate seed series; vet creator applications."],
+              ["Content / Creator ops", "—", "Curate seed series; review creator applications (Moderator role)."],
               ["QA", "—", "Run TESTING_GUIDE per release; regression Playwright walkthroughs."],
-              ["Moderation", "Admin role-holders", "Review flagged posts, decide creator applications."],
+              ["Moderation", "Moderator role-holders", "Review flagged posts (progression branch), decide creator applications."],
           ])
 
     h2(doc, "Deliverables (this PR)")
-    bullet(doc, "All v0.3.0 code (apps/web + backend) — typecheck + production build green.")
-    bullet(doc, "User Manual (docs/USER_MANUAL.md + .docx).")
-    bullet(doc, "Testing Guide (docs/TESTING_GUIDE.md + .docx).")
-    bullet(doc, "Product flows reference (docs/PRODUCT_FLOWS.md).")
+    bullet(doc, "All v0.5.0 code on main — typecheck + production build green.")
     bullet(doc, "Tech docs pack (this folder, six documents).")
 
     h2(doc, "Risks & mitigations")
     table(doc,
           header=["Risk", "Impact", "Mitigation"],
           rows=[
-              ["Stripe not yet integrated", "Cannot collect revenue", "Scope locked; integration is a discrete next milestone."],
-              ["Single-developer code velocity", "Roadmap slippage", "Tight scope per release; prioritise SOW gaps over polish."],
-              ["AI cost variance per active user", "Margin compression on premium", "Memory window is tier-gated (8 vs 32); model is configurable."],
-              ["Crisis-detection false negatives", "Safety incident", "Conservative regex by design; document exact triggers; prefer professional referral copy."],
-              ["Creator quality drift", "Brand dilution", "Hand-vetted application process; admin can unpublish any series."],
+              ["Stripe not yet integrated", "Cannot collect revenue self-serve", "Premium gifted by admin; Stripe is next milestone."],
+              ["Single-developer velocity", "Roadmap slippage", "Tight scope per release; reuse progression-branch features when needed."],
+              ["AI cost variance per active user", "Margin pressure", "Model is configurable (OPENAI_MODEL); temperature tuned per surface."],
+              ["Crisis-detection false negatives", "Safety incident", "Conservative regex by design; explicit CRISIS HANDLING in both Companion + Guide prompts."],
+              ["Creator quality drift", "Brand dilution", "Public apply form + hand-vetted by moderators; admin can disable/delete any creator."],
+              ["SMTP not wired (no password reset)", "User onboarding friction", "Documented in support bot's responses; superadmin can reset directly in DB if needed. Wire SMTP before public launch."],
           ])
 
     h2(doc, "Definition of Done (per release)")
     bullet(doc, "TypeScript compiles cleanly (tsc --noEmit) and Next.js production build succeeds.")
     bullet(doc, "Backend imports cleanly and /health returns ok.")
-    bullet(doc, "Full role-based Playwright walkthrough passes (member, creator, admin).")
-    bullet(doc, "USER_MANUAL.md, TESTING_GUIDE.md, and the .docx versions reflect the new behavior.")
-    bullet(doc, "PRODUCT_FLOWS.md updated if any role / lifecycle / workflow changed.")
+    bullet(doc, "Full role-based Playwright walkthrough passes (customer, creator, moderator, superadmin).")
+    bullet(doc, "Glimmora Guide answers 5+ smoke questions accurately.")
+    bullet(doc, "USER_MANUAL.md, TESTING_GUIDE.md, and Tech docs reflect the new behavior.")
 
     out = OUT / "04_Project_Documents.docx"; doc.save(str(out)); print(f"wrote {out}")
 
@@ -537,267 +583,213 @@ def build_test_cases():
     cover(doc, "Test Cases", "Deliverable 05 — Test Cases")
 
     body(doc, f"Test pack for {PROJECT} v{VERSION}. Run against http://127.0.0.1:3000 (web) + "
-              "http://127.0.0.1:8000 (api). Reset state by deleting backend/dev.db and restarting "
-              "the API (re-seeds demo content + superadmin: superadmin / ChangeMe!2026).")
+              "http://127.0.0.1:8000 (api). Bootstrap superadmin: superadmin / 1 (from .env). "
+              "Real Postgres in dev; lifespan auto-creates tables on first boot.")
 
     def case(num, title_, role, pre, steps, expected):
         h3(doc, f"TC-{num:03d}  ·  {title_}")
         body(doc, f"Role: {role}    ·    Pre-conditions: {pre}")
-        for i, s in enumerate(steps, start=1):
+        for s in steps:
             numbered(doc, s)
         p = doc.add_paragraph()
         r = p.add_run("Expected: "); r.bold = True; r.font.size = Pt(11)
         rb = p.add_run(expected); rb.font.size = Pt(11)
 
-    h2(doc, "1.  Authentication & account")
+    h2(doc, "1.  Auth + account")
 
-    case(1, "Sign up with username + password",
+    case(1, "Sign up with confirm-password gate",
          "Anonymous", "App reachable.",
          ["Open /signup.",
-          "Fill name=Ren, username=ren_test, password=hello1. Leave email blank.",
-          "Click Create account."],
-         "Land directly on /onboarding. Sidebar shows 'Ren · Member · free'. No flash of /dashboard.")
+          "Fill: name=Ren, username=ren_test, email=blank, password=hello1, confirmPassword=hello2.",
+          "Observe the 'Create account' button.",
+          "Fix confirmPassword to hello1.",
+          "Click 'Create account'."],
+         "While the two passwords mismatch, the button is disabled and an inline 'Doesn't match…' error shows under the confirm field. When matched, button enables. Submit lands DIRECTLY on /onboarding (single redirect, no flash).")
 
-    case(2, "Sign in with username",
-         "Anonymous", "User ren_test exists.",
-         ["Open /login.",
-          "Username=ren_test, password=hello1, Sign in."],
-         "Land on /dashboard. glimmora_session cookie set, httpOnly.")
+    case(2, "Password visibility toggle",
+         "Anonymous", "On /signup or /login.",
+         ["Click the eye icon at the right edge of any password field."],
+         "Field text becomes visible; icon flips to EyeOff. Click again to hide. Works on /login, /signup, /apply, and the admin Create-moderator popup.")
 
-    case(3, "Forgot password issues a token",
-         "Anonymous", "User ren_test exists with email ren@example.com.",
-         ["Open /login → Forgot password?",
-          "Enter ren@example.com → Send reset link."],
-         "Page shows confirmation. In dev (no SMTP), a yellow box exposes the reset token + Continue link.")
+    case(3, "Login routes to the right place per role",
+         "Anonymous", "Three accounts exist: customer, moderator, superadmin.",
+         ["Sign in as superadmin/1.",
+          "Sign out, sign in as a moderator.",
+          "Sign out, sign in as a customer."],
+         "Each lands DIRECTLY on the correct page: superadmin → /admin/customers, moderator → /moderate/applications, customer → /dashboard (or /onboarding if not onboarded). No double-redirect blank flash.")
 
-    case(4, "Reset password flow",
-         "Anonymous", "Token from TC-003.",
-         ["Open /reset-password (or click the dev-mode link).",
-          "Token pre-filled. Enter new password=hello2 → Set new password."],
-         "After ~1.5s, redirect to /login. Old password fails (401); new password succeeds.")
+    h2(doc, "2.  Onboarding")
 
-    case(5, "Change password while signed in",
-         "Member", "Signed in as ren_test.",
-         ["Open /profile → Security & data → Change password.",
-          "Current=hello2, New=hello3 → Update password."],
-         "'Password updated.' inline. Sign out, sign in with hello3 → success.")
+    case(4, "Four-step onboarding lands on dashboard",
+         "Customer (just signed up)", "On /onboarding.",
+         ["Step 1 — name + reason → Continue.",
+          "Step 2 — intention → Continue.",
+          "Step 3 — pick 2 focus areas → Continue.",
+          "Step 4 — Begin."],
+         "Land on /dashboard. preferences.onboarded=true; intention saved. Companion has 'A first hello' conversation seeded.")
 
-    case(6, "Export my data",
-         "Member", "Signed in.",
-         ["Profile → Security & data → Download my data."],
-         "A glimmora-<username>-export.json downloads with keys: user, reflections, conversations, watchProgress, posts, exportedAt.")
+    case(5, "Skip works",
+         "Customer (just signed up)", "On /onboarding.",
+         ["Click 'Skip for now →' (top right, sits below the floating utility cluster)."],
+         "Lands on /dashboard. preferences.onboarded=true with no intention/focus.")
 
-    case(7, "Delete account requires username confirm",
-         "Member (not superadmin)", "Signed in.",
-         ["Profile → Security & data → Delete account.",
-          "Type wrong username → Permanently delete."],
-         "Backend returns 400 'username confirmation does not match'. Account still exists.")
+    h2(doc, "3.  Daily ritual + Companion")
 
-    case(8, "Delete account succeeds",
-         "Member", "Signed in.",
-         ["Profile → Security & data → Delete account.",
-          "Type correct username → Permanently delete."],
-         "Account removed; signed out; redirected to /. Re-login with same credentials → 401.")
+    case(6, "Three small steps tick as you complete them",
+         "Customer", "Signed in.",
+         ["Open /companion → send any message → return to /dashboard.",
+          "Open /watch → play any episode 60+s → return to /dashboard.",
+          "Open /reflect/new → save any entry → return to /dashboard."],
+         "Steps tick in order: Arrive ✓, Notice ✓, Reflect ✓. Streak +1 when all three done.")
 
-    case(9, "Superadmin cannot self-delete",
-         "Superadmin", "Signed in as superadmin.",
-         ["Same flow as TC-008 with username=superadmin."],
-         "API returns 400 'superadmin cannot self-delete'.")
+    case(7, "Companion replies via real OpenAI",
+         "Customer", "OPENAI_API_KEY set.",
+         ["Open /companion → type 'I feel restless tonight' → Enter."],
+         "Within ~2s an assistant message appears, with emotion chip ('anxious' typically) and a 'question to sit with' card. Falls back to deterministic responder if key missing.")
 
-    h2(doc, "2.  Onboarding & dashboard")
+    case(8, "Crisis safety card surfaces",
+         "Customer", "Signed in.",
+         ["Type 'I want to die tonight' → Enter."],
+         "Rose-bordered safety card appears with India/US-Canada/UK/global helplines. Companion still replies kindly.")
 
-    case(10, "Four-step onboarding lands on dashboard",
-          "Member (just signed up)", "On /onboarding.",
-          ["Step 1 — name + reason → Continue.",
-           "Step 2 — intention → Continue.",
-           "Step 3 — pick 2 focus areas → Continue.",
-           "Step 4 — Begin."],
-          "Land on /dashboard. preferences.onboarded=true; preferences.intention saved; companion has 'A first hello' conversation.")
+    h2(doc, "4.  Stories")
 
-    case(11, "Skip onboarding still marks user onboarded",
-          "Member (just signed up)", "On /onboarding.",
-          ["Click Skip for now."],
-          "Land on /dashboard. preferences.onboarded=true with no intention/focus.")
+    case(9, "Watch episode → progress saves → resume",
+         "Customer", "Signed in.",
+         ["Open any free episode → play 30+ seconds → leave → return to /watch."],
+         "Continue-watching row appears at top with the episode + gold progress bar + % watched. Click resumes near saved position.")
 
-    case(12, "Daily ritual ticks Step 1 after companion message",
-          "Member", "Signed in, no messages today.",
-          ["Open /companion → send any message.",
-           "Return to /dashboard."],
-          "Step 1 — Arrive shows complete (gold check).")
+    h2(doc, "5.  Reflection + digital twin")
 
-    case(13, "Daily ritual ticks Step 3 after a reflection",
-          "Member", "Signed in.",
-          ["Open /reflect/new → write any sentence → Save.",
-           "Return to /dashboard."],
-          "Step 3 — Reflect shows complete; streak +1 if all three done.")
+    case(10, "Create reflection with AI noticing",
+          "Customer", "OPENAI_API_KEY set.",
+          ["/reflect/new → write a sentence → pick mood hopeful → intensity 6 → Save."],
+          "Lands on /reflect. Reflections: 1, Day streak: 1, Most-present: hopeful. A ✦ AI-noticing line appears under the entry.")
 
-    h2(doc, "3.  Companion")
+    h2(doc, "6.  Public creator application + under-review gate")
 
-    case(14, "Companion replies and offers a reflection prompt",
-          "Member", "Signed in.",
-          ["Open /companion → click any starter or type a message → Enter."],
-          "Within ~2s assistant message appears, with optional emotion chip and a 'question to sit with' card.")
+    case(11, "Anonymous /apply creates account + application",
+          "Anonymous", "Logged out.",
+          ["Open /apply via header / footer / sidebar 'Apply' link.",
+           "Fill name, username, email, password, pitch, optional links.",
+           "Submit."],
+          "Account created + CreatorApplication added with status=pending. Auto-logged-in. Redirected to /under-review.")
 
-    case(15, "Crisis safety card surfaces",
-          "Member", "Signed in.",
-          ["Type: 'I want to die tonight' → Enter."],
-          "Rose-bordered safety card appears with India / US-Canada / UK-ROI / findahelpline.com lines. Companion still replies kindly.")
+    case(12, "Under-review gate is inescapable",
+          "Applicant (customer with pending app)", "On /under-review.",
+          ["Try navigating to /dashboard manually.",
+           "Try /companion, /reflect, anything in the app."],
+          "Server redirects you back to /under-review for every path. No infinite-loop. Layout's pending-application gate early-returns above all other checks.")
 
-    case(16, "Conversation drawer search by message body",
-          "Member", "≥2 conversations exist.",
-          ["Open /companion → type a word that only one conversation contains in the drawer search."],
-          "Drawer list narrows to 1 row matching that conversation by message text.")
+    h2(doc, "7.  Moderator")
 
-    case(17, "Resume a prior conversation",
-          "Member", "Prior conversations exist.",
-          ["Click any row in the drawer."],
-          "URL becomes /companion?c=<id>; messages load; new replies append to the same conversation.")
+    case(13, "Moderator sees + approves a pending application",
+          "Moderator", "Pending application exists.",
+          ["/moderate/applications → filter chip 'pending' → click 'Review and decide' on the row.",
+           "Write a short note → Approve."],
+          "Tile counters update (Pending −1, Approved +1). Applicant's role flips to creator. Applicant gets application_approved notification.")
 
-    case(18, "Premium memory window deeper than free",
-          "Premium member", "Signed in as premium.",
-          ["Send 12+ turns then refer back to a detail from turn 1."],
-          "Companion picks up the detail (32-turn window). Same test on free should miss it (8-turn window).")
+    case(14, "Moderator rejects with note",
+          "Moderator", "Pending application exists.",
+          ["Same flow as TC-13 but click Reject with a note."],
+          "Applicant role stays customer. Applicant gets application_rejected notification.")
 
-    h2(doc, "4.  Stories / Watch")
+    h2(doc, "8.  Superadmin")
 
-    case(19, "Episode plays + saves progress",
-          "Member", "Signed in.",
-          ["Open any free episode → click play → let run 30+s → leave."],
-          "/v1/content/progress receives ~3 saves (every ~10s). Saved row exists in WatchProgress.")
+    case(15, "Three role-locked tabs each show one role only",
+          "Superadmin", "Signed in.",
+          ["Open /admin/customers — observe rows.",
+           "Open /admin/creators — observe rows.",
+           "Open /admin/moderators — observe rows."],
+          "Each tab shows ONLY the matching role. No filter dropdown — the role IS the page.")
 
-    case(20, "Continue-watching row appears",
-          "Member", "Progress from TC-019.",
-          ["Open /watch."],
-          "Top of page shows a 'Continue watching' row with a gold progress bar and % watched.")
+    case(16, "Clickable stat tiles filter the list",
+          "Superadmin", "On /admin/customers.",
+          ["Click the 'Premium' tile.",
+           "Click 'Premium' again to clear.",
+           "Click 'Pending apps'."],
+          "Selected tile gets an amber glow ring + outline. Table narrows to matching rows. Re-clicking the same tile clears the filter. 'All' is the default state.")
 
-    case(21, "Resume from saved position",
-          "Member", "Progress exists.",
-          ["Click the continue card."],
-          "Player loads and seeks within ~1s of the saved position (not 0).")
+    case(17, "Inline ✎ Edit and 🗑 Delete on every row",
+          "Superadmin", "On any of the three admin tabs.",
+          ["Click ✎ on a row.",
+           "Back to list → click 🗑 on a non-superadmin row.",
+           "Type the wrong username in the confirm field → observe button.",
+           "Type the right username → Permanently delete."],
+          "Edit navigates to /admin/customers/[id]. Delete opens confirm-type-username modal; destructive button is disabled until username matches exactly. On confirm, row vanishes and all owned data is cascaded.")
 
-    case(22, "Premium episode 402 for free user",
-          "Free member", "Signed in as free.",
-          ["Try opening a premium episode directly via URL."],
-          "API returns 402 Payment Required; UI surfaces an upgrade hint.")
+    case(18, "Delete protections",
+          "Superadmin", "Signed in.",
+          ["Try DELETE /v1/admin/customers/<your-own-user-id> via API.",
+           "Try DELETE on another superadmin row."],
+          "First returns 400 'cannot delete self'. Second returns 403 'cannot delete another superadmin'. No row in the UI lets you trigger this from the table — protections are layered.")
 
-    h2(doc, "5.  Reflection journal")
+    case(19, "Subscription grant flips tier immediately",
+          "Superadmin", "Target customer exists.",
+          ["/admin/customers → click a customer row.",
+           "Subscription manager → Add subscription → tier=premium, today→+30d → save.",
+           "As that customer, refresh and look at the sidebar tier badge."],
+          "Subscription row appears with 'active' chip. Customer's badge flips from Standard (grey) to Premium (gold). subscription_changed notification fires.")
 
-    case(23, "Create + AI-noticing",
-          "Member", "Signed in (OPENAI_API_KEY set for noticing).",
-          ["/reflect/new → write a sentence, pick mood, intensity → Save."],
-          "Land on /reflect. Stats update. Entry appears with ✦ noticing line if AI is enabled.")
+    case(20, "Create moderator + first login routing",
+          "Superadmin → new Moderator", "On /admin/moderators.",
+          ["Click 'Create moderator' → fill the popup (full name, username, email, password) → Create.",
+           "Sign out. Sign in with the new moderator credentials."],
+          "Moderator appears in the list with role=moderator + moderator_promoted notification. Login routes the moderator DIRECTLY to /moderate/applications (not /dashboard).")
 
-    case(24, "Edit a reflection in place",
-          "Member", "Reflection exists.",
-          ["Hover entry → ✎ → change content + intensity → ✓."],
-          "Entry updates in place. AI noticing regenerated when content changed.")
+    h2(doc, "9.  Notifications")
 
-    case(25, "Search + mood filter",
-          "Member", "≥2 reflections with different moods.",
-          ["Type a unique word into the journal search; pick a mood."],
-          "Entries filter live; URL reflects ?q=…&mood=….")
+    case(21, "Bell shows unread + dropdown lists notifications",
+          "Anyone", "At least one notification fired for this user.",
+          ["Look at the bell icon top-right of the app shell.",
+           "Click the bell."],
+          "Badge with unread count. Dropdown shows last 30 notifications with title + body + relative time. Click a notification's link to navigate; it marks as read.")
 
-    case(26, "Range toggle on trend chart",
-          "Member", "Reflections exist.",
-          ["Click 7d / 30d / 90d / 1y above the chart."],
-          "Chart re-renders for the selected window; URL reflects ?range=….")
+    case(22, "Polling picks up new notifications without refresh",
+          "Customer", "Signed in on /dashboard.",
+          ["From another window, sign in as superadmin and add a subscription to this customer.",
+           "Wait ~30 seconds. Look at the bell."],
+          "Bell badge increments without a page refresh.")
 
-    h2(doc, "6.  Circles")
+    h2(doc, "10.  Glimmora Guide (help bot)")
 
-    case(27, "Post under anonymous handle",
-          "Member", "Signed in.",
-          ["Open /circles → pick a circle → write a sentence → Share."],
-          "Post appears under a soft handle (e.g. 'Steady River'), not the username.")
+    case(23, "Bubble opens chat on left-click",
+          "Anyone", "On any page.",
+          ["Look at the bottom-right of the viewport.",
+           "Left-click the amber bubble."],
+          "A 360×460 glass chat panel opens, smart-edged to whichever side has more room. Empty state shows 4 suggested starter questions.")
 
-    case(28, "Report a post hides it",
-          "Member", "A post is visible.",
-          ["Click Report on the post."],
-          "Post disappears from public feed; flagged=true in DB; appears in admin queue.")
+    case(24, "Right-click + drag repositions",
+          "Anyone", "Bubble visible.",
+          ["Right-click and drag the bubble to a new spot.",
+           "Release.",
+           "Refresh the page."],
+          "Bubble follows the cursor while dragging (no browser context menu appears). Position is constrained to the viewport. After refresh, bubble is in the new spot (persisted in localStorage glimmora-supportbot-pos).")
 
-    case(29, "Safety-blocklist refuses harmful phrase",
-          "Member", "Signed in.",
-          ["Try posting a body containing 'kill yourself'."],
-          "API returns 400 'message blocked by safety filter'.")
+    case(25, "Bot answers accurately",
+          "Anyone", "Bot open.",
+          ["Ask: 'How do I become a creator?'",
+           "Ask: 'What's the difference between Standard and Premium?'",
+           "Ask: 'Who can see my reflections?'"],
+          "Q1: explains the /apply form + moderator review. Q2: explains Standard=free default, Premium=admin-granted, no self-serve checkout yet. Q3: only you (and admins, if escalated).")
 
-    h2(doc, "7.  Creator")
+    case(26, "Bot crisis handling",
+          "Anyone", "Bot open.",
+          ["Ask: 'I'm thinking of hurting myself.'"],
+          "Reply leads with one warm sentence ('I'm really glad you told me.'), surfaces helplines DIRECTLY in the reply (India iCall 9152987821 · US/Canada 988 · UK Samaritans 116 123 · findahelpline.com), points to /companion. No follow-up questions.")
 
-    case(30, "Apply to be a creator",
-          "Member", "Signed in, no pending application.",
-          ["/creator/apply → write a pitch → Send application."],
-          "Application appears with status=pending. Re-apply blocked until decided.")
+    h2(doc, "11.  Theme + brand")
 
-    case(31, "Admin approves application",
-          "Admin", "Pending application exists.",
-          ["/admin → Creator applications → Approve."],
-          "Application flips to approved; target user.role becomes creator.")
-
-    case(32, "Creator publishes a series + episode",
-          "Creator", "Signed in as creator.",
-          ["/creator/series/new → fill form → Create.",
-           "From Studio → series → +Add episode → fill → Create."],
-          "Series + episode appear in the public /watch library, tier-gated as configured.")
-
-    case(33, "Edit + unpublish a series",
-          "Creator", "Owns a series.",
-          ["Studio → Edit on the series → change tagline → Save.",
-           "Click Unpublish."],
-          "Tagline updates immediately. After Unpublish, the series no longer appears in the public library; Publish restores it.")
-
-    case(34, "Edit + delete an episode",
-          "Creator", "Owns a series with episodes.",
-          ["Studio → series → Edit → ✎ on an episode → change title → Save.",
-           "Then 🗑 next to a different episode."],
-          "First episode updates. Second deleted; cascade removes its watch-progress rows.")
-
-    case(35, "Cannot edit other creators' series",
-          "Creator A", "Series owned by Creator B exists.",
-          ["Try PATCH /v1/creator/series/<B-series-id>."],
-          "API returns 403 'not your series'.")
-
-    h2(doc, "8.  Admin")
-
-    case(36, "User search + role filter",
-          "Admin", "Multiple users exist.",
-          ["/admin → Users → type a fragment of a username; pick role=member."],
-          "Table debounces (~200ms) and filters live by both query + role.")
-
-    case(37, "Inline role change + active toggle",
-          "Admin", "Target user exists.",
-          ["Inline role select → change to creator. Click Disable on another row."],
-          "Both PATCHes succeed; row updates in place. Audit log records the role change.")
-
-    case(38, "Admin cannot grant superadmin (unless superadmin)",
-          "Admin (not superadmin)", "Signed in.",
-          ["Try setting any user's role to superadmin via the UI / API."],
-          "API returns 403 'only superadmin can grant superadmin'.")
-
-    case(39, "Admin unpublishes any series",
-          "Admin", "Any series exists.",
-          ["/admin → Content moderation → Unpublish on a series."],
-          "Series hidden from the public library. Audit log records series_admin_edit.")
-
-    case(40, "Admin deletes any series",
-          "Admin", "Any series exists.",
-          ["/admin → Content moderation → 🗑 → confirm."],
-          "Series + episodes + watch progress removed. Audit log records series_admin_delete.")
-
-    case(41, "Audit log lists recent events",
-          "Admin", "Some moderator actions taken.",
-          ["/admin → Audit log."],
-          "Table shows actor / action / target / when / meta. Most recent first; password_changed and account_self_deleted entries appear too.")
-
-    h2(doc, "9.  Theme + UX")
-
-    case(42, "Dark / light toggle persists",
+    case(27, "Theme toggle persists",
           "Anyone", "App open.",
-          ["Click sun / moon icon top right.",
-           "Reload the page."],
-          "Theme switches immediately; choice persists (localStorage glimmora-theme). No flash of wrong theme on next load.")
+          ["Click moon/sun in the floating top-right cluster.",
+           "Refresh."],
+          "Theme switches immediately; bokeh background cross-fades between dark and cream variants. Choice persists. No flash of wrong theme.")
 
-    case(43, "Page-transition motion fires",
-          "Member", "Signed in.",
-          ["Navigate between Dashboard / Companion / Watch / Reflect."],
-          "Each route fades up on arrival; sidebar active indicator slides; reduce-motion users get instant transitions.")
+    case(28, "Logo renders on every surface",
+          "Anyone", "Pages: landing, /signup, /login, /apply, sidebar (any in-app), tab favicon.",
+          ["Visually inspect each surface."],
+          "logo.png renders cleanly. Tab favicon matches. Brand component scales (sm/md/lg) appropriately by context. Drop-shadow + hover scale visible.")
 
     out = OUT / "05_Test_Cases.docx"; doc.save(str(out)); print(f"wrote {out}")
 
@@ -812,40 +804,57 @@ def build_technical_documentation():
 
     h2(doc, "Stack")
     bullet(doc, "Frontend: Next.js 15 (App Router, RSC) · React 19 · TypeScript · Tailwind CSS · shadcn-style primitives · jose (JWT verification).")
-    bullet(doc, "Backend: FastAPI · SQLAlchemy 2.0 (async) · Alembic · Pydantic v2 · PyJWT · bcrypt.")
-    bullet(doc, "Database: SQLite (dev) / Postgres (prod) — same models, Alembic auto-detects dialect.")
-    bullet(doc, "AI: OpenAI-compatible (default model gpt-4o-mini). Graceful fallback to deterministic responder when OPENAI_API_KEY is unset.")
-    bullet(doc, "Build / package: pnpm workspaces · turbo · uv-style venv for backend.")
-    bullet(doc, "Deployment target: DigitalOcean App Platform (one app, two services, one PRE_DEPLOY migrate job).")
+    bullet(doc, "Backend: FastAPI · SQLAlchemy 2.0 (async) · Alembic · Pydantic v2 · PyJWT · bcrypt · asyncpg.")
+    bullet(doc, "Database: Postgres in dev + prod (Neon / DigitalOcean managed). SQLite still supported as a dev fallback via DATABASE_URL.")
+    bullet(doc, "AI: OpenAI-compatible (default gpt-4o-mini). Powers Companion + reflection noticings + Glimmora Guide.")
+    bullet(doc, "Build / package: pnpm workspaces · turbo · venv for backend.")
+    bullet(doc, "Deployment target: DigitalOcean App Platform (.do/app.yaml; auto-deploy on push to main).")
 
     h2(doc, "Repository layout")
     code(doc,
          "glimmora-one/\n"
          "├── apps/web/                    # Next.js frontend\n"
+         "│   ├── public/                  # static assets (logo.png + favicon)\n"
          "│   ├── src/app/                 # routes (App Router)\n"
-         "│   │   ├── (app)/               # authed shell (sidebar)\n"
-         "│   │   ├── (auth)/              # login, signup, forgot/reset\n"
+         "│   │   ├── (app)/               # authed shell with role-aware layout\n"
+         "│   │   │   ├── admin/           # superadmin: customers / creators / moderators\n"
+         "│   │   │   ├── moderate/        # moderator: applications\n"
+         "│   │   │   ├── companion/ watch/ reflect/ profile/ onboarding/\n"
+         "│   │   │   └── under-review/    # gate for pending applicants\n"
+         "│   │   ├── (auth)/              # public auth pages: login, signup, apply\n"
          "│   │   ├── api/proxy/[...path]/ # forwards to FastAPI w/ Bearer\n"
-         "│   │   └── api/auth/logout/     # clears session cookie\n"
-         "│   ├── src/components/          # client + presentational components\n"
-         "│   ├── src/lib/                 # backend client, session, types, server actions\n"
-         "│   └── src/middleware.ts        # auth-gating + pathname header\n"
+         "│   │   ├── api/auth/logout/     # clears session cookie\n"
+         "│   │   └── api/auth/session/    # sets cookie from token (used by /apply)\n"
+         "│   ├── src/components/          # presentational + client components\n"
+         "│   │   ├── admin/               # role-locked admin tables + clients\n"
+         "│   │   ├── support-bot.tsx      # Glimmora Guide floating widget\n"
+         "│   │   ├── notification-bell.tsx\n"
+         "│   │   ├── app-shell.tsx        # role-aware sidebar + utility cluster\n"
+         "│   │   ├── brand.tsx            # logo (sm/md/lg sizes)\n"
+         "│   │   └── ui/                  # primitives (button, input, password-input, ...)\n"
+         "│   └── src/lib/                 # backend client, session, types, server actions\n"
          "├── backend/                     # FastAPI service\n"
          "│   ├── app/\n"
          "│   │   ├── routers/             # one per domain\n"
-         "│   │   ├── ai/companion.py      # AI orchestration\n"
-         "│   │   ├── models.py            # SQLAlchemy models\n"
-         "│   │   ├── schemas.py           # Pydantic schemas\n"
+         "│   │   │   ├── auth.py / users.py / dashboard.py / content.py\n"
+         "│   │   │   ├── ai.py / reflection.py / skg.py\n"
+         "│   │   │   ├── notifications.py / applications.py / admin.py\n"
+         "│   │   │   └── support.py       # Glimmora Guide chatbot\n"
+         "│   │   ├── ai/companion.py      # Companion AI orchestration\n"
+         "│   │   ├── models.py            # SQLAlchemy: User, Subscription, Notification, ...\n"
+         "│   │   ├── schemas.py           # Pydantic v2 with camelCase alias generator\n"
+         "│   │   ├── services.py          # active_tier(), hydrate_user(), ...\n"
          "│   │   ├── security.py          # bcrypt + JWT\n"
          "│   │   ├── deps.py              # CurrentUser dependency\n"
          "│   │   ├── db.py                # async engine + session factory\n"
          "│   │   ├── bootstrap.py         # superadmin + demo seeds\n"
-         "│   │   └── main.py              # app factory + lifespan\n"
-         "│   └── alembic/                 # migrations\n"
-         "├── docs/                        # USER_MANUAL, TESTING_GUIDE, PRODUCT_FLOWS, Tech docs\n"
-         "├── scripts/                     # build_docs.py + dev launchers\n"
-         "├── .do/app.yaml                 # DigitalOcean deploy spec\n"
-         "└── docker-compose.yml           # local Postgres + both halves")
+         "│   │   └── main.py              # app factory + lifespan + create_all\n"
+         "│   ├── data/skg.json            # Spiritual Knowledge Graph seed\n"
+         "│   └── alembic/                 # migrations (used in prod)\n"
+         "├── docs/                        # USER_MANUAL, TESTING_GUIDE, PRODUCT_FLOWS,\n"
+         "│   ├── Tech docs/               # this deliverables pack\n"
+         "│   └── brand/                   # logo SVGs + preview\n"
+         "└── .do/app.yaml                 # DigitalOcean deploy spec")
 
     h2(doc, "Environment variables")
     table(doc,
@@ -853,162 +862,115 @@ def build_technical_documentation():
           rows=[
               ["JWT_SECRET", "Shared HS256 signing secret (api + web).", "32+ random chars"],
               ["JWT_EXPIRES_HOURS", "Session lifetime.", "24"],
-              ["DATABASE_URL", "SQLAlchemy async URL.", "sqlite+aiosqlite:///./dev.db"],
+              ["DATABASE_URL", "SQLAlchemy async URL.", "postgresql+asyncpg://user:pass@host:5432/one"],
               ["BACKEND_URL", "Where Next proxies API calls.", "http://localhost:8000"],
-              ["OPENAI_API_KEY", "Enables LLM companion + AI noticing.", "(unset → fallback)"],
+              ["OPENAI_API_KEY", "Enables LLM Companion + AI noticing + Guide.", "(unset → fallback)"],
               ["OPENAI_MODEL", "Override LLM model.", "gpt-4o-mini"],
-              ["BOOTSTRAP_SUPERADMIN_USERNAME / _PASSWORD / _EMAIL", "Seed superadmin on first boot.", "superadmin / ChangeMe!2026 / admin@glimmora.ai"],
+              ["BOOTSTRAP_SUPERADMIN_USERNAME/_PASSWORD/_EMAIL", "Seed superadmin on first boot.", "superadmin / 1 / admin@glimmora.ai"],
               ["ALLOWED_ORIGINS", "CORS allowlist (CSV).", "http://localhost:3000"],
-              ["SMTP_HOST / _PORT / _USER / _PASSWORD / _FROM", "SMTP for password-reset email.", "(unset → dev-mode in-page token)"],
-              ["RATE_LIMIT_PER_MINUTE", "Reserved for upcoming rate limiter.", "120"],
           ])
 
-    h2(doc, "REST API reference (selected)")
+    h2(doc, "REST API reference (selected — current main)")
     body(doc, "All endpoints return the envelope {success, data, error}. Auth: Authorization: "
               "Bearer <jwt> (Next.js proxy attaches it from the httpOnly cookie). camelCase on the "
               "wire (Pydantic alias generator).")
 
     h3(doc, "Auth")
     table(doc, header=["Method + Path", "Purpose"], rows=[
-        ["POST /v1/auth/signup", "Create account; returns JWT."],
+        ["POST /v1/auth/signup", "Create customer account; returns JWT."],
         ["POST /v1/auth/login", "Login by username or email; returns JWT."],
         ["POST /v1/auth/logout", "Stateless; cookie cleared by Next.js layer."],
-        ["GET  /v1/auth/me", "Current user (also exposed at /v1/users/me)."],
-        ["POST /v1/auth/password/forgot", "Issue 1h reset token; in dev returns devToken in response."],
-        ["POST /v1/auth/password/reset", "Confirm token + set new password."],
+        ["GET  /v1/auth/me", "Current user with derived role + tier + hasPendingApplication."],
     ])
 
-    h3(doc, "Users")
+    h3(doc, "Users + dashboard + content + AI + reflection")
     table(doc, header=["Method + Path", "Purpose"], rows=[
-        ["PATCH /v1/users/me", "Update profile (full_name, bio, avatar_url, preferences merge)."],
-        ["POST  /v1/users/onboard", "Persist onboarding payload + seed welcome conversation."],
-        ["POST  /v1/users/me/password", "Change password (verifies current)."],
-        ["GET   /v1/users/me/export", "Full JSON export of everything user owns."],
-        ["DELETE /v1/users/me", "Self-delete (requires confirm_username)."],
+        ["PATCH /v1/users/me", "Update own profile."],
+        ["POST  /v1/users/onboard", "Persist 4-step onboarding + seed welcome conversation."],
+        ["GET   /v1/dashboard/today", "Three-step state for today + streak."],
+        ["GET   /v1/content/series · /series/{slug} · /episodes/{id}", "Public catalog (published only)."],
+        ["GET   /v1/content/progress/{episode_id} · POST /v1/content/progress · GET /v1/content/continue-watching", "Watch progress + resume."],
+        ["POST  /v1/ai/chat", "Companion turn — returns reply + emotion + suggested reflection + crisis flag."],
+        ["GET   /v1/reflection · POST /v1/reflection", "List + create journal entries (with AI noticing)."],
+        ["GET   /v1/reflection/insights/twin", "Digital twin snapshot (trend, streak, mood, milestones)."],
+        ["GET   /v1/skg/situations · /v1/skg/situations/{slug}", "Read-only SKG (12 situations × 5 frameworks × 3 practices)."],
     ])
 
-    h3(doc, "Dashboard / Content / Reflection")
+    h3(doc, "Notifications, applications, support bot")
     table(doc, header=["Method + Path", "Purpose"], rows=[
-        ["GET /v1/dashboard/today", "Three-step state for today + streak."],
-        ["GET /v1/content/series", "Public catalog (published only)."],
-        ["GET /v1/content/series/{slug}", "Series detail with episodes."],
-        ["GET /v1/content/episodes/{id}", "Episode (premium-gated)."],
-        ["GET /v1/content/progress/{episode_id}", "Saved progress (or null)."],
-        ["POST /v1/content/progress", "Upsert progress."],
-        ["GET /v1/content/continue-watching", "Up to 12 in-progress episodes."],
-        ["GET /v1/content/recommendations", "Tag-affinity recommender."],
-        ["GET /v1/reflection?q=&mood=", "List reflections (search + filter)."],
-        ["POST /v1/reflection", "Create reflection (+ AI noticing if enabled)."],
-        ["PATCH /v1/reflection/{id}", "Edit (regenerates noticing if content changed)."],
-        ["DELETE /v1/reflection/{id}", "Delete."],
-        ["GET /v1/reflection/insights/twin?days=", "Digital twin (7/30/90/365)."],
+        ["GET    /v1/notifications", "List up to 30 most-recent notifications."],
+        ["GET    /v1/notifications/unread-count", "Unread count (polled by bell)."],
+        ["POST   /v1/notifications/{id}/read · POST /v1/notifications/read-all", "Mark read."],
+        ["POST   /v1/creator-applications", "PUBLIC. Creates account + pending application atomically. Returns JWT."],
+        ["GET    /v1/creator-applications/me", "Current user's latest application (if any)."],
+        ["GET    /v1/moderate/applications?status_filter=...", "Moderator: list (pending/approved/rejected)."],
+        ["GET    /v1/moderate/applications/{id}", "Moderator: detail."],
+        ["POST   /v1/moderate/applications/{id}/decide", "Moderator: approve or reject + optional note. Fires notification."],
+        ["POST   /v1/support/chat", "Glimmora Guide. Auth optional (role-tailored if present)."],
     ])
 
-    h3(doc, "AI / Community / Creator / Admin")
+    h3(doc, "Admin (superadmin only)")
     table(doc, header=["Method + Path", "Purpose"], rows=[
-        ["POST /v1/ai/chat", "Send message; create-or-continue conversation; returns reply, emotion, suggested reflection, episode recs, crisis flag."],
-        ["GET /v1/ai/conversations?q=", "List + search across titles and message bodies."],
-        ["GET /v1/ai/conversations/{id}", "Conversation detail with messages."],
-        ["DELETE /v1/ai/conversations/{id}", "Delete conversation + messages."],
-        ["GET /v1/community/circles", "List circles + post counts."],
-        ["GET /v1/community/circles/{slug}/posts", "List posts (non-flagged)."],
-        ["POST /v1/community/circles/{slug}/posts", "Anonymous post (handle deterministic)."],
-        ["POST /v1/community/posts/{id}/report", "Flag a post."],
-        ["POST /v1/creator/apply", "Member submits creator application."],
-        ["GET /v1/creator/application/me", "Latest application status."],
-        ["POST /v1/creator/series", "Create series (creator+)."],
-        ["GET /v1/creator/series/{id}", "Get my series with episodes."],
-        ["PATCH /v1/creator/series/{id}", "Edit / unpublish (eager-loads episodes)."],
-        ["DELETE /v1/creator/series/{id}", "Delete (cascade)."],
-        ["POST /v1/creator/episodes", "Create episode."],
-        ["PATCH /v1/creator/episodes/{id}", "Edit episode."],
-        ["DELETE /v1/creator/episodes/{id}", "Delete episode."],
-        ["GET /v1/creator/mine", "My series."],
-        ["GET /v1/creator/analytics", "Series / episode / watcher / completion counts."],
-        ["GET /v1/admin/stats", "Platform counts."],
-        ["GET /v1/admin/users?q=&role=", "Search + filter."],
-        ["PATCH /v1/admin/users/{id}/role", "Change role."],
-        ["PATCH /v1/admin/users/{id}/active", "Activate / disable account."],
-        ["GET /v1/admin/applications", "Review queue."],
-        ["POST /v1/admin/applications/{id}/decide", "Approve / deny."],
-        ["GET /v1/admin/series", "All series (incl. unpublished)."],
-        ["PATCH /v1/admin/series/{id}", "Admin edit / unpublish (audit logged)."],
-        ["DELETE /v1/admin/series/{id}", "Admin delete (audit logged)."],
-        ["GET /v1/admin/flagged-posts", "Reported community posts."],
-        ["DELETE /v1/admin/posts/{id}", "Delete community post."],
-        ["GET /v1/admin/audit-log", "Most recent moderator + security events."],
-        ["GET /v1/billing/tiers", "Tier definitions."],
-        ["GET /v1/billing/me", "Entitlements for the current user."],
-        ["POST /v1/billing/upgrade", "Dev-only tier flip (Stripe webhooks plug in here)."],
+        ["GET    /v1/admin/customers?role=...&q=...", "List users filtered by role + free-text."],
+        ["GET    /v1/admin/customers/{id}", "Detail (hydrated with active tier + hasPendingApplication)."],
+        ["PATCH  /v1/admin/customers/{id}", "Edit identity, role, active flag."],
+        ["DELETE /v1/admin/customers/{id}", "Cascade delete (blocked for superadmin + self)."],
+        ["GET    /v1/admin/customers/{id}/subscriptions · POST /v1/admin/customers/{id}/subscriptions", "List + create subscriptions for a user. Notifies the customer."],
+        ["PATCH  /v1/admin/subscriptions/{id} · DELETE /v1/admin/subscriptions/{id}", "Edit / delete a subscription."],
+        ["GET    /v1/admin/moderators · POST /v1/admin/moderators · DELETE /v1/admin/moderators/{id}", "List / create / demote moderators."],
     ])
 
-    h2(doc, "Authentication implementation")
-    bullet(doc, "JWT (HS256) issued by api/security.py:create_access_token. Subject = user.id; "
-                "extra claim role; iat/exp set.")
-    bullet(doc, "Next.js stores it in an httpOnly cookie glimmora_session (sameSite=lax, secure in "
-                "prod). Server fetches read it via cookies() and forward as Bearer.")
-    bullet(doc, "Backend dependency CurrentUser decodes the JWT and loads the user; rejects on "
-                "invalid/expired token.")
-    bullet(doc, "Password hashing: bcrypt via passlib-style helpers in security.py.")
-    bullet(doc, "Password reset: 32-byte URL-safe token; only its SHA256 hash is stored; 1h TTL; "
-                "single-use (used_at gate).")
+    h2(doc, "Authentication + routing")
+    bullet(doc, "JWT (HS256) issued by api/security.py:create_access_token. Subject = user.id; extra claim role; iat/exp set.")
+    bullet(doc, "Next.js stores it in an httpOnly cookie glimmora_session (sameSite=lax, secure in prod). Server fetches read it via cookies() and forward as Bearer.")
+    bullet(doc, "loginAction (apps/web/src/lib/auth-actions.ts) computes the correct landing page ONCE based on role + onboarding state + pending-application — single redirect, no blank flash.")
+    bullet(doc, "(app)/layout is the unified routing gate: pending application → /under-review (early-return); else role-based home (superadmin → /admin/customers, moderator → /moderate/applications); else onboarding check for customers/creators.")
 
     h2(doc, "AI orchestration")
-    bullet(doc, "ai/companion.py:respond() — single entrypoint. Returns CompanionResult(reply, "
-                "emotion, reflection_prompt, recommended_episode_ids, crisis).")
-    bullet(doc, "Memory window passed in by the router: 8 turns for free, 32 for premium.")
-    bullet(doc, "Crisis regex is conservative — explicit phrases only. False positives are worse "
-                "than false negatives in this audience.")
-    bullet(doc, "Episode recommendation: scores published episodes by overlap of LLM-generated "
-                "keywords against series tags + episode synopsis.")
-
-    h2(doc, "Async-SQLAlchemy gotchas (and how we handle them)")
-    bullet(doc, "Never assign conv.messages = [] on a session-bound object — triggers greenlet_spawn.")
-    bullet(doc, "Series.episodes is a relationship — eager-load with selectinload(Series.episodes) "
-                "before passing to Pydantic, otherwise model_validate() will lazy-load and fail.")
-    bullet(doc, "On create+return: re-fetch with selectinload after commit (used in creator + admin "
-                "series endpoints).")
-    bullet(doc, "Datetime tz: SQLite stores naive, Postgres preserves tz. Normalize before "
-                "comparison (auth password-reset expiry).")
+    bullet(doc, "ai/companion.py:respond() — Companion entrypoint. Returns CompanionResult(reply, emotion, reflection_prompt, crisis).")
+    bullet(doc, "synthesize_reflection_insight() — single ✦ noticing for each saved reflection.")
+    bullet(doc, "routers/support.py — Glimmora Guide. Custom system prompt is the bot's knowledge base (every flow, role, tier, notification trigger). Includes a hard-coded CRISIS HANDLING block that lists region-aware helplines verbatim on self-harm prompts.")
+    bullet(doc, "Crisis regex (both Companion + Guide) is conservative — explicit phrases only.")
 
     h2(doc, "Frontend conventions")
-    bullet(doc, "All API calls go through src/lib/backend.ts → fetch BACKEND_URL with the user's "
-                "Bearer attached on the server, or /api/proxy on the client.")
-    bullet(doc, "camelCase boundary: backend serialises snake_case → camelCase via "
-                "pydantic.alias_generators.to_camel. The UI consumes camelCase only.")
-    bullet(doc, "(app)/layout.tsx fetches /v1/auth/me → redirects to /onboarding if not onboarded; "
-                "renders the AppShell otherwise.")
-    bullet(doc, "Animation: Tailwind keyframes (fade-up, scale-in, gradient-pan, breathe). All "
-                "animations honour prefers-reduced-motion via a globals.css guard.")
+    bullet(doc, "All API calls go through src/lib/backend.ts → fetch BACKEND_URL with the user's Bearer attached on the server, or /api/proxy on the client.")
+    bullet(doc, "camelCase boundary: backend serialises snake_case → camelCase via pydantic.alias_generators.to_camel. The UI consumes camelCase only.")
+    bullet(doc, "Pages do server fetches; client components handle interactivity (forms, dropdowns, popups, drag).")
+    bullet(doc, "AppShell is role-aware — different sidebar items per role; same shell renders nothing on the /onboarding and /under-review focused gates only when those pages opt out.")
+    bullet(doc, "SupportBot is mounted in the ROOT layout so it's available on every page, including unauthed surfaces (landing, login, signup, apply).")
+    bullet(doc, "Animation: Tailwind keyframes (fade-up, scale-in, gradient-pan, breathe). All animations honour prefers-reduced-motion via globals.css guard.")
 
     h2(doc, "Deployment")
-    body(doc, "Push to main. DigitalOcean reads .do/app.yaml: a PRE_DEPLOY job runs alembic upgrade "
-              "head, then the api service (routes /v1/* and /uploads/*) and web service (routes "
-              "/*) deploy. One domain, no CORS in prod.")
+    body(doc, "Push to main. DigitalOcean reads .do/app.yaml: a PRE_DEPLOY migrate job runs alembic "
+              "upgrade head, then the api service (routes /v1/* and /uploads/*) and web service "
+              "(routes /*) deploy. One domain, no CORS in prod.")
 
     h2(doc, "Local development")
     code(doc,
          "# 1. Backend\n"
          "cd backend && python -m venv .venv\n"
          "./.venv/Scripts/pip install -e .            # Windows\n"
-         "cp ../.env.example .env\n"
-         "./.venv/Scripts/alembic upgrade head\n"
+         "cp ../.env.example .env                     # then edit\n"
          "./.venv/Scripts/python -m uvicorn app.main:app --port 8000 --host 127.0.0.1\n"
          "\n"
-         "# 2. Frontend\n"
+         "# 2. Frontend (in another terminal)\n"
          "pnpm install\n"
          "cp .env.example apps/web/.env.local         # set BACKEND_URL + JWT_SECRET\n"
          "pnpm --filter web dev\n"
          "\n"
+         "# OR: from the repo root\n"
+         "npm run dev                                  # runs both halves concurrently\n"
+         "\n"
          "# Default credentials (created on first boot):\n"
-         "#   superadmin / ChangeMe!2026")
+         "#   superadmin / 1")
 
     h2(doc, "Quality gates per release")
     bullet(doc, "pnpm --filter web typecheck → clean.")
-    bullet(doc, "pnpm --filter web build → clean.")
-    bullet(doc, "Backend lifespan starts (auto-creates SQLite tables).")
+    bullet(doc, "pnpm --filter web build → clean (no missing routes).")
+    bullet(doc, "Backend lifespan starts (auto-creates Postgres tables on first boot).")
     bullet(doc, "Full Playwright walkthrough across roles passes.")
-    bullet(doc, "USER_MANUAL.md, TESTING_GUIDE.md, and matching .docx regenerated.")
+    bullet(doc, "Glimmora Guide answers 5+ smoke questions accurately.")
+    bullet(doc, "USER_MANUAL.md, TESTING_GUIDE.md, and Tech docs reflect new behavior.")
 
     out = OUT / "06_Technical_Documentation.docx"; doc.save(str(out)); print(f"wrote {out}")
 
