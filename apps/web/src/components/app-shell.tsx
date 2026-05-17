@@ -61,6 +61,14 @@ export function AppShell({ user, children }: { user: User; children: React.React
   const pathname = usePathname();
   const items = navFor(user.role);
   const isCustomerOrCreator = user.role === 'customer' || user.role === 'creator';
+  // Hide chrome on focused gates — onboarding has its own Skip button and
+  // under-review users shouldn't see notifications / sign-out floating around.
+  const isFocusedPage = pathname?.startsWith('/onboarding') || pathname?.startsWith('/under-review');
+
+  if (isFocusedPage) {
+    // Full-bleed page, no sidebar, no utility cluster — the page owns the whole viewport.
+    return <div className="min-h-screen">{children}</div>;
+  }
 
   return (
     <div className="min-h-screen">
