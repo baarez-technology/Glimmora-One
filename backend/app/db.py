@@ -7,6 +7,9 @@ from .config import get_settings
 
 settings = get_settings()
 
+import sys
+print(f"[db.py] DATABASE_URL repr = {settings.database_url!r}", flush=True, file=sys.stderr)
+
 engine = create_async_engine(
     settings.database_url,
     echo=False,
