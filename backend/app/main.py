@@ -22,6 +22,7 @@ from .routers import (
     notifications,
     reflection,
     skg,
+    studio,
     support,
     users,
 )
@@ -42,6 +43,13 @@ async def lifespan(_app: FastAPI):
                 "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_creator_approved "
                 "BOOLEAN NOT NULL DEFAULT TRUE"
             ))
+            await conn.execute(text(
+                "ALTER TABLE series ADD COLUMN IF NOT EXISTS creator_id VARCHAR(32) "
+                "REFERENCES users(id) ON DELETE SET NULL"
+            ))
+            await conn.execute(text(
+                "CREATE INDEX IF NOT EXISTS ix_series_creator_id ON series(creator_id)"
+            ))
         elif dialect == "sqlite":
             # SQLite: probe and add if missing.
             res = await conn.exec_driver_sql("PRAGMA table_info(users)")
@@ -50,6 +58,13 @@ async def lifespan(_app: FastAPI):
                 await conn.exec_driver_sql(
                     "ALTER TABLE users ADD COLUMN is_creator_approved "
                     "BOOLEAN NOT NULL DEFAULT 1"
+                )
+            res = await conn.exec_driver_sql("PRAGMA table_info(series)")
+            cols = {row[1] for row in res.fetchall()}
+            if "creator_id" not in cols:
+                await conn.exec_driver_sql(
+                    "ALTER TABLE series ADD COLUMN creator_id VARCHAR(32) "
+                    "REFERENCES users(id) ON DELETE SET NULL"
                 )
     async with async_session_factory() as db:
         await ensure_superadmin(db)
@@ -86,6 +101,7 @@ def create_app() -> FastAPI:
     app.include_router(notifications.router)
     app.include_router(applications.router)
     app.include_router(admin.router)
+    app.include_router(studio.router)
     app.include_router(support.router)
 
     uploads = Path(__file__).resolve().parents[1] / "uploads"

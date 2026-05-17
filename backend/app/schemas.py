@@ -352,3 +352,148 @@ class ModeratorCreate(CamelModel):
     password: str = Field(min_length=1, max_length=128)
     full_name: str = Field(min_length=1, max_length=255)
     email: EmailStr
+
+
+# ---------------- Studio (creator authoring) ----------------
+
+class StudioSeriesRow(CamelModel):
+    """Lightweight row for the creator's series list."""
+    id: str
+    title: str
+    slug: str
+    tagline: Optional[str] = None
+    category: str
+    cover_url: Optional[str] = None
+    accent_color: Optional[str] = None
+    tier: str
+    published: bool
+    episode_count: int
+    created_at: datetime
+
+
+class StudioEpisode(CamelModel):
+    id: str
+    series_id: str
+    title: str
+    slug: str
+    synopsis: Optional[str] = None
+    duration_seconds: int
+    order_index: int
+    video_url: str
+    poster_url: Optional[str] = None
+    reflection_prompt: Optional[str] = None
+    tier: str
+    published: bool
+    created_at: datetime
+
+
+class StudioSeries(CamelModel):
+    id: str
+    title: str
+    slug: str
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    category: str
+    cover_url: Optional[str] = None
+    hero_url: Optional[str] = None
+    accent_color: Optional[str] = None
+    tier: str
+    published: bool
+    tags: list[str] = Field(default_factory=list)
+    episodes: list[StudioEpisode] = Field(default_factory=list)
+    created_at: datetime
+
+
+class StudioSeriesCreate(CamelModel):
+    title: str = Field(min_length=1, max_length=255)
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    category: str = "wisdom"
+    cover_url: Optional[str] = None
+    hero_url: Optional[str] = None
+    accent_color: Optional[str] = None
+    tier: str = Field(default="free", pattern="^(free|premium)$")
+    tags: list[str] = Field(default_factory=list)
+
+
+class StudioSeriesUpdate(CamelModel):
+    title: Optional[str] = Field(default=None, min_length=1, max_length=255)
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    cover_url: Optional[str] = None
+    hero_url: Optional[str] = None
+    accent_color: Optional[str] = None
+    tier: Optional[str] = Field(default=None, pattern="^(free|premium)$")
+    tags: Optional[list[str]] = None
+    published: Optional[bool] = None
+
+
+class StudioEpisodeCreate(CamelModel):
+    title: str = Field(min_length=1, max_length=255)
+    synopsis: Optional[str] = None
+    duration_seconds: int = Field(default=0, ge=0)
+    video_url: str = Field(min_length=1, max_length=1024)
+    poster_url: Optional[str] = None
+    reflection_prompt: Optional[str] = None
+    tier: str = Field(default="free", pattern="^(free|premium)$")
+
+
+class StudioEpisodeUpdate(CamelModel):
+    title: Optional[str] = Field(default=None, min_length=1, max_length=255)
+    synopsis: Optional[str] = None
+    duration_seconds: Optional[int] = Field(default=None, ge=0)
+    video_url: Optional[str] = Field(default=None, min_length=1, max_length=1024)
+    poster_url: Optional[str] = None
+    reflection_prompt: Optional[str] = None
+    tier: Optional[str] = Field(default=None, pattern="^(free|premium)$")
+    published: Optional[bool] = None
+    order_index: Optional[int] = Field(default=None, ge=0)
+
+
+class StudioReorder(CamelModel):
+    """Bulk re-order: list of episode IDs in their new order."""
+    episode_ids: list[str]
+
+
+# ---------------- Studio AI ----------------
+
+class AISeriesFromTitleRequest(CamelModel):
+    title: str = Field(min_length=1, max_length=255)
+    hint: Optional[str] = Field(default=None, max_length=500)
+
+
+class AISeriesFromTitleResponse(CamelModel):
+    tagline: str
+    description: str
+    category: str
+    tags: list[str]
+    accent_color: str
+
+
+class AIEpisodeFromTitleRequest(CamelModel):
+    title: str = Field(min_length=1, max_length=255)
+    series_id: str
+    duration_seconds: Optional[int] = None
+
+
+class AIEpisodeFromTitleResponse(CamelModel):
+    synopsis: str
+    reflection_prompt: str
+    tier: str  # "free" | "premium"
+
+
+class AISeriesOutlineRequest(CamelModel):
+    title: str = Field(min_length=1, max_length=255)
+    episode_count: int = Field(default=6, ge=2, le=12)
+    hint: Optional[str] = Field(default=None, max_length=500)
+
+
+class AIOutlineEpisode(CamelModel):
+    title: str
+    synopsis: str
+
+
+class AISeriesOutlineResponse(CamelModel):
+    description: str
+    episodes: list[AIOutlineEpisode]

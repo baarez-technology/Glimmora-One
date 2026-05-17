@@ -195,6 +195,76 @@ export type Circle = {
   postCount: number;
 };
 
+// ---------------- Studio (creator authoring) ----------------
+
+export type StudioSeriesRow = {
+  id: string;
+  title: string;
+  slug: string;
+  tagline: string | null;
+  category: string;
+  coverUrl: string | null;
+  accentColor: string | null;
+  tier: 'free' | 'premium';
+  published: boolean;
+  episodeCount: number;
+  createdAt: string;
+};
+
+export type StudioEpisode = {
+  id: string;
+  seriesId: string;
+  title: string;
+  slug: string;
+  synopsis: string | null;
+  durationSeconds: number;
+  orderIndex: number;
+  videoUrl: string;
+  posterUrl: string | null;
+  reflectionPrompt: string | null;
+  tier: 'free' | 'premium';
+  published: boolean;
+  createdAt: string;
+};
+
+export type StudioSeries = {
+  id: string;
+  title: string;
+  slug: string;
+  tagline: string | null;
+  description: string | null;
+  category: string;
+  coverUrl: string | null;
+  heroUrl: string | null;
+  accentColor: string | null;
+  tier: 'free' | 'premium';
+  published: boolean;
+  tags: string[];
+  episodes: StudioEpisode[];
+  createdAt: string;
+};
+
+export type AISeriesFromTitle = {
+  tagline: string;
+  description: string;
+  category: string;
+  tags: string[];
+  accentColor: string;
+};
+
+export type AIEpisodeFromTitle = {
+  synopsis: string;
+  reflectionPrompt: string;
+  tier: 'free' | 'premium';
+};
+
+export type AIOutlineEpisode = { title: string; synopsis: string };
+
+export type AISeriesOutline = {
+  description: string;
+  episodes: AIOutlineEpisode[];
+};
+
 export type CirclePost = {
   id: string;
   circleId: string;

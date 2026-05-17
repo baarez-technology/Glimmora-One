@@ -46,6 +46,11 @@ class Series(Base):
     __tablename__ = "series"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=lambda: new_id("s"))
+    # Owner. Nullable for legacy/seeded catalog series (no specific creator).
+    # Creator-authored series always set this; studio CRUD scopes by it.
+    creator_id: Mapped[Optional[str]] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     title: Mapped[str] = mapped_column(String(255), index=True)
     slug: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     tagline: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
