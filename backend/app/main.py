@@ -21,6 +21,7 @@ from .routers import (
     notifications,
     reflection,
     skg,
+    support,
     users,
 )
 
@@ -67,6 +68,7 @@ def create_app() -> FastAPI:
     app.include_router(notifications.router)
     app.include_router(applications.router)
     app.include_router(admin.router)
+    app.include_router(support.router)
 
     uploads = Path(__file__).resolve().parents[1] / "uploads"
     uploads.mkdir(parents=True, exist_ok=True)
