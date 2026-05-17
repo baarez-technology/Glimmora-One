@@ -91,6 +91,23 @@ async def get_customer(
     return Envelope(data=await _user_row(db, u))
 
 
+@router.delete("/customers/{user_id}", response_model=Envelope[dict])
+async def delete_customer(
+    user_id: str, user: CurrentUser, db: AsyncSession = Depends(get_db)
+):
+    _ensure_superadmin(user)
+    if user_id == user.id:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "superadmin cannot delete self")
+    target = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
+    if not target:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "user not found")
+    if target.role == "superadmin":
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "cannot delete another superadmin")
+    await db.delete(target)
+    await db.commit()
+    return Envelope(data={"deleted": True})
+
+
 @router.patch("/customers/{user_id}", response_model=Envelope[AdminUserRow])
 async def update_customer(
     user_id: str,

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatRelative } from '@/lib/utils';
 import type { AdminUserRow } from '@/lib/types';
@@ -104,7 +105,7 @@ export function ModeratorsPanel({ initial }: { initial: AdminUserRow[] }) {
               </div>
               <div>
                 <label className="text-sm text-muted">Initial password</label>
-                <Input type="password" className="mt-1.5" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                <PasswordInput className="mt-1.5" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
                 <p className="text-xs text-muted mt-1">Share with them out-of-band; they can change it later.</p>
               </div>
               {err && <p className="text-sm text-red-600">{err}</p>}

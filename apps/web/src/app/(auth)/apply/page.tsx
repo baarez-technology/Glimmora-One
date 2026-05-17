@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input, Textarea } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function ApplyPage() {
@@ -93,7 +94,7 @@ export default function ApplyPage() {
           </Field>
         </div>
         <Field label="Choose a password">
-          <Input type="password" value={form.password} onChange={(e) => set('password', e.target.value)} />
+          <PasswordInput value={form.password} onChange={(e) => set('password', e.target.value)} />
         </Field>
 
         <Field label="What you'd like to share (a few sentences)">

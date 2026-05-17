@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { loginAction } from '@/lib/auth-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function LoginPage() {
@@ -34,7 +35,7 @@ export default function LoginPage() {
           </div>
           <div>
             <label className="text-sm text-muted" htmlFor="password">Password</label>
-            <Input id="password" name="password" type="password" autoComplete="current-password" required className="mt-1.5" />
+            <PasswordInput id="password" name="password" autoComplete="current-password" required className="mt-1.5" />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <Button className="w-full" type="submit" disabled={isPending}>

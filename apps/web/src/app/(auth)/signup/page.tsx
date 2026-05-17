@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { signupAction } from '@/lib/auth-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function SignupPage() {
@@ -44,7 +45,7 @@ export default function SignupPage() {
           </div>
           <div>
             <label className="text-sm text-muted" htmlFor="password">Password</label>
-            <Input id="password" name="password" type="password" autoComplete="new-password" required minLength={1} className="mt-1.5" />
+            <PasswordInput id="password" name="password" autoComplete="new-password" required minLength={1} className="mt-1.5" />
             <p className="mt-1 text-xs text-muted">You can change it later.</p>
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
