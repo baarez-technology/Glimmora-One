@@ -39,28 +39,65 @@ body {
   position: relative;
 }
 
-/* Atmospheric warm glow that lives behind every page — calm, never loud.
-   Fixed so it doesn't reflow on scroll. Subtle in light mode, slightly
-   more present in dark mode where the contrast carries it. */
+/* ---- Pictured warm bokeh background (fixed, behind everything) ----
+   Inlined SVG so it loads instantly with no extra request. Heavily blurred
+   warm circles give the "soft photo behind glass" feel of premium dashboards.
+*/
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(80% 60% at 12% -5%, rgba(233, 169, 50, 0.10) 0%, transparent 55%),
-    radial-gradient(55% 45% at 92% 8%, rgba(191, 174, 147, 0.10) 0%, transparent 60%),
-    radial-gradient(70% 55% at 50% 110%, rgba(118, 100, 81, 0.08) 0%, transparent 60%);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'><defs><filter id='b' x='-20%25' y='-20%25' width='140%25' height='140%25'><feGaussianBlur stdDeviation='90'/></filter></defs><rect width='100%25' height='100%25' fill='%230c0a08'/><g filter='url(%23b)'><circle cx='240' cy='160' r='340' fill='%23e9a932' opacity='0.55'/><circle cx='1280' cy='220' r='300' fill='%237d4912' opacity='0.55'/><circle cx='720' cy='720' r='400' fill='%235a3613' opacity='0.55'/><circle cx='1480' cy='760' r='240' fill='%23a96513' opacity='0.55'/><circle cx='80' cy='720' r='220' fill='%23574a3c' opacity='0.55'/><circle cx='960' cy='80' r='200' fill='%23f0c057' opacity='0.30'/><circle cx='400' cy='460' r='160' fill='%23d18819' opacity='0.40'/></g></svg>");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 0;                /* light mode: hide the dark bokeh */
+  transition: opacity 0.4s ease;
 }
 .dark body::before {
-  background:
-    radial-gradient(80% 60% at 12% -5%, rgba(240, 192, 87, 0.10) 0%, transparent 55%),
-    radial-gradient(55% 45% at 92% 8%, rgba(154, 135, 112, 0.08) 0%, transparent 60%),
-    radial-gradient(70% 55% at 50% 110%, rgba(154, 135, 112, 0.05) 0%, transparent 60%);
+  opacity: 1;
 }
-/* Make sure all real content sits above the glow. */
-body > * { position: relative; z-index: 1; }
+
+/* Light-mode bokeh — cream base, warmer dim circles */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'><defs><filter id='bl' x='-20%25' y='-20%25' width='140%25' height='140%25'><feGaussianBlur stdDeviation='100'/></filter></defs><rect width='100%25' height='100%25' fill='%23f9f6f1'/><g filter='url(%23bl)'><circle cx='240' cy='160' r='340' fill='%23f0c057' opacity='0.55'/><circle cx='1280' cy='220' r='300' fill='%23ddd2c1' opacity='0.55'/><circle cx='720' cy='720' r='400' fill='%23fbedc9' opacity='0.70'/><circle cx='1480' cy='760' r='240' fill='%23bfae93' opacity='0.40'/><circle cx='80' cy='720' r='220' fill='%23ddd2c1' opacity='0.50'/><circle cx='960' cy='80' r='200' fill='%23e9a932' opacity='0.25'/><circle cx='400' cy='460' r='160' fill='%23f6d98e' opacity='0.45'/></g></svg>");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+.dark body::after {
+  opacity: 0;
+}
+
+/* Grain overlay — soft analog texture, very low opacity */
+body > #__next, body > div:first-of-type {
+  position: relative;
+  z-index: 1;
+}
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+}
+.dark html::before { opacity: 0.08; }
+
+/* Real content sits above the bg + grain. */
+body > * { position: relative; z-index: 3; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -188,97 +225,160 @@ body > * { position: relative; z-index: 1; }
   animation: shimmer 6s linear infinite;
 }
 
-/* ----- Polished surface treatments (cards, tiles, panels) ----- */
+/* ===========================================================
+   GLASSMORPHIC SURFACES — panels and stat tiles
+   Real translucency + backdrop-blur sitting on top of the pictured bokeh bg.
+   The bg image bleeds through — that is the whole effect.
+   =========================================================== */
 
-/* A "panel" is the default elevated surface used across admin/moderator
-   pages: warm-tinted bg with a subtle inner highlight on top and a
-   hairline gradient border. Sits warmer than .bg-elev alone. */
 .panel {
   position: relative;
   background:
-    linear-gradient(180deg, rgba(255, 252, 247, 0.65), rgba(255, 252, 247, 0)) ,
-    rgb(var(--bg-elev));
-  border: 1px solid rgb(var(--border));
-  border-radius: 14px;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25));
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 18px;
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+          backdrop-filter: blur(22px) saturate(140%);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 1px 2px rgba(20, 16, 12, 0.04),
-    0 10px 30px -18px rgba(20, 16, 12, 0.10);
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 14px 40px -18px rgba(20, 16, 12, 0.18),
+    0 30px 80px -40px rgba(20, 16, 12, 0.22);
 }
 .dark .panel {
   background:
-    linear-gradient(180deg, rgba(255, 232, 170, 0.04), rgba(255, 232, 170, 0)) ,
-    rgb(var(--bg-elev));
+    linear-gradient(180deg, rgba(34, 28, 22, 0.55), rgba(20, 16, 12, 0.35));
+  border-color: rgba(255, 232, 170, 0.10);
   box-shadow:
-    0 1px 0 rgba(255, 232, 170, 0.04) inset,
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    0 24px 60px -28px rgba(0, 0, 0, 0.65);
+    inset 0 1px 0 rgba(255, 232, 170, 0.10),
+    inset 0 0 0 1px rgba(255, 232, 170, 0.03),
+    0 18px 60px -22px rgba(0, 0, 0, 0.70),
+    0 40px 100px -50px rgba(0, 0, 0, 0.80);
 }
 
-/* Stat tile — a smaller panel used in hero strips on admin pages.
-   Small label, big number, optional sublabel underneath. */
+/* Stat tile — the big, glowing data plates. Generous padding, huge serif
+   numbers, a soft warm halo behind the value, and a top-edge highlight. */
 .stat-tile {
   position: relative;
   overflow: hidden;
+  border-radius: 18px;
+  padding: 22px 24px 24px;
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+          backdrop-filter: blur(22px) saturate(140%);
   background:
-    radial-gradient(120% 80% at 0% 0%, rgba(233, 169, 50, 0.08), transparent 60%),
-    linear-gradient(180deg, rgba(255, 252, 247, 0.55), rgba(255, 252, 247, 0)),
-    rgb(var(--bg-elev));
-  border: 1px solid rgb(var(--border));
-  border-radius: 14px;
-  padding: 18px 20px;
+    radial-gradient(120% 90% at 110% -10%, rgba(233, 169, 50, 0.18), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.20));
+  border: 1px solid rgba(255, 255, 255, 0.50);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 10px 30px -18px rgba(20, 16, 12, 0.10);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 30px rgba(255, 255, 255, 0.10),
+    0 18px 50px -22px rgba(20, 16, 12, 0.22),
+    0 32px 80px -40px rgba(20, 16, 12, 0.28);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .dark .stat-tile {
   background:
-    radial-gradient(120% 80% at 0% 0%, rgba(240, 192, 87, 0.10), transparent 60%),
-    linear-gradient(180deg, rgba(255, 232, 170, 0.04), rgba(255, 232, 170, 0)),
-    rgb(var(--bg-elev));
+    radial-gradient(120% 90% at 110% -10%, rgba(240, 192, 87, 0.22), transparent 65%),
+    linear-gradient(180deg, rgba(40, 32, 24, 0.55), rgba(18, 14, 10, 0.30));
+  border-color: rgba(255, 232, 170, 0.12);
   box-shadow:
-    0 1px 0 rgba(255, 232, 170, 0.04) inset,
-    0 24px 60px -28px rgba(0, 0, 0, 0.55);
+    inset 0 1px 0 rgba(255, 232, 170, 0.14),
+    inset 0 0 30px rgba(240, 192, 87, 0.04),
+    0 22px 60px -22px rgba(0, 0, 0, 0.70),
+    0 40px 90px -45px rgba(0, 0, 0, 0.80);
 }
 .stat-tile:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+}
+.stat-tile:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 0 30px rgba(255, 255, 255, 0.10),
+    0 24px 60px -22px rgba(20, 16, 12, 0.25),
+    0 40px 100px -40px rgba(233, 169, 50, 0.18);
+}
+.dark .stat-tile:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 170, 0.20),
+    inset 0 0 30px rgba(240, 192, 87, 0.08),
+    0 26px 70px -22px rgba(0, 0, 0, 0.75),
+    0 50px 120px -50px rgba(240, 192, 87, 0.25);
 }
 .stat-tile .stat-label {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
+  font-weight: 500;
   color: rgb(var(--fg-muted));
 }
 .stat-tile .stat-value {
   font-family: var(--font-serif), Georgia, serif;
-  font-size: 32px;
+  font-size: 52px;
   font-weight: 500;
-  line-height: 1.1;
-  margin-top: 6px;
+  line-height: 1.0;
+  margin-top: 14px;
   color: rgb(var(--fg));
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.dark .stat-tile .stat-value {
+  text-shadow: 0 0 24px rgba(240, 192, 87, 0.20);
 }
 .stat-tile .stat-sub {
   font-size: 12px;
   color: rgb(var(--fg-muted));
-  margin-top: 6px;
+  margin-top: 10px;
+  letter-spacing: 0.02em;
 }
-/* Optional accented tile (uses the brand glimmer as the dominant glow). */
+
+/* Accent tile — the standout. Dominated by the brand glimmer glow,
+   warm halo behind the number, glowing border edge. */
 .stat-tile.accent {
   background:
-    radial-gradient(140% 100% at 100% 0%, rgba(233, 169, 50, 0.22), transparent 65%),
-    linear-gradient(180deg, rgba(255, 252, 247, 0.55), rgba(255, 252, 247, 0)),
-    rgb(var(--bg-elev));
-  border-color: rgba(233, 169, 50, 0.35);
+    radial-gradient(140% 110% at 100% 0%, rgba(233, 169, 50, 0.45), transparent 60%),
+    radial-gradient(120% 90% at 0% 100%, rgba(233, 169, 50, 0.20), transparent 60%),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.50), rgba(255, 252, 247, 0.20));
+  border-color: rgba(233, 169, 50, 0.55);
 }
 .dark .stat-tile.accent {
   background:
-    radial-gradient(140% 100% at 100% 0%, rgba(240, 192, 87, 0.18), transparent 65%),
-    linear-gradient(180deg, rgba(255, 232, 170, 0.06), rgba(255, 232, 170, 0)),
-    rgb(var(--bg-elev));
-  border-color: rgba(240, 192, 87, 0.25);
+    radial-gradient(140% 110% at 100% 0%, rgba(240, 192, 87, 0.35), transparent 60%),
+    radial-gradient(120% 90% at 0% 100%, rgba(240, 192, 87, 0.15), transparent 60%),
+    linear-gradient(180deg, rgba(60, 44, 28, 0.55), rgba(28, 22, 16, 0.30));
+  border-color: rgba(240, 192, 87, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 170, 0.22),
+    inset 0 0 40px rgba(240, 192, 87, 0.10),
+    0 22px 60px -22px rgba(0, 0, 0, 0.65),
+    0 40px 90px -40px rgba(240, 192, 87, 0.28);
 }
+.stat-tile.accent .stat-value {
+  color: #fdf8ec;
+  text-shadow: 0 0 30px rgba(240, 192, 87, 0.55);
+}
+
+/* ===========================================================
+   HERO GLOW ORB — the big amber spotlight you see in the reference's
+   top-left. Drop it onto a page header for instant atmospheric weight.
+   =========================================================== */
+.glow-orb {
+  position: absolute;
+  pointer-events: none;
+  width: 380px;
+  height: 380px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 232, 170, 0.95) 0%, rgba(240, 192, 87, 0.55) 28%, rgba(233, 169, 50, 0.10) 60%, transparent 70%);
+  filter: blur(2px);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+.dark .glow-orb {
+  opacity: 0.75;
+}
+.glow-orb.sm { width: 220px; height: 220px; }
+.glow-orb.lg { width: 520px; height: 520px; }
 
 /* Animated dotted ring used to draw attention without yelling. */
 .glow-ring::before {

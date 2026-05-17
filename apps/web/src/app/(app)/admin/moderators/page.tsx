@@ -14,11 +14,12 @@ export default async function AdminModeratorsPage() {
   const rejected = allApps.filter((a) => a.status === 'rejected').length;
 
   return (
-    <div className="px-4 lg:px-8 py-8 max-w-5xl space-y-8">
-      <header>
+    <div className="relative px-4 lg:px-8 py-8 max-w-5xl space-y-8">
+      <div className="glow-orb" style={{ top: '-120px', right: '-100px' }} />
+      <header className="relative">
         <p className="text-sm uppercase tracking-[0.18em] text-glimmer-500">Admin</p>
-        <h1 className="font-serif text-3xl md:text-4xl mt-1">Moderators</h1>
-        <p className="text-muted mt-1">Trusted reviewers who decide creator applications.</p>
+        <h1 className="font-serif text-4xl md:text-5xl mt-1">Moderators</h1>
+        <p className="text-muted mt-2 max-w-xl">Trusted reviewers who decide creator applications.</p>
       </header>
 
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">

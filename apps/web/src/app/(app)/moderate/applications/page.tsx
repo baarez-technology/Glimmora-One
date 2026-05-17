@@ -13,11 +13,12 @@ export default async function ModerateApplicationsPage() {
     .sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt))[0];
 
   return (
-    <div className="px-4 lg:px-8 py-8 max-w-6xl space-y-8">
-      <header>
+    <div className="relative px-4 lg:px-8 py-8 max-w-6xl space-y-8">
+      <div className="glow-orb" style={{ top: '-140px', right: '-120px' }} />
+      <header className="relative">
         <p className="text-sm uppercase tracking-[0.18em] text-glimmer-500">Moderator</p>
-        <h1 className="font-serif text-3xl md:text-4xl mt-1">Creator applications</h1>
-        <p className="text-muted mt-1">Read each application carefully before deciding.</p>
+        <h1 className="font-serif text-4xl md:text-5xl mt-1">Creator applications</h1>
+        <p className="text-muted mt-2 max-w-xl">Read each application carefully before deciding.</p>
       </header>
 
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">

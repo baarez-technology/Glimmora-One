@@ -55,8 +55,8 @@ export function AppShell({ user, children }: { user: User; children: React.React
   const items = navFor(user.role);
   const isCustomerOrCreator = user.role === 'customer' || user.role === 'creator';
   return (
-    <div className="min-h-screen flex bg-app">
-      <aside className="hidden lg:flex w-60 shrink-0 flex-col border-r border-app/60 bg-elev/40 p-5">
+    <div className="min-h-screen flex">
+      <aside className="hidden lg:flex w-60 shrink-0 flex-col border-r border-app/40 bg-elev/30 backdrop-blur-xl p-5">
         <Brand href={user.role === 'moderator' ? '/moderate/applications' : (user.role === 'superadmin' ? '/admin/customers' : '/dashboard')} className="mb-8" />
         <nav className="flex flex-col gap-1 text-sm">
           {items.map(({ href, icon: Icon, label }) => {
@@ -110,7 +110,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-app/60 bg-app/80 px-4 lg:px-6 backdrop-blur">
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-app/40 bg-app/40 px-4 lg:px-6 backdrop-blur-xl">
           <div className="lg:hidden">
             <Brand href="/dashboard" />
           </div>
@@ -126,7 +126,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
         </header>
         <main className="flex-1 min-w-0">{children}</main>
 
-        <nav className="lg:hidden sticky bottom-0 z-20 flex items-center justify-around border-t border-app/60 bg-app/90 px-2 py-2 backdrop-blur">
+        <nav className="lg:hidden sticky bottom-0 z-20 flex items-center justify-around border-t border-app/40 bg-app/40 px-2 py-2 backdrop-blur-xl">
           {items.map(({ href, icon: Icon, label }) => {
             const active = pathname === href || pathname?.startsWith(href + '/');
             return (
