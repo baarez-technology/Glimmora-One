@@ -4,6 +4,15 @@ import { AppShell } from '@/components/app-shell';
 import { backendData } from '@/lib/backend';
 import type { User } from '@/lib/types';
 
+// CRITICAL: never prerender or cache anything inside (app).
+// Everything here depends on the session cookie. If Next.js / a CDN caches
+// the auth-redirect output of an un-cookied request, every subsequent user
+// gets sent to /login regardless of their real session. Forcing dynamic
+// rendering + no-store on the responses prevents that class of bug.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   let user: User;
   try {
