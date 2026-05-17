@@ -10,7 +10,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [isPending, startTransition] = useTransition();
+
+  const mismatch = confirm.length > 0 && password !== confirm;
+  const canSubmit = password.length > 0 && password === confirm;
 
   return (
     <Card>
@@ -22,6 +27,10 @@ export default function SignupPage() {
         <form
           action={(fd) => {
             setError(null);
+            if (password !== confirm) {
+              setError('Passwords do not match.');
+              return;
+            }
             startTransition(async () => {
               const res = await signupAction(fd);
               if (res?.error) setError(res.error);
@@ -45,11 +54,39 @@ export default function SignupPage() {
           </div>
           <div>
             <label className="text-sm text-muted" htmlFor="password">Password</label>
-            <PasswordInput id="password" name="password" autoComplete="new-password" required minLength={1} className="mt-1.5" />
-            <p className="mt-1 text-xs text-muted">You can change it later.</p>
+            <PasswordInput
+              id="password"
+              name="password"
+              autoComplete="new-password"
+              required
+              minLength={1}
+              className="mt-1.5"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-sm text-muted" htmlFor="confirmPassword">Confirm password</label>
+            <PasswordInput
+              id="confirmPassword"
+              name="confirmPassword"
+              autoComplete="new-password"
+              required
+              minLength={1}
+              className="mt-1.5"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              aria-invalid={mismatch}
+            />
+            {mismatch && (
+              <p className="mt-1 text-xs text-red-600">Doesn't match the password above.</p>
+            )}
+            {!mismatch && (
+              <p className="mt-1 text-xs text-muted">You can change it later.</p>
+            )}
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button className="w-full" type="submit" disabled={isPending}>
+          <Button className="w-full" type="submit" disabled={isPending || !canSubmit}>
             {isPending ? 'Creating…' : 'Create account'}
           </Button>
           <p className="text-center text-sm text-muted">
