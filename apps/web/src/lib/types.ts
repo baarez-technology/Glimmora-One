@@ -1,15 +1,70 @@
 // Mirror of backend Pydantic schemas (camelCase via Pydantic alias generator).
 
+export type Role = 'superadmin' | 'moderator' | 'creator' | 'customer';
+export type Tier = 'standard' | 'premium';
+
 export type User = {
   id: string;
   username: string;
   email: string;
   fullName: string | null;
-  role: 'superadmin' | 'admin' | 'creator' | 'member';
+  role: Role;
+  isActive: boolean;
   avatarUrl: string | null;
   bio: string | null;
   preferences: Record<string, unknown>;
-  subscriptionTier: 'free' | 'premium';
+  subscriptionTier: Tier;
+  hasPendingApplication: boolean;
+  createdAt: string;
+};
+
+export type Notification = {
+  id: string;
+  kind: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  readAt: string | null;
+  createdAt: string;
+};
+
+export type CreatorApplication = {
+  id: string;
+  userId: string;
+  username: string;
+  fullName: string;
+  email: string;
+  pitch: string | null;
+  links: string[];
+  attachments: string[];
+  status: 'pending' | 'approved' | 'rejected';
+  decidedBy: string | null;
+  decidedAt: string | null;
+  decisionNote: string | null;
+  createdAt: string;
+};
+
+export type Subscription = {
+  id: string;
+  userId: string;
+  tier: Tier;
+  startDate: string;
+  endDate: string;
+  note: string | null;
+  createdBy: string;
+  createdAt: string;
+  isActive: boolean;
+};
+
+export type AdminUserRow = {
+  id: string;
+  username: string;
+  email: string;
+  fullName: string | null;
+  role: Role;
+  subscriptionTier: Tier;
+  isActive: boolean;
+  hasPendingApplication: boolean;
   createdAt: string;
 };
 
@@ -91,18 +146,6 @@ export type DailyPlan = {
   steps: DailyStep[];
   streak: number;
   allDone: boolean;
-};
-
-export type CreatorApplication = {
-  id: string;
-  userId: string;
-  username: string;
-  pitch: string;
-  sampleUrl: string | null;
-  status: 'pending' | 'approved' | 'denied';
-  decidedBy: string | null;
-  decidedAt: string | null;
-  createdAt: string;
 };
 
 export type ConversationSummary = {

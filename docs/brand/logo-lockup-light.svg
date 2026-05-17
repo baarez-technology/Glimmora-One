@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="Glimmora ONE">
+  <defs>
+    <radialGradient id="aurora-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#e9a932" stop-opacity="0.55"/>
+      <stop offset="35%"  stop-color="#f0c057" stop-opacity="0.22"/>
+      <stop offset="70%"  stop-color="#bfae93" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#bfae93" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spark-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#fdf8ec"/>
+      <stop offset="35%"  stop-color="#f0c057"/>
+      <stop offset="100%" stop-color="#d18819"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Mark -->
+  <g transform="translate(0,0)">
+    <circle cx="100" cy="100" r="86"  fill="url(#aurora-l)"/>
+    <circle cx="100" cy="100" r="58"  fill="none" stroke="#bfae93" stroke-opacity="0.45" stroke-width="1"/>
+    <circle cx="100" cy="100" r="20"  fill="url(#spark-l)"/>
+    <circle cx="100" cy="100" r="20"  fill="none" stroke="#a96513" stroke-opacity="0.22" stroke-width="0.7"/>
+    <ellipse cx="94"  cy="92"  rx="7" ry="4" fill="#fdf8ec" opacity="0.55"/>
+  </g>
+
+  <!-- Wordmark: "Glimmora" serif + "ONE" small caps -->
+  <text x="218" y="118"
+        font-family="Georgia, 'Times New Roman', ui-serif, serif"
+        font-size="80"
+        font-weight="400"
+        fill="#27211c"
+        letter-spacing="-1.5">Glimmora</text>
+
+  <!-- Hairline separator -->
+  <line x1="218" y1="138" x2="660" y2="138" stroke="#bfae93" stroke-opacity="0.6" stroke-width="0.75"/>
+
+  <!-- Tagline / sub-mark -->
+  <text x="220" y="166"
+        font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+        font-size="14"
+        font-weight="500"
+        fill="#766451"
+        letter-spacing="6">O N E</text>
+
+  <text x="320" y="166"
+        font-family="Georgia, 'Times New Roman', ui-serif, serif"
+        font-size="14"
+        font-style="italic"
+        fill="#766451"
+        letter-spacing="0.3">— a calm room for your inner life</text>
+</svg>

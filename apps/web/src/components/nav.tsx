@@ -12,6 +12,7 @@ export function MarketingNav() {
           <Link href="/#stories" className="hover:text-app">Stories</Link>
           <Link href="/#companion" className="hover:text-app">Companion</Link>
           <Link href="/#journey" className="hover:text-app">Journey</Link>
+          <Link href="/apply" className="hover:text-app">Apply as creator</Link>
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />

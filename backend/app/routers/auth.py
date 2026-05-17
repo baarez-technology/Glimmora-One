@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+
+
 from ..db import get_db
 from ..deps import CurrentUser
 from ..models import User
@@ -13,6 +15,7 @@ from ..schemas import (
     UserPublic,
 )
 from ..security import create_access_token, hash_password, verify_password
+from ..services import hydrate_user
 
 router = APIRouter(prefix="/v1/auth", tags=["auth"])
 
@@ -48,8 +51,8 @@ async def signup(payload: SignupRequest, db: AsyncSession = Depends(get_db)):
         email=email,
         full_name=payload.full_name,
         password_hash=hash_password(payload.password),
-        role="member",
-        subscription_tier="free",
+        role="customer",
+        subscription_tier="standard",
     )
     db.add(user)
     await db.commit()
@@ -59,8 +62,8 @@ async def signup(payload: SignupRequest, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/me", response_model=Envelope[UserPublic])
-async def me(user: CurrentUser):
-    return Envelope(data=UserPublic.model_validate(user))
+async def me(user: CurrentUser, db: AsyncSession = Depends(get_db)):
+    return Envelope(data=UserPublic.model_validate(await hydrate_user(db, user)))
 
 
 @router.post("/logout", response_model=Envelope[dict])

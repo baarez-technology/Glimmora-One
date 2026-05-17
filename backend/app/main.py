@@ -12,10 +12,13 @@ from .bootstrap import ensure_demo_catalog, ensure_superadmin
 from .db import Base
 from . import models  # noqa: F401  -- register models with Base.metadata
 from .routers import (
+    admin,
     ai as ai_router,
+    applications,
     auth,
     content,
     dashboard,
+    notifications,
     reflection,
     skg,
     users,
@@ -60,6 +63,9 @@ def create_app() -> FastAPI:
     app.include_router(ai_router.router)
     app.include_router(reflection.router)
     app.include_router(skg.router)
+    app.include_router(notifications.router)
+    app.include_router(applications.router)
+    app.include_router(admin.router)
 
     uploads = Path(__file__).resolve().parents[1] / "uploads"
     uploads.mkdir(parents=True, exist_ok=True)

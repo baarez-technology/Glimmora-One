@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Glimmora ONE — Logo previews</title>
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    body { margin: 0; background: #f9f6f1; color: #27211c; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 100vh; }
+    .light { background: #f9f6f1; color: #27211c; padding: 48px; }
+    .dark  { background: #0c0a08; color: #efe9df; padding: 48px; }
+    h2 { font-family: Georgia, serif; font-weight: 400; font-size: 22px; margin: 0 0 24px; opacity: 0.7; }
+    h3 { font-family: Georgia, serif; font-weight: 400; font-size: 14px; margin: 36px 0 8px; opacity: 0.55; text-transform: uppercase; letter-spacing: 0.15em; }
+    .swatch { display: inline-flex; flex-direction: column; align-items: center; margin: 8px 12px 0 0; font-size: 11px; }
+    .swatch .chip { width: 56px; height: 56px; border-radius: 10px; box-shadow: 0 2px 6px rgba(20,16,12,0.12); margin-bottom: 6px; }
+    .swatch code { font-family: ui-monospace, Consolas, monospace; opacity: 0.7; }
+    .mark { width: 200px; height: 200px; }
+    .markSmall { width: 96px; height: 96px; margin-right: 16px; vertical-align: middle; }
+    .markTiny { width: 32px; height: 32px; margin-right: 8px; vertical-align: middle; }
+    .lockup { width: 100%; max-width: 540px; height: auto; }
+    .row { display: flex; align-items: center; gap: 12px; margin: 14px 0; flex-wrap: wrap; }
+    .row .label { font-size: 11px; opacity: 0.55; margin-left: 12px; text-transform: uppercase; letter-spacing: 0.15em; }
+    footer { padding: 24px 48px; text-align: center; background: #efe9df; color: #574a3c; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <!-- LIGHT -->
+    <section class="light">
+      <h2>Light theme — <code>#f9f6f1</code> ink-50</h2>
+
+      <h3>Mark (square, primary)</h3>
+      <img class="mark" src="logo-mark-light.svg" alt="">
+
+      <h3>Mark at common sizes</h3>
+      <div class="row">
+        <img class="markSmall" src="logo-mark-light.svg" alt="">
+        <img class="markTiny"  src="logo-mark-light.svg" alt="">
+        <img class="markTiny" style="width:24px;height:24px" src="logo-mark-light.svg" alt="">
+        <img class="markTiny" style="width:16px;height:16px" src="logo-mark-light.svg" alt="">
+        <span class="label">200 · 96 · 32 · 24 · 16</span>
+      </div>
+
+      <h3>Lockup</h3>
+      <img class="lockup" src="logo-lockup-light.svg" alt="">
+
+      <h3>Palette</h3>
+      <div>
+        <span class="swatch"><span class="chip" style="background:#e9a932"></span><code>#e9a932</code><span>spark</span></span>
+        <span class="swatch"><span class="chip" style="background:#27211c"></span><code>#27211c</code><span>ink</span></span>
+        <span class="swatch"><span class="chip" style="background:#f9f6f1"></span><code>#f9f6f1</code><span>cream</span></span>
+        <span class="swatch"><span class="chip" style="background:#bfae93"></span><code>#bfae93</code><span>sand</span></span>
+        <span class="swatch"><span class="chip" style="background:#766451"></span><code>#766451</code><span>walnut</span></span>
+      </div>
+    </section>
+
+    <!-- DARK -->
+    <section class="dark">
+      <h2>Dark theme — <code>#0c0a08</code> ink-950</h2>
+
+      <h3>Mark (square, primary)</h3>
+      <img class="mark" src="logo-mark-dark.svg" alt="">
+
+      <h3>Mark at common sizes</h3>
+      <div class="row">
+        <img class="markSmall" src="logo-mark-dark.svg" alt="">
+        <img class="markTiny"  src="logo-mark-dark.svg" alt="">
+        <img class="markTiny" style="width:24px;height:24px" src="logo-mark-dark.svg" alt="">
+        <img class="markTiny" style="width:16px;height:16px" src="logo-mark-dark.svg" alt="">
+        <span class="label">200 · 96 · 32 · 24 · 16</span>
+      </div>
+
+      <h3>Lockup</h3>
+      <img class="lockup" src="logo-lockup-dark.svg" alt="">
+
+      <h3>Favicon (16px tile)</h3>
+      <div class="row">
+        <img src="favicon.svg" style="width:96px;height:96px" alt="">
+        <img src="favicon.svg" style="width:32px;height:32px" alt="">
+        <img src="favicon.svg" style="width:16px;height:16px" alt="">
+        <span class="label">96 · 32 · 16</span>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    Files: <code>docs/brand/</code>  ·  logo-mark-{light,dark}.svg · logo-lockup-{light,dark}.svg · favicon.svg
+  </footer>
+</body>
+</html>

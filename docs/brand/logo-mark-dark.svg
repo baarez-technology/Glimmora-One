@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Glimmora ONE">
+  <defs>
+    <radialGradient id="aurora-d" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#e9a932" stop-opacity="0.45"/>
+      <stop offset="35%"  stop-color="#f0c057" stop-opacity="0.18"/>
+      <stop offset="70%"  stop-color="#9a8770" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#9a8770" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spark-d" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#fdf8ec"/>
+      <stop offset="35%"  stop-color="#f0c057"/>
+      <stop offset="100%" stop-color="#a96513"/>
+    </radialGradient>
+  </defs>
+
+  <!-- The "room": warm near-black -->
+  <rect x="0" y="0" width="256" height="256" rx="56" fill="#0c0a08"/>
+
+  <!-- The aurora glow -->
+  <circle cx="128" cy="128" r="110" fill="url(#aurora-d)"/>
+
+  <!-- The thin ring -->
+  <circle cx="128" cy="128" r="74" fill="none" stroke="#766451" stroke-opacity="0.45" stroke-width="1.2"/>
+
+  <!-- The spark -->
+  <circle cx="128" cy="128" r="26" fill="url(#spark-d)"/>
+  <circle cx="128" cy="128" r="26" fill="none" stroke="#fdf8ec" stroke-opacity="0.18" stroke-width="0.8"/>
+
+  <!-- Subtle highlight -->
+  <ellipse cx="120" cy="118" rx="10" ry="6" fill="#fdf8ec" opacity="0.45"/>
+</svg>

@@ -103,6 +103,7 @@ export default function LandingPage() {
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted">
           <p>© {new Date().getFullYear()} Glimmora. Made with care.</p>
           <div className="flex items-center gap-5">
+            <Link href="/apply" className="link-quiet hover:text-app">Apply as creator</Link>
             <Link href="/login" className="link-quiet hover:text-app">Sign in</Link>
             <Link href="/signup" className="link-quiet hover:text-app">Begin</Link>
           </div>

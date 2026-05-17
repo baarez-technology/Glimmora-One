@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const PROTECTED = [
-  '/dashboard', '/companion', '/watch', '/reflect', '/circles',
-  '/profile', '/admin', '/creator', '/onboarding',
+  '/dashboard', '/companion', '/watch', '/reflect',
+  '/profile', '/admin', '/moderate', '/onboarding',
+  '/under-review',
 ];
 
 export function middleware(req: NextRequest) {

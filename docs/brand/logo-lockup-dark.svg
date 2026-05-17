@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="Glimmora ONE">
+  <defs>
+    <radialGradient id="aurora-ld" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#e9a932" stop-opacity="0.45"/>
+      <stop offset="35%"  stop-color="#f0c057" stop-opacity="0.18"/>
+      <stop offset="70%"  stop-color="#9a8770" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#9a8770" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="spark-ld" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#fdf8ec"/>
+      <stop offset="35%"  stop-color="#f0c057"/>
+      <stop offset="100%" stop-color="#a96513"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Mark -->
+  <g transform="translate(0,0)">
+    <circle cx="100" cy="100" r="86"  fill="url(#aurora-ld)"/>
+    <circle cx="100" cy="100" r="58"  fill="none" stroke="#766451" stroke-opacity="0.5" stroke-width="1"/>
+    <circle cx="100" cy="100" r="20"  fill="url(#spark-ld)"/>
+    <ellipse cx="94" cy="92" rx="7" ry="4" fill="#fdf8ec" opacity="0.45"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="218" y="118"
+        font-family="Georgia, 'Times New Roman', ui-serif, serif"
+        font-size="80"
+        font-weight="400"
+        fill="#efe9df"
+        letter-spacing="-1.5">Glimmora</text>
+
+  <line x1="218" y1="138" x2="660" y2="138" stroke="#766451" stroke-opacity="0.7" stroke-width="0.75"/>
+
+  <text x="220" y="166"
+        font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+        font-size="14"
+        font-weight="500"
+        fill="#bfae93"
+        letter-spacing="6">O N E</text>
+
+  <text x="320" y="166"
+        font-family="Georgia, 'Times New Roman', ui-serif, serif"
+        font-size="14"
+        font-style="italic"
+        fill="#bfae93"
+        letter-spacing="0.3">— a calm room for your inner life</text>
+</svg>

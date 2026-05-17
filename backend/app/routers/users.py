@@ -7,6 +7,7 @@ from ..db import get_db
 from ..deps import CurrentUser
 from ..models import Conversation, Message
 from ..schemas import Envelope, OnboardingPayload, UserPublic, UserUpdate
+from ..services import hydrate_user
 
 router = APIRouter(prefix="/v1/users", tags=["users"])
 
@@ -18,8 +19,8 @@ FOCUS_AREAS = {
 
 
 @router.get("/me", response_model=Envelope[UserPublic])
-async def get_me(user: CurrentUser):
-    return Envelope(data=UserPublic.model_validate(user))
+async def get_me(user: CurrentUser, db: AsyncSession = Depends(get_db)):
+    return Envelope(data=UserPublic.model_validate(await hydrate_user(db, user)))
 
 
 @router.patch("/me", response_model=Envelope[UserPublic])
@@ -38,7 +39,7 @@ async def update_me(
         setattr(user, k, v)
     await db.commit()
     await db.refresh(user)
-    return Envelope(data=UserPublic.model_validate(user))
+    return Envelope(data=UserPublic.model_validate(await hydrate_user(db, user)))
 
 
 def _welcome_message(intention: str | None, focus_areas: list[str], name: str | None) -> str:
@@ -93,4 +94,4 @@ async def onboard(
     user.preferences = prefs
     await db.commit()
     await db.refresh(user)
-    return Envelope(data=UserPublic.model_validate(user))
+    return Envelope(data=UserPublic.model_validate(await hydrate_user(db, user)))

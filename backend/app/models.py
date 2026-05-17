@@ -20,7 +20,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255))
-    role: Mapped[str] = mapped_column(String(32), default="member")
+    role: Mapped[str] = mapped_column(String(32), default="customer")  # customer | creator | moderator | superadmin
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     avatar_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
     bio: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -33,6 +33,9 @@ class User(Base):
 
     reflections: Mapped[list["Reflection"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     progress: Mapped[list["WatchProgress"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    subscriptions: Mapped[list["Subscription"]] = relationship(back_populates="user", cascade="all, delete-orphan", order_by="Subscription.start_date.desc()")
+    notifications: Mapped[list["Notification"]] = relationship(back_populates="user", cascade="all, delete-orphan", order_by="Notification.created_at.desc()")
+    creator_applications: Mapped[list["CreatorApplication"]] = relationship(back_populates="user", cascade="all, delete-orphan", order_by="CreatorApplication.created_at.desc()")
 
 
 class Series(Base):
@@ -144,3 +147,52 @@ class Reflection(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     user: Mapped["User"] = relationship(back_populates="reflections")
+
+
+class Subscription(Base):
+    __tablename__ = "subscriptions"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=lambda: new_id("sub"))
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    tier: Mapped[str] = mapped_column(String(32))  # standard | premium
+    start_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    end_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    note: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_by: Mapped[str] = mapped_column(String(32))  # superadmin user_id
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    user: Mapped["User"] = relationship(back_populates="subscriptions")
+
+
+class CreatorApplication(Base):
+    __tablename__ = "creator_applications"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=lambda: new_id("ca"))
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    full_name: Mapped[str] = mapped_column(String(255))
+    email: Mapped[str] = mapped_column(String(255))
+    pitch: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    links: Mapped[list] = mapped_column(JSON, default=list)        # ["https://...", ...]
+    attachments: Mapped[list] = mapped_column(JSON, default=list)  # ["https://..." attachment URLs]
+    status: Mapped[str] = mapped_column(String(16), default="pending")  # pending | approved | rejected
+    decided_by: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    decided_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    decision_note: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+
+    user: Mapped["User"] = relationship(back_populates="creator_applications")
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=lambda: new_id("n"))
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    kind: Mapped[str] = mapped_column(String(64))   # application_submitted | application_approved | application_rejected | subscription_changed | moderator_promoted | ...
+    title: Mapped[str] = mapped_column(String(255))
+    body: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    link: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+    read_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+
+    user: Mapped["User"] = relationship(back_populates="notifications")

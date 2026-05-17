@@ -36,15 +36,14 @@ const FOCUS_TO_CATEGORY: Record<string, string[]> = {
 };
 
 export default async function DashboardPage() {
-  const [user, series, twin, cont, recs, plan, application] = await Promise.all([
+  const [user, series, twin, cont, plan] = await Promise.all([
     backendData<User>('/v1/auth/me'),
     backendData<Series[]>('/v1/content/series'),
     backendData<DigitalTwinSnapshot>('/v1/reflection/insights/twin').catch(() => null),
     backendData<ContinueWatchingItem[]>('/v1/content/continue-watching').catch(() => []),
-    backendData<Episode[]>('/v1/content/recommendations').catch(() => []),
     backendData<DailyPlan>('/v1/dashboard/today').catch(() => null),
-    backendData<{ status: string } | null>('/v1/creator/application/me').catch(() => null),
   ]);
+  const recs: Episode[] = [];
 
   const firstName = user.fullName?.split(' ')[0] || user.username;
   const featured = series[0];
@@ -236,7 +235,7 @@ export default async function DashboardPage() {
         </Button>
       </section>
 
-      {user.role === 'member' && !application && (
+      {user.role === 'customer' && !user.hasPendingApplication && (
         <section className="rounded-lg border border-dashed border-app p-6">
           <p className="text-xs uppercase tracking-widest text-glimmer-500">For creators</p>
           <h3 className="font-serif text-xl mt-1">Do you have something quiet to share?</h3>
@@ -245,17 +244,8 @@ export default async function DashboardPage() {
             come home to themselves, we'd love to know.
           </p>
           <Button asChild variant="ghost" size="sm" className="mt-3">
-            <Link href="/creator/apply">Apply to become a creator →</Link>
+            <Link href="/apply">Apply to become a creator →</Link>
           </Button>
-        </section>
-      )}
-      {user.role === 'member' && application?.status === 'pending' && (
-        <section className="rounded-lg border border-app p-6 bg-elev/30">
-          <p className="text-xs uppercase tracking-widest text-glimmer-500">Creator application</p>
-          <h3 className="font-serif text-xl mt-1">We're reading your application.</h3>
-          <p className="text-sm text-muted mt-1 max-w-xl">
-            No rush on your side — we read every pitch by hand.
-          </p>
         </section>
       )}
     </div>

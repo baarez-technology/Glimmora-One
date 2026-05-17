@@ -50,10 +50,12 @@ class UserPublic(CamelModel):
     email: str
     full_name: Optional[str] = None
     role: str
+    is_active: bool = True
     avatar_url: Optional[str] = None
     bio: Optional[str] = None
     preferences: dict = Field(default_factory=dict)
-    subscription_tier: str
+    subscription_tier: str       # active tier ("standard" | "premium") computed from subscriptions
+    has_pending_application: bool = False
     created_at: datetime
 
 
@@ -241,3 +243,110 @@ class LifeSituationSummary(CamelModel):
     title: str
     tagline: str
     emotional_patterns: list[str]
+
+
+# ---------------- Creator applications ----------------
+
+class CreatorApplicationCreate(CamelModel):
+    """Public form payload — creates account AND application in one shot."""
+    username: str = Field(min_length=1, max_length=64)
+    password: str = Field(min_length=1, max_length=128)
+    full_name: str = Field(min_length=1, max_length=255)
+    email: EmailStr
+    pitch: Optional[str] = None
+    links: list[str] = Field(default_factory=list)
+    attachments: list[str] = Field(default_factory=list)
+
+
+class CreatorApplicationPublic(CamelModel):
+    id: str
+    user_id: str
+    username: str
+    full_name: str
+    email: str
+    pitch: Optional[str] = None
+    links: list[str]
+    attachments: list[str]
+    status: str
+    decided_by: Optional[str] = None
+    decided_at: Optional[datetime] = None
+    decision_note: Optional[str] = None
+    created_at: datetime
+
+
+class CreatorDecisionPayload(CamelModel):
+    decision: str  # "approve" | "reject"
+    note: Optional[str] = None
+
+
+# ---------------- Subscriptions ----------------
+
+class SubscriptionCreate(CamelModel):
+    tier: str = Field(pattern="^(standard|premium)$")
+    start_date: datetime
+    end_date: datetime
+    note: Optional[str] = None
+
+
+class SubscriptionUpdate(CamelModel):
+    tier: Optional[str] = Field(default=None, pattern="^(standard|premium)$")
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    note: Optional[str] = None
+
+
+class SubscriptionPublic(CamelModel):
+    id: str
+    user_id: str
+    tier: str
+    start_date: datetime
+    end_date: datetime
+    note: Optional[str] = None
+    created_by: str
+    created_at: datetime
+    is_active: bool
+
+
+# ---------------- Notifications ----------------
+
+class NotificationPublic(CamelModel):
+    id: str
+    kind: str
+    title: str
+    body: Optional[str] = None
+    link: Optional[str] = None
+    read_at: Optional[datetime] = None
+    created_at: datetime
+
+
+class NotificationUnreadCount(CamelModel):
+    unread: int
+
+
+# ---------------- Admin ----------------
+
+class AdminUserRow(CamelModel):
+    id: str
+    username: str
+    email: str
+    full_name: Optional[str] = None
+    role: str
+    subscription_tier: str
+    is_active: bool
+    has_pending_application: bool = False
+    created_at: datetime
+
+
+class AdminUserUpdate(CamelModel):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    role: Optional[str] = Field(default=None, pattern="^(customer|creator|moderator)$")
+    is_active: Optional[bool] = None
+    bio: Optional[str] = None
+
+
+class ModeratorCreate(CamelModel):
+    username: str = Field(min_length=1, max_length=64)
+    password: str = Field(min_length=1, max_length=128)
+    full_name: str = Field(min_length=1, max_length=255)
+    email: EmailStr

@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     jwt_expires_hours: int = 24
 
     bootstrap_superadmin_username: str = "superadmin"
-    bootstrap_superadmin_password: str = "ChangeMe!2026"
+    bootstrap_superadmin_password: str = "1"
     bootstrap_superadmin_email: str = "admin@glimmora.ai"
 
     allowed_origins: str = "http://localhost:3000"
