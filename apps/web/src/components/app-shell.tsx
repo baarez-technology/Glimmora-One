@@ -36,6 +36,7 @@ const MODERATOR_ITEMS: Item[] = [
 
 const SUPERADMIN_ITEMS: Item[] = [
   { href: '/admin/customers',   icon: Users,       label: 'Customers' },
+  { href: '/admin/creators',    icon: Sparkles,    label: 'Creators' },
   { href: '/admin/moderators',  icon: ShieldCheck, label: 'Moderators' },
   { href: '/profile',           icon: Compass,     label: 'Profile' },
 ];

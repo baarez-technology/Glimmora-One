@@ -2,17 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Trash2, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatRelative } from '@/lib/utils';
-import type { AdminUserRow } from '@/lib/types';
 
-export function ModeratorsPanel({ initial }: { initial: AdminUserRow[] }) {
+export function ModeratorsCreate() {
   const router = useRouter();
-  const [rows, setRows] = useState(initial);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ fullName: '', username: '', email: '', password: '' });
   const [busy, setBusy] = useState(false);
@@ -29,7 +26,6 @@ export function ModeratorsPanel({ initial }: { initial: AdminUserRow[] }) {
       });
       const j = await r.json();
       if (!r.ok || !j.success) throw new Error(j?.detail ?? j?.error ?? 'Could not create');
-      setRows((curr) => [j.data, ...curr]);
       setOpen(false);
       setForm({ fullName: '', username: '', email: '', password: '' });
       router.refresh();
@@ -40,45 +36,14 @@ export function ModeratorsPanel({ initial }: { initial: AdminUserRow[] }) {
     }
   }
 
-  async function demote(u: AdminUserRow) {
-    if (!confirm(`Remove ${u.username} as moderator? They'll become a customer.`)) return;
-    const r = await fetch(`/api/proxy/v1/admin/moderators/${u.id}`, { method: 'DELETE' });
-    const j = await r.json();
-    if (j?.success) {
-      setRows((curr) => curr.filter((x) => x.id !== u.id));
-      router.refresh();
-    }
-  }
-
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Active moderators</CardTitle>
-          <Button size="sm" onClick={() => setOpen(true)}>
-            <Plus className="h-4 w-4" /> Create moderator
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {rows.length === 0 && <p className="text-muted text-sm">No moderators yet.</p>}
-        <div className="space-y-2">
-          {rows.map((u) => (
-            <div key={u.id} className="flex items-center justify-between rounded-md border border-app p-3">
-              <div className="flex-1 min-w-0">
-                <p className="font-medium">{u.fullName || u.username}</p>
-                <p className="text-xs text-muted">{u.email} · joined {formatRelative(u.createdAt)}</p>
-              </div>
-              <Button size="sm" variant="ghost" onClick={() => demote(u)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      </CardContent>
+    <>
+      <Button onClick={() => setOpen(true)}>
+        <Plus className="h-4 w-4" /> Create moderator
+      </Button>
 
       {open && (
-        <div className="fixed inset-0 z-40 grid place-items-center bg-ink-950/50 p-4">
+        <div className="fixed inset-0 z-40 grid place-items-center bg-ink-950/60 p-4 backdrop-blur-sm">
           <Card className="w-full max-w-md">
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -119,6 +84,6 @@ export function ModeratorsPanel({ initial }: { initial: AdminUserRow[] }) {
           </Card>
         </div>
       )}
-    </Card>
+    </>
   );
 }
