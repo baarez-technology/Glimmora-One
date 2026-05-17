@@ -31,6 +31,15 @@ export function RoleUsersTable({ role, initial, emptyMessage, tier, pendingOnly,
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  // Sync rows when the parent passes a fresh `initial` (router.refresh after
+  // a create/delete elsewhere on the page). Without this, useState(initial)
+  // only captures the very first prop value and later refreshes silently no-op.
+  // Only resync when the user isn't actively searching, so we don't clobber
+  // their in-progress filter.
+  useEffect(() => {
+    if (!q) setRows(initial);
+  }, [initial, q]);
+
   useEffect(() => {
     const t = setTimeout(async () => {
       const params = new URLSearchParams({ role });

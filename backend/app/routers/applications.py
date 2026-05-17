@@ -72,7 +72,11 @@ async def submit_application(
         email=payload.email,
         full_name=payload.full_name,
         password_hash=hash_password(payload.password),
-        role="customer",   # stays customer until approved
+        # Flip to creator immediately, but gate them behind is_creator_approved=False
+        # until a moderator approves. They land on /under-review with the creator
+        # sidebar/role visible; on approve the gate releases.
+        role="creator",
+        is_creator_approved=False,
         subscription_tier="standard",
     )
     db.add(user)
@@ -199,8 +203,13 @@ async def decide_application(
         await db.execute(select(User).where(User.id == a.user_id))
     ).scalar_one_or_none()
     if applicant:
-        if a.status == "approved" and applicant.role == "customer":
+        if a.status == "approved":
             applicant.role = "creator"
+            applicant.is_creator_approved = True
+        else:
+            # Reject → revert to customer and release the gate so they aren't stuck.
+            applicant.role = "customer"
+            applicant.is_creator_approved = True
         await notify(
             db,
             user_id=applicant.id,

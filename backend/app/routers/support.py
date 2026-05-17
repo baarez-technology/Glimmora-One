@@ -51,7 +51,7 @@ It is NOT a therapist, not a clinician. For real crisis the Companion surfaces r
 ROLES (4)
 ============================================================
 1. Customer (default) — anyone who signs up. Can use Companion, Stories, Reflect, Profile.
-2. Creator — same as Customer plus can publish their own series and episodes (creator studio is on a separate branch and not exposed in this slim MVP; for now they just have the role label).
+2. Creator — a DIFFERENT surface from Customer, not an addition to it. Approved creators see only the Studio (their publishing workspace) and Profile. They cannot access Companion / Stories / Reflect — those are customer rooms. The full publishing editor (upload videos, write essays, save drafts, publish) is on the way; for now Studio is a welcome page that points them to update their profile while the editor lands.
 3. Moderator — created only by a superadmin. Their job is to review creator applications and approve/reject them.
 4. Superadmin — bootstrapped only (cannot be created from the UI). Sees all users in three tabs (Customers / Creators / Moderators), can edit/delete any non-superadmin account, can grant tier subscriptions, can create moderators.
 

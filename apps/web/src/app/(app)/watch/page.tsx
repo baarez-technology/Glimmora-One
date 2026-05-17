@@ -89,7 +89,7 @@ export default async function WatchPage() {
                 <div className="p-5">
                   <h3 className="font-serif text-lg">{s.title}</h3>
                   <p className="text-sm text-muted mt-1">{s.tagline}</p>
-                  <p className="text-xs text-muted mt-3">{s.episodes.length} episodes</p>
+                  <p className="text-xs text-muted mt-3">{s.episodes.length} {s.episodes.length === 1 ? 'episode' : 'episodes'}</p>
                 </div>
               </Link>
             ))}

@@ -15,6 +15,7 @@ export type User = {
   preferences: Record<string, unknown>;
   subscriptionTier: Tier;
   hasPendingApplication: boolean;
+  isCreatorApproved: boolean;
   createdAt: string;
 };
 
@@ -65,6 +66,7 @@ export type AdminUserRow = {
   subscriptionTier: Tier;
   isActive: boolean;
   hasPendingApplication: boolean;
+  isCreatorApproved: boolean;
   createdAt: string;
 };
 

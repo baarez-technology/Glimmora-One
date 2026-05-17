@@ -22,6 +22,10 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(32), default="customer")  # customer | creator | moderator | superadmin
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    # True for everyone except creators with a pending application.
+    # Flipped to False when /apply succeeds, back to True on moderator approve.
+    # Stays True for non-creator roles (the field is just irrelevant for them).
+    is_creator_approved: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     avatar_url: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
     bio: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     preferences: Mapped[dict] = mapped_column(JSON, default=dict)

@@ -48,7 +48,28 @@ class CompanionResult:
 
 
 _CRISIS_RE = re.compile(
-    r"\b(kill myself|end my life|suicide|suicidal|want to die|don'?t want to live|hurt myself|self[- ]harm)\b",
+    r"\b("
+    # Direct intent phrasings
+    r"kill myself|killing myself|kill my self"
+    r"|end my life|end my own life|end it all"
+    r"|take my (own )?life|taking my (own )?life"
+    r"|suicide|suicidal"
+    r"|want to die|wanna die|want to be dead|wanna be dead"
+    r"|don'?t want to live|do not want to live"
+    r"|don'?t want to be alive|do not want to be alive"
+    r"|don'?t want to be here( anymore)?"
+    r"|hurt myself|hurting myself"
+    r"|self[- ]harm|self[- ]harming"
+    # Method-specific phrasings
+    r"|jump(ing)? off( a| the| this)?( building| bridge| cliff| roof| balcony)?"
+    r"|jump(ing)? from( a| the| this)?( bridge| building| roof)?"
+    r"|jump(ing)? in front of( a| the)?( train| bus| car)"
+    r"|step(ping)? in front of( a| the)?( train| bus| car)"
+    r"|shoot(ing)? myself"
+    r"|hang(ing)? myself"
+    r"|overdos(e|ing)( on| myself)?|od myself"
+    r"|cut(ting)? myself"
+    r")\b",
     re.IGNORECASE,
 )
 

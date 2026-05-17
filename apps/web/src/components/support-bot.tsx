@@ -271,7 +271,7 @@ export function SupportBot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about anything in the app…"
-              className="flex-1 h-9 rounded-md bg-app/40 border border-app/40 px-3 text-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 ring-accent"
+              className="flex-1 h-9 rounded-md bg-ink-50 dark:bg-ink-900 border border-app/70 px-3 text-sm text-app font-medium placeholder:text-muted placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 ring-accent"
             />
             <button
               type="submit"

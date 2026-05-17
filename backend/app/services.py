@@ -52,5 +52,6 @@ async def hydrate_user(db: AsyncSession, user: User) -> dict:
         "preferences": user.preferences,
         "subscriptionTier": await active_tier(db, user.id),
         "hasPendingApplication": await has_pending_application(db, user.id),
+        "isCreatorApproved": user.is_creator_approved,
         "createdAt": user.created_at,
     }

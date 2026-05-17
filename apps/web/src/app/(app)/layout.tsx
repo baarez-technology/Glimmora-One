@@ -22,10 +22,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
   const pathname = (await headers()).get('x-pathname') ?? '';
 
-  // 1. Pending creator application — gate above EVERYTHING else.
-  //    Once gated, the user stays on /under-review until decision; no
-  //    onboarding check, no role check, no other redirects.
-  if (user.hasPendingApplication) {
+  // 1. Pending creator (role flips to 'creator' on /apply but the
+  //    is_creator_approved gate stays false until a moderator decides) —
+  //    gate above EVERYTHING else. They stay on /under-review until then.
+  if (user.role === 'creator' && !user.isCreatorApproved) {
     if (!pathname.startsWith('/under-review')) redirect('/under-review');
     return <AppShell user={user}>{children}</AppShell>;
   }
@@ -45,10 +45,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         pathname.startsWith('/admin') || pathname.startsWith('/under-review')) {
       redirect('/moderate/applications');
     }
+  } else if (user.role === 'creator') {
+    // Creators have a dedicated workspace. They are NOT customers — they
+    // should not see /companion, /watch, /reflect, the daily ritual, or
+    // any onboarding. They can only access /studio and /profile.
+    const allowedForCreator =
+      pathname === '/studio' || pathname.startsWith('/studio/') ||
+      pathname === '/profile' || pathname.startsWith('/profile/');
+    if (!allowedForCreator) redirect('/studio');
   } else {
-    // customer / creator
+    // customer (the default)
     if (pathname.startsWith('/admin') || pathname.startsWith('/moderate') ||
-        pathname.startsWith('/under-review')) {
+        pathname.startsWith('/under-review') ||
+        pathname === '/studio' || pathname.startsWith('/studio/')) {
       redirect('/dashboard');
     }
     const onboarded = Boolean((user.preferences as Record<string, unknown>)?.onboarded);

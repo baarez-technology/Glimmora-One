@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 const PROTECTED = [
   '/dashboard', '/companion', '/watch', '/reflect',
   '/profile', '/admin', '/moderate', '/onboarding',
-  '/under-review',
+  '/under-review', '/studio',
 ];
 
 export function middleware(req: NextRequest) {
@@ -18,9 +18,13 @@ export function middleware(req: NextRequest) {
   }
   const hasSession = req.cookies.get('glimmora_session');
   if (!hasSession) {
+    // Deliberately do NOT include a ?next= query param. It would leak the
+    // previous role's intended destination (e.g. /admin/moderators) in the
+    // address bar after sign-out. loginAction routes by role anyway, so
+    // ?next= was dead code as well as a privacy leak.
     const url = req.nextUrl.clone();
     url.pathname = '/login';
-    url.searchParams.set('next', pathname);
+    url.search = '';
     return NextResponse.redirect(url);
   }
   return NextResponse.next({ request: { headers: reqHeaders } });

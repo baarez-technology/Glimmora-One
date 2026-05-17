@@ -143,7 +143,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <Row label="Reflections" value={`${twin?.totalReflections ?? 0}`} />
-            <Row label="Current streak" value={`${twin?.streakDays ?? 0} days`} />
+            <Row label="Current streak" value={`${twin?.streakDays ?? 0} ${(twin?.streakDays ?? 0) === 1 ? 'day' : 'days'}`} />
             <Row label="Most-present" value={twin?.dominantMood ?? '—'} />
             <Row label="Avg. intensity" value={twin?.averageIntensity?.toFixed(1) ?? '0.0'} />
             <Button asChild variant="ghost" size="sm" className="w-full mt-2">
@@ -175,7 +175,7 @@ export default async function DashboardPage() {
                 </div>
                 <div className="p-3">
                   <p className="text-sm font-medium leading-snug">{s.title}</p>
-                  <p className="text-xs text-muted mt-1">{s.episodes.length} episodes</p>
+                  <p className="text-xs text-muted mt-1">{s.episodes.length} {s.episodes.length === 1 ? 'episode' : 'episodes'}</p>
                 </div>
               </Link>
             ))}

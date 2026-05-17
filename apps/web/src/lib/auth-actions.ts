@@ -23,9 +23,10 @@ async function landingPathForToken(token: string): Promise<string> {
     if (!r.ok) return '/dashboard';
     const env = (await r.json()) as { data: User };
     const u = env.data;
-    if (u.hasPendingApplication) return '/under-review';
+    if (u.role === 'creator' && !u.isCreatorApproved) return '/under-review';
     if (u.role === 'superadmin') return '/admin/customers';
     if (u.role === 'moderator')  return '/moderate/applications';
+    if (u.role === 'creator')    return '/studio';
     const onboarded = Boolean((u.preferences as Record<string, unknown>)?.onboarded);
     return onboarded ? '/dashboard' : '/onboarding';
   } catch {

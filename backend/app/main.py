@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 
 from .config import get_settings
 from .db import async_session_factory, engine
@@ -33,6 +34,23 @@ async def lifespan(_app: FastAPI):
     # Alembic still owns destructive / schema-altering migrations in prod.
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # In-place migration for is_creator_approved on existing deployments.
+        # SQLite ignores IF NOT EXISTS quirks; Postgres handles it natively.
+        dialect = conn.dialect.name
+        if dialect == "postgresql":
+            await conn.execute(text(
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_creator_approved "
+                "BOOLEAN NOT NULL DEFAULT TRUE"
+            ))
+        elif dialect == "sqlite":
+            # SQLite: probe and add if missing.
+            res = await conn.exec_driver_sql("PRAGMA table_info(users)")
+            cols = {row[1] for row in res.fetchall()}
+            if "is_creator_approved" not in cols:
+                await conn.exec_driver_sql(
+                    "ALTER TABLE users ADD COLUMN is_creator_approved "
+                    "BOOLEAN NOT NULL DEFAULT 1"
+                )
     async with async_session_factory() as db:
         await ensure_superadmin(db)
         await ensure_demo_catalog(db)

@@ -56,6 +56,7 @@ class UserPublic(CamelModel):
     preferences: dict = Field(default_factory=dict)
     subscription_tier: str       # active tier ("standard" | "premium") computed from subscriptions
     has_pending_application: bool = False
+    is_creator_approved: bool = True
     created_at: datetime
 
 
@@ -334,6 +335,7 @@ class AdminUserRow(CamelModel):
     subscription_tier: str
     is_active: bool
     has_pending_application: bool = False
+    is_creator_approved: bool = True
     created_at: datetime
 
 

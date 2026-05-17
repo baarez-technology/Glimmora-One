@@ -49,6 +49,7 @@ async def _user_row(db: AsyncSession, u: User) -> AdminUserRow:
         subscription_tier=await active_tier(db, u.id),
         is_active=u.is_active,
         has_pending_application=await has_pending_application(db, u.id),
+        is_creator_approved=u.is_creator_approved,
         created_at=u.created_at,
     )
 

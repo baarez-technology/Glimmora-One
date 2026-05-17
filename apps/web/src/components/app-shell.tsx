@@ -29,6 +29,11 @@ const CUSTOMER_ITEMS: Item[] = [
   { href: '/profile',    icon: Compass,         label: 'Profile' },
 ];
 
+const CREATOR_ITEMS: Item[] = [
+  { href: '/studio',  icon: Sparkles, label: 'Studio' },
+  { href: '/profile', icon: Compass,  label: 'Profile' },
+];
+
 const MODERATOR_ITEMS: Item[] = [
   { href: '/moderate/applications', icon: ShieldCheck, label: 'Applications' },
   { href: '/profile',               icon: Compass,     label: 'Profile' },
@@ -44,6 +49,7 @@ const SUPERADMIN_ITEMS: Item[] = [
 function navFor(role: Role): Item[] {
   if (role === 'superadmin') return SUPERADMIN_ITEMS;
   if (role === 'moderator')  return MODERATOR_ITEMS;
+  if (role === 'creator')    return CREATOR_ITEMS;
   return CUSTOMER_ITEMS;
 }
 
@@ -54,12 +60,18 @@ function roleLabel(role: Role): string {
 function brandHrefFor(role: Role): string {
   if (role === 'moderator')  return '/moderate/applications';
   if (role === 'superadmin') return '/admin/customers';
+  if (role === 'creator')    return '/studio';
   return '/dashboard';
 }
 
 export function AppShell({ user, children }: { user: User; children: React.ReactNode }) {
   const pathname = usePathname();
-  const items = navFor(user.role);
+  // While a creator application is pending (role='creator' but not yet approved),
+  // the user is locked on /under-review. The sidebar nav items would all be
+  // dead-ends (the layout gates them back), so render no items at all. Keep
+  // brand + user block + topbar visible.
+  const pending = user.role === 'creator' && !user.isCreatorApproved;
+  const items = pending ? [] : navFor(user.role);
   const isCustomerOrCreator = user.role === 'customer' || user.role === 'creator';
   const isFocusedPage = false;
 
@@ -149,8 +161,12 @@ export function AppShell({ user, children }: { user: User; children: React.React
         {children}
       </main>
 
-      {/* MOBILE — floating glass pill nav at the bottom */}
-      <nav className="lg:hidden fixed bottom-3 left-3 right-3 z-30 flex items-center justify-around panel px-2 py-2">
+      {/* MOBILE — floating glass pill nav at the bottom. Hidden entirely when
+          there are no nav items (e.g. while a creator application is pending). */}
+      <nav className={cn(
+        'lg:hidden fixed bottom-3 left-3 right-3 z-30 flex items-center justify-around panel px-2 py-2',
+        items.length === 0 && 'hidden'
+      )}>
         {items.map(({ href, icon: Icon, label }) => {
           const active = pathname === href || pathname?.startsWith(href + '/');
           return (
